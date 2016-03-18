@@ -1,0 +1,65 @@
+#!/bin/bash
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd $DIR
+
+AUTOMATION_DIR_PATH=$(readlink -f $DIR/..)
+HOOKS_DIR_PATH=$AUTOMATION_DIR_PATH/hooks
+ROOT_APP_DIR_PATH=$(readlink -f $AUTOMATION_DIR_PATH/..)
+BIN_NAME=$(basename $0)
+
+pre_bin()
+{
+  if [[ -f $HOOKS_DIR_PATH/pre_$BIN_NAME ]]; then
+      echo ===========================================================
+      echo     Specific pre_$BIN_NAME
+      source $HOOKS_DIR_PATH/pre_$BIN_NAME
+  fi
+}
+
+post_bin()
+{
+  if [[ -f $HOOKS_DIR_PATH/post_$BIN_NAME ]]; then
+      echo ===========================================================
+      echo     Specific post_$BIN_NAME
+      source $HOOKS_DIR_PATH/post_$BIN_NAME
+  fi
+}
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+OPTIONS:
+   -h        Show this message
+   --target  Target env
+EOF
+}
+
+function error {
+    echo -e "\033[31m$1\033[00m"
+    exit 1
+}
+
+while test $# -gt 0
+do
+    case "$1" in
+        --target )
+            shift
+            TARGET=$1
+            ;;
+        -h )
+            usage
+            exit
+            break ;;
+        *)
+            usage
+            error "Unknown parameter"
+            ;;
+        esac
+    shift
+done
+
+if [[ -z ${TARGET} ]]; then
+    TARGET="dev"
+fi
