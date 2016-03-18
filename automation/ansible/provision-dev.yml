@@ -1,0 +1,28 @@
+---
+
+
+- name: Deploy Mockiji app dependencies
+  hosts: webservers
+  user: root
+
+  vars:
+    apps:
+      - framework: "drupal"
+        name: "{{maestro_project_name}}-{{ maestro_app_name }}"
+        fqdn: "{{maestro_project_name}}-{{ maestro_app_name }}.service.{{ consul_datacenter }}.{{ consul_domain }}"
+        root_path: "/srv/www/{{maestro_app_name}}"
+        subdomains:
+          - "www"
+    env: "{{target}}"
+    consul_domain: "{{ maestro_domain_name }}"
+    consul_datacenter: "{{ target }}"
+    consul_use_systemd: true
+
+  roles:
+    - apt-proxy
+    - consul
+    - server-tools
+    - monitoring-tools
+    - git-tools
+    - apache2
+    - nodejs
