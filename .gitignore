@@ -50,4 +50,5 @@ crashlytics.properties
 crashlytics-build.properties
 
 .maestro.yml
+automation/bin/ansible-deploy
 vendor/
