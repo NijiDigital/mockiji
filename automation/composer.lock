@@ -1,0 +1,49 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "d3d7b57ea3265d637b64d2dfa5fe2864",
+    "content-hash": "4f3a6be9e34d8b593bc3ac4deb0da97a",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "niji/ansible",
+            "version": "dev-release/2.1",
+            "source": {
+                "type": "git",
+                "url": "git@git.niji.fr:web/ansible.git",
+                "reference": "4429746061dd2fec9dae067d311c53d88ffb8f04"
+            },
+            "bin": [
+                "./scripts/ansible-deploy"
+            ],
+            "type": "library",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Anthony Arnaud",
+                    "email": "anthony.arnaud@niji.fr"
+                },
+                {
+                    "name": "Jean-Philippe Lainé",
+                    "email": "jean-philippe.laine@niji.fr"
+                }
+            ],
+            "description": "Niji - Scripts de déploiement ansible",
+            "time": "2016-03-15 16:21:06"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "niji/ansible": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
