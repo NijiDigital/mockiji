@@ -1,9 +1,14 @@
 node_modules/
-api/data/*
+data/*
+!data/.gitkeep
 api/logs/*
+!api/logs/.gitkeep
+.maestro.yml
+automation/bin/ansible-deploy
+vendor/
+
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
-
 *.iml
 
 ## Directory-based project format:
@@ -48,7 +53,3 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
-
-.maestro.yml
-automation/bin/ansible-deploy
-vendor/
