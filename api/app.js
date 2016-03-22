@@ -8,10 +8,6 @@ app.use(express.json());
 app.use(express.urlencoded());
 let http = require('http').Server(app);
 
-var livereload = require('livereload');
-var reloadServer = livereload.createServer();
-reloadServer.watch(__dirname);  // Enable watch on complete app folder
-
 let Logger = require('bunyan');
 let log = new Logger({
   name: 'helloapi',
