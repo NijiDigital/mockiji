@@ -1,5 +1,5 @@
 {
-    "app_listening_port": 3030,
+    "app_listening_port": 8080,
     "default_folder_name": "@default",
     "mock_file_not_found_http_code": 404,
     "enable_extra_http_responses_headers": {
