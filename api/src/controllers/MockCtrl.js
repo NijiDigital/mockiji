@@ -5,6 +5,14 @@ let Toolbox = require('../utils/Toolbox.js');
 let FilePathBuilderService = require('../services/FilePathBuilderService.js');
 let FileLoaderService = require('../services/FileLoaderService.js');
 
+// Configuration
+let env = require('../../config/env.json');
+let config = require('../../config/'+ env.name +'.json');
+
+// Logger
+let bunyan = require('bunyan');
+let log = bunyan.createLogger({name: config.logger.name});
+
 /**
  * This controller is for building the response
  */
