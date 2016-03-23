@@ -23,15 +23,15 @@ let http = require('http').Server(app);
 // Logger
 let Logger = require('bunyan');
 let log = new Logger({
-  name: 'api-mockiji',
+  name: config.logger.name,
   streams: [
     {
       stream: process.stdout,
       level: 'debug'
     },
     {
-      path: '../logs/api-mockiji.log',
-      level: 'trace'
+      path: config.logger.filepath,
+      level: config.logger.level
     }
   ]
 });
