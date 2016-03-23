@@ -6,7 +6,14 @@ let app = express();
 
 // Configuration
 let env = require('./config/env.json');
-let config = require('./config/'+ env.name +'.json');
+let config;
+try {
+    config = require('./config/'+ env.name +'.json');
+} catch(e) {
+    console.error('ERROR - Impossible to load the configuration file.');
+    console.error('ERROR - Maybe the config/env.json file is not set to the right environment.');
+    throw e;
+}
 
 // Server configuration
 app.use(express.json());
