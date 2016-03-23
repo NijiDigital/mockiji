@@ -1,8 +1,8 @@
 node_modules/
 data/*
 !data/.gitkeep
-api/logs/*
-!api/logs/.gitkeep
+logs/*
+!logs/.gitkeep
 .maestro.yml
 automation/bin/ansible-deploy
 vendor/

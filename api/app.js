@@ -30,7 +30,7 @@ let log = new Logger({
       level: 'debug'
     },
     {
-      path: 'logs/api-mockiji.log',
+      path: '../logs/api-mockiji.log',
       level: 'trace'
     }
   ]
