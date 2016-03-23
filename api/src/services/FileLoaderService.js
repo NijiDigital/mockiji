@@ -13,12 +13,12 @@ let bunyan = require('bunyan');
 let log = bunyan.createLogger({name: config.logger.name});
 
 /**
- * This Controller is for building the response
+ * This service is for loading the right file
  */
 let FileLoaderService = function() {
 
     /**
-     *
+     * Find the right file to load
      */
     function _findTheFileToLoad(paths) {
 
@@ -48,7 +48,7 @@ let FileLoaderService = function() {
     }
 
     /**
-     *
+     * Load the file located at the path
      */
     function _load(path) {
 
@@ -78,6 +78,9 @@ let FileLoaderService = function() {
         return data;
     }
 
+    /**
+     * Extract the HTTP Code from the filename (just before the final extension)
+     */
     function _extractHttpCodeFromFileName(filename) {
         let httpCode = 200;
 
@@ -90,6 +93,7 @@ let FileLoaderService = function() {
         return httpCode;
     }
 
+    // Expose
     return {
         find: _findTheFileToLoad,
         load: _load
