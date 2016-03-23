@@ -30,7 +30,7 @@ let FileLoaderService = function() {
                 return;
             }
 
-            let rootPath = 'data' + element;
+            let rootPath = __dirname + "/" + config.listen_to_these_api_base_urls.api + element;
             files = glob.sync(rootPath);
             if(files.length > 0) {
                 log.info("FILE MATCH! : " + rootPath + " - " + util.inspect(files));
@@ -39,7 +39,7 @@ let FileLoaderService = function() {
         });
 
         if(files.length > 0) {
-            log.error(files);
+            log.warn("Multiple files found, selecting the first one: " + files);
             let file = files[0];
             return file;
         }

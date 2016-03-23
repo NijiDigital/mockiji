@@ -13,9 +13,8 @@
         "mock_file_is_found_and_empty": true,
         "mock_file_is_found_and_unreadable": true
     },
-    "listen_to_these_api_base_url": {
-        "api1": "data/api",
-        "api2": "/data/clientName/api2"
+    "listen_to_these_api_base_urls": {
+        "api": "../../../data"
     },
     "mock_files_authorized_extensions": ["json","phpmock"],
     "enable_php_for_these_extensions": ["phpmock"]
