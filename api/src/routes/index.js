@@ -1,8 +1,12 @@
 'use strict';
 let util = require('util');
 var MockCtrl = require('../controllers/MockCtrl');
+var cors = require('cors');
 
 module.exports = function(pApp) {
+
+    // Cross-domain management
+    pApp.use(cors());
 
     // HeartBeat test
     pApp.get('/', function(req, res) {

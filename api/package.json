@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bunyan": "^1.8.0",
+    "cors": "^2.7.1",
     "express": "3.x",
     "glob-all": "^3.0.1"
   }
