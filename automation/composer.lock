@@ -14,7 +14,7 @@
             "source": {
                 "type": "git",
                 "url": "git@git.niji.fr:web/ansible.git",
-                "reference": "b966253358adff34face02207ca36f11a284c2e9"
+                "reference": "3c596890fef78d8b0f19694093cb1040284c5a9b"
             },
             "bin": [
                 "./scripts/ansible-deploy"
@@ -34,7 +34,7 @@
                 }
             ],
             "description": "Niji - Scripts de déploiement ansible",
-            "time": "2016-03-23 13:43:29"
+            "time": "2016-04-05 15:19:07"
         }
     ],
     "aliases": [],
