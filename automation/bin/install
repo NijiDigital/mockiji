@@ -17,8 +17,6 @@ echo ===========================================================
 echo ===========================================================
 echo     INSTALL mockiji
 
-cd ${PROJECT_DIR}/automation/vendor/niji/drupal-core/www
-
 #hook pre
 pre_bin
 
