@@ -1,6 +1,7 @@
 {
   "apps" : [{
     "name"               : "mockiji-api",
-    "script"             : "app.js"
+    "script"             : "app.js",
+    "autorestart"        : true
   }]
 }
