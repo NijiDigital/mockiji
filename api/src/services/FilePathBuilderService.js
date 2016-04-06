@@ -24,7 +24,10 @@ let FilePathBuilderService = function() {
         let path = request[0];
         
         // @TODO Use parameters to build more paths
-        let parameters = request[1].split('&');
+        let parameters = [];
+        if(typeof request[1] === 'string') {
+            parameters = request[1].split('&');
+        }
         
         // Let's split the path to work with it
         let allParts = path.split('/');
