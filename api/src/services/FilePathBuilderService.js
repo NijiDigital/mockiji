@@ -9,11 +9,20 @@ let FilePathBuilderService = function() {
 
     /**
      *
+     * @param method
+     * @param url
+     * @param queryString
+     * @returns {Array}
+     * @private
      */
     function _generatePaths(method, url, queryString) {
         let urls = [];
 
-        let allParts = url.split('/');
+        let request = url.split('?');
+        let path = request[0];
+        // TODO: Gestion des paramètres dans la recherche de fichiers
+        let parameters = url[1].split('&');
+        let allParts = path.split('/');
 
         // method.json
         {
