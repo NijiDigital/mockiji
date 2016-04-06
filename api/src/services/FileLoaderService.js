@@ -54,7 +54,7 @@ let FileLoaderService = function() {
 
         var contents = fs.readFileSync(path, 'utf8');
         let jsonContent = null;
-        let httpCode = 404;
+        let httpCode = 0;
         let notices = [];
 
         httpCode = _extractHttpCodeFromFileName(path);
@@ -67,7 +67,10 @@ let FileLoaderService = function() {
             }
         } catch(e) {
             // Log (not valid JSON)
-            notices.push('The mock file is not empty but contains invalid JSON');
+            httpCode = config.mock_file_invalid_http_code;
+            let message = 'The mock file contains invalid JSON';
+            jsonContent =  {'error':message};
+            notices.push(message);
         }
 
         let data = {
