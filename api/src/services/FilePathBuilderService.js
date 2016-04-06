@@ -16,12 +16,17 @@ let FilePathBuilderService = function() {
      * @private
      */
     function _generatePaths(method, url, queryString) {
+        
         let urls = [];
 
+        // Remove the parameters for building paths (at the moment)
         let request = url.split('?');
         let path = request[0];
-        // TODO: Gestion des paramètres dans la recherche de fichiers
-        let parameters = url[1].split('&');
+        
+        // @TODO Use parameters to build more paths
+        let parameters = request[1].split('&');
+        
+        // Let's split the path to work with it
         let allParts = path.split('/');
 
         // method.json
