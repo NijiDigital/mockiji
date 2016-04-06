@@ -16,6 +16,5 @@
     "listen_to_these_api_base_urls": {
         "api": "../../../data"
     },
-    "mock_files_authorized_extensions": ["json","phpmock"],
-    "enable_php_for_these_extensions": ["phpmock"]
+    "mock_files_authorized_extensions": ["json","jsmock"]
 }
