@@ -47,7 +47,7 @@ let MockCtrl = function() {
             responseHeaders['X-Mockiji-File'] = fileToLoad;
             responseHeaders['X-Mockiji-Notices'] = fileData.notices;
         } else {
-            httpCode = 404;
+            httpCode = config.mock_file_not_found_http_code;
             rawContent = {
                 'errorCode': httpCode,
                 'errorDescription': 'No mock file was found',
