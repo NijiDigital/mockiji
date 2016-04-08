@@ -1,7 +1,7 @@
 'use strict';
 
 let util = require('util');
-let Toolbox = require('../utils/Toolbox.js');
+let URLRecomposerService = require('../services/URLRecomposerService.js');
 let FilePathBuilderService = require('../services/FilePathBuilderService.js');
 let FileLoaderService = require('../services/FileLoaderService.js');
 
@@ -20,15 +20,20 @@ let MockCtrl = function() {
 
     /**
      *
+     * @param request
+     * @param response
      */
     function _buildResponse(request, response) {
-        let toolbox = new Toolbox();
 
         let method = request.method.toLowerCase();
-        let url = toolbox.removeTrailingSlash(request.url);
         let queryString = null;
         let httpCode = 201;
         let rawContent = null;
+
+        // Get the URL
+        let urlRecomposer = new URLRecomposerService();
+        let url = urlRecomposer.recompose(request);
+        log.info({'method': method, 'url': url}, 'Incoming request');
 
         // List every possible paths
         let pathBuilder = new FilePathBuilderService();
@@ -53,6 +58,7 @@ let MockCtrl = function() {
                 'errorDescription': 'No mock file was found',
                 'evaluatedMockFilePaths': paths
             };
+            log.info(rawContent, '[Response] Not Found');
         }
 
         // Set Response Headers

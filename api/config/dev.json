@@ -17,5 +17,15 @@
     "listen_to_these_api_base_urls": {
         "api": "../../../data"
     },
-    "mock_files_authorized_extensions": ["json","jsmock"]
+    "mock_files_authorized_extensions": ["json","jsmock"],
+    "authorization_token": [
+        {
+            "regexp": "/api/v1/sites/(-)",
+            "token_replacement_key": "site_id"
+        },
+        {
+            "regexp": "\/api\/v1\/weather-stations\/(-)",
+            "token_replacement_key": "weather_station_id"
+        }
+    ]
 }
