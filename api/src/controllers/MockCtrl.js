@@ -46,7 +46,7 @@ let MockCtrl = function() {
     let responseHeaders = {};
 
     if(fileToLoad !== null) {
-      let fileData = fileLoader.load(fileToLoad);
+      let fileData = fileLoader.load(fileToLoad, request);
       rawContent = fileData.rawContent;
       httpCode = fileData.httpCode;
       responseHeaders['X-Mockiji-File'] = fileToLoad;

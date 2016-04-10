@@ -20,7 +20,7 @@ let FileLoaderService = function() {
   /**
    * Find the right file to load
    */
-  function _findTheFileToLoad(paths) {
+  function find(paths) {
 
     let files = [];
 
@@ -50,7 +50,7 @@ let FileLoaderService = function() {
   /**
    * Load the file located at the path
    */
-  function _load(path) {
+  function load(path, request) {
 
     var contents = fs.readFileSync(path, 'utf8');
     let jsonContent = null;
@@ -58,21 +58,28 @@ let FileLoaderService = function() {
     let notices = [];
 
     httpCode = _extractHttpCodeFromFileName(path);
+    let extension = _extractExtensionFromFileName(path);
+    log.warn({"ext":extension},"Extension");
 
-    try {
-      if(contents.length > 0) {
-        jsonContent = JSON.parse(contents);
-      } else {
-        notices.push('The mock file is empty');
-      }
-    } catch(e) {
-      // Log (not valid JSON)
-      httpCode = config.mock_file_invalid_http_code;
-      let message = 'The mock file contains invalid JSON';
-      jsonContent =  {'error':message};
-      notices.push(message);
+    if(extension === 'js') {
+      delete require.cache[require.resolve(path)];
+      let jsMock = require(path);
+      jsonContent = new jsMock(request);
     }
-
+    else {
+      try {
+        if(contents.length > 0) {
+          jsonContent = JSON.parse(contents);
+        } else {
+          notices.push('The mock file is empty');
+        }
+      } catch(e) {
+        httpCode = config.mock_file_invalid_http_code;
+        let message = 'The mock file contains invalid JSON';
+        jsonContent =  {'error':message};
+        notices.push(message);
+      }
+    }
     let data = {
       rawContent: jsonContent,
       httpCode: httpCode,
@@ -88,7 +95,6 @@ let FileLoaderService = function() {
     let httpCode = 200;
 
     let matches = filename.match(/\.([0-9]{3})\.[a-z0-9]+$/i);
-    console.log(matches);
     if(matches != null) {
       httpCode = matches[1];
     }
@@ -96,10 +102,24 @@ let FileLoaderService = function() {
     return httpCode;
   }
 
+  /**
+   * Extract the file extension from the filename
+   */
+  function _extractExtensionFromFileName(filename) {
+    let extension = null;
+
+    let matches = filename.match(/\.([a-z0-9]+)$/i);
+    if(matches != null) {
+      extension = matches[1];
+    }
+
+    return extension;
+  }
+
   // Expose
   return {
-    find: _findTheFileToLoad,
-    load: _load
+    find: find,
+    load: load
   }
 
 }
