@@ -15,7 +15,7 @@
     "mock_file_is_found_and_unreadable": true
   },
   "listen_to_these_api_base_urls": {
-    "api": "../../../data"
+    "api": "../../../../mocks/data"
   },
   "mock_files_authorized_extensions": ["json","jsmock"],
   "authorization_token": [
