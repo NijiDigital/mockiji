@@ -52,9 +52,9 @@ let FileLoaderService = function() {
    */
   function load(path, request) {
 
-    var contents = fs.readFileSync(path, 'utf8');
-    let jsonContent = null;
-    let httpCode = 0;
+    var fileContent = fs.readFileSync(path, 'utf8');
+    let content = null;
+    let httpCode = 200;
     let notices = [];
 
     httpCode = _extractHttpCodeFromFileName(path);
@@ -64,24 +64,26 @@ let FileLoaderService = function() {
     if(extension === 'js') {
       delete require.cache[require.resolve(path)];
       let jsMock = require(path);
-      jsonContent = new jsMock(request);
+      let response = new jsMock(request);
+      content = response.content;
+      httpCode = response.httpCode || httpCode;
     }
     else {
       try {
-        if(contents.length > 0) {
-          jsonContent = JSON.parse(contents);
+        if(fileContent.length > 0) {
+          content = JSON.parse(fileContent);
         } else {
           notices.push('The mock file is empty');
         }
       } catch(e) {
         httpCode = config.mock_file_invalid_http_code;
         let message = 'The mock file contains invalid JSON';
-        jsonContent =  {'error':message};
+        content =  {'error':message};
         notices.push(message);
       }
     }
     let data = {
-      rawContent: jsonContent,
+      rawContent: content,
       httpCode: httpCode,
       notices: notices
     }
