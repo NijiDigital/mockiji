@@ -30,11 +30,12 @@ let FileLoaderService = function() {
         return;
       }
 
-      let rootPath = __dirname + "/" + config.listen_to_these_api_base_urls.api + element;
-      files = glob.sync(rootPath);
+      files = glob.sync(element);
       if(files.length > 0) {
-        log.info("FILE MATCH! : " + rootPath + " - " + util.inspect(files));
+        log.info("FILE MATCH! : " + element + " - " + util.inspect(files));
         fileMatch = true;
+      } else {
+        log.info({"rootPath":element});
       }
     });
 
@@ -54,10 +55,9 @@ let FileLoaderService = function() {
 
     var fileContent = fs.readFileSync(path, 'utf8');
     let content = null;
-    let httpCode = 200;
     let notices = [];
 
-    httpCode = _extractHttpCodeFromFileName(path);
+    let httpCode = _extractHttpCodeFromFileName(path);
     let extension = _extractExtensionFromFileName(path);
     log.warn({"ext":extension},"Extension");
 
@@ -75,13 +75,15 @@ let FileLoaderService = function() {
         } else {
           notices.push('The mock file is empty');
         }
-      } catch(e) {
+      }
+      catch(e) {
         httpCode = config.mock_file_invalid_http_code;
         let message = 'The mock file contains invalid JSON';
         content =  {'error':message};
         notices.push(message);
       }
     }
+
     let data = {
       rawContent: content,
       httpCode: httpCode,

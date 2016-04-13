@@ -1,4 +1,5 @@
 'use strict';
+var url = require('url');
 
 var Toolbox = function() {
 
@@ -7,12 +8,24 @@ var Toolbox = function() {
    * @param string the string to clean
    * @return string the cleaned string
    */
-  function _removeTrailingSlash(str) {
+  function removeTrailingSlash(str) {
     return str.replace(/\/$/, '');
   }
 
+  /**
+   * Resolve shortest path from a path
+   * With '/root/mocks/../data' => '/root/data'
+   * @param string root the first part of the path
+   * @param string path the last part of the path
+   * @return string the resolved path
+   */
+  function resolveAbsolutePath(root, path) {
+    return url.resolve(root+'/', path).replace(/(\/)\.\*$/, '.*');
+  }
+
   return {
-    removeTrailingSlash: _removeTrailingSlash
+    removeTrailingSlash: removeTrailingSlash,
+    resolveAbsolutePath: resolveAbsolutePath
   }
 
 }

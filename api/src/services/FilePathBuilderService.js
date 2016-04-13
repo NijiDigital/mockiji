@@ -1,6 +1,16 @@
 'use strict';
 
+let Toolbox = require('../utils/Toolbox.js');
 let util = require('util');
+let fs = require('fs');
+
+// Configuration
+let env = require('../../config/env.json');
+let config = require('../../config/'+ env.name +'.json');
+
+// Logger
+let bunyan = require('bunyan');
+let log = bunyan.createLogger({name: config.logger.name});
 
 /**
  * This Controller is for building the response
@@ -15,7 +25,7 @@ let FilePathBuilderService = function() {
    * @returns {Array}
    * @private
    */
-  function _generatePaths(method, url, queryString) {
+  function generatePaths(method, url, queryString) {
 
     let urls = [];
 
@@ -80,11 +90,17 @@ let FilePathBuilderService = function() {
       urls.push(url);
     }
 
-    return urls;
+    let toolbox = new Toolbox();
+    let absoluteURLs = urls.map((element) => {
+      let path = config.listen_to_these_api_base_urls.api + element;
+      return toolbox.resolveAbsolutePath(__dirname, path);
+    });
+
+    return absoluteURLs;
   }
 
   return {
-    generatePaths: _generatePaths
+    generatePaths: generatePaths
   }
 
 }

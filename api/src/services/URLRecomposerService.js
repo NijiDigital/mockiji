@@ -22,13 +22,14 @@ let URLRecomposerService = function() {
    * @returns {Array}
    * @private
    */
-  function _recompose(request) {
+  function recompose(request) {
 
       let toolbox = new Toolbox();
       let rawUrl = toolbox.removeTrailingSlash(request.url);
 
       // Read the authorization token if provided and rebuild the request url
-      let authorizationHeader = request.headers.authorization
+      let authorizationHeader = request.headers.authorization;
+
       if(authorizationHeader) {
 
         // Authorization token is present
@@ -110,7 +111,7 @@ let URLRecomposerService = function() {
 
     // Expose
     return {
-      recompose: _recompose
+      recompose: recompose
     }
 
 }
