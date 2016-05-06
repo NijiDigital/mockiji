@@ -41,12 +41,12 @@ let MockCtrl = function() {
 
     // Find the file to load and extract the content
     let fileLoader = new FileLoaderService();
-    let fileToLoad = fileLoader.find(paths);
+    let fileToLoad = fileLoader.find(paths.mocks);
 
     let responseHeaders = {};
 
     if(fileToLoad !== null) {
-      let fileData = fileLoader.load(fileToLoad, request);
+      let fileData = fileLoader.load(fileToLoad, request, paths.scripts);
       rawContent = fileData.rawContent;
       httpCode = fileData.httpCode;
       responseHeaders['X-Mockiji-File'] = fileToLoad;
@@ -56,7 +56,7 @@ let MockCtrl = function() {
       rawContent = {
         'errorCode': httpCode,
         'errorDescription': 'No mock file was found',
-        'evaluatedMockFilePaths': paths
+        'evaluatedMockFilePaths': paths.mocks
       };
       log.info(rawContent, '[Response] Not Found');
     }

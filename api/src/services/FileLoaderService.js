@@ -32,15 +32,13 @@ let FileLoaderService = function() {
 
       files = glob.sync(element);
       if(files.length > 0) {
-        log.info("FILE MATCH! : " + element + " - " + util.inspect(files));
+        log.info({'files': util.inspect(files), 'key': element}, 'FILE MATCH!');
         fileMatch = true;
-      } else {
-        log.info({"rootPath":element});
       }
     });
 
     if(files.length > 0) {
-      log.warn("Multiple files found, selecting the first one: " + files);
+      log.warn('Multiple files found, selecting the first one: ' + files);
       let file = files[0];
       return file;
     }
@@ -51,22 +49,37 @@ let FileLoaderService = function() {
   /**
    * Load the file located at the path
    */
-  function load(path, request) {
+  function load(path, request, scripts) {
 
     var fileContent = fs.readFileSync(path, 'utf8');
     let content = null;
     let notices = [];
 
+    let isScriptMock = _isScriptMockFilePath(path);
     let httpCode = _extractHttpCodeFromFileName(path);
     let extension = _extractExtensionFromFileName(path);
-    log.warn({"ext":extension},"Extension");
+    log.warn({'ext':extension},'Extension');
+
+    if(isScriptMock) {
+      let scriptToLoad = find(scripts);
+      path = scriptToLoad;
+      extension = 'js';
+      log.warn({'scripts':scripts},'paths script');
+      log.warn({'path':path},'path script');
+    }
 
     if(extension === 'js') {
       delete require.cache[require.resolve(path)];
       let jsMock = require(path);
-      let response = new jsMock(request);
-      content = response.content;
-      httpCode = response.httpCode || httpCode;
+      try {
+        let response = new jsMock(request);
+        content = response.content;
+        httpCode = response.httpCode || httpCode;
+      } catch(e) {
+        let message = 'The mock file is not valid';
+        content = { 'error': message, 'e': util.inspect(e, false, 2, true) };
+        notices.push(message);
+      }
     }
     else {
       try {
@@ -79,7 +92,7 @@ let FileLoaderService = function() {
       catch(e) {
         httpCode = config.mock_file_invalid_http_code;
         let message = 'The mock file contains invalid JSON';
-        content =  {'error':message};
+        content =  {'error': message};
         notices.push(message);
       }
     }
@@ -118,6 +131,19 @@ let FileLoaderService = function() {
     }
 
     return extension;
+  }
+
+  function _isScriptMockFilePath(filename) {
+    let matches = filename.match(/\.script.json$/i);
+    if(matches != null) {
+      return true;
+    }
+    return false;
+  }
+
+  function _extractScriptFilePathFromFileName(filename) {
+    // Find Script URLs from FilePathBuilderServicel
+    return filename.substring(0, filename.indexOf('.script.json') + 1) + '*';
   }
 
   // Expose
