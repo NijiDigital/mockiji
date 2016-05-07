@@ -49,30 +49,28 @@ let FileLoaderService = function() {
   /**
    * Load the file located at the path
    */
-  function load(path, request, scripts) {
+  function load(path, request, paths) {
 
-    var fileContent = fs.readFileSync(path, 'utf8');
+    let fileContent = fs.readFileSync(path, 'utf8');
     let content = null;
     let notices = [];
 
     let isScriptMock = _isScriptMockFilePath(path);
     let httpCode = _extractHttpCodeFromFileName(path);
-    let extension = _extractExtensionFromFileName(path);
-    log.warn({'ext':extension},'Extension');
+    let mockData = {};
 
     if(isScriptMock) {
-      let scriptToLoad = find(scripts);
-      path = scriptToLoad;
-      extension = 'js';
-      log.warn({'scripts':scripts},'paths script');
-      log.warn({'path':path},'path script');
+      path = find(paths.scripts);
+      log.warn({'path':path},'Loading a script file');
+      mockData = _loadMockData(paths.mocks);
     }
 
+    let extension = _extractExtensionFromFileName(path);
     if(extension === 'js') {
       delete require.cache[require.resolve(path)];
       let jsMock = require(path);
       try {
-        let response = new jsMock(request);
+        let response = new jsMock(request, mockData);
         content = response.content;
         httpCode = response.httpCode || httpCode;
       } catch(e) {
@@ -99,8 +97,8 @@ let FileLoaderService = function() {
 
     let data = {
       rawContent: content,
-      httpCode: httpCode,
-      notices: notices
+      httpCode,
+      notices
     }
     return data;
   }
@@ -134,16 +132,46 @@ let FileLoaderService = function() {
   }
 
   function _isScriptMockFilePath(filename) {
-    let matches = filename.match(/\.script.json$/i);
+    let matches = filename.match(/\.script$/i);
     if(matches != null) {
       return true;
     }
     return false;
   }
 
-  function _extractScriptFilePathFromFileName(filename) {
-    // Find Script URLs from FilePathBuilderServicel
-    return filename.substring(0, filename.indexOf('.script.json') + 1) + '*';
+  function _loadMockData(paths) {
+    let dataPaths = _convertMockPathsToDataPaths(paths);
+    let data = _loadMockDataFromDataPaths(dataPaths);
+    return {
+      "woot": data
+    }
+  }
+
+  function _convertMockPathsToDataPaths(paths) {
+    let dataPaths = [];
+    paths.forEach(function(element) {
+      let lastSlashPosition = element.lastIndexOf('/');
+      if(lastSlashPosition !== -1) {
+        let dataPath = element.substring(0, lastSlashPosition + 1) + '@data.json';
+        dataPaths.push(dataPath);
+      }
+    });
+    return dataPaths;
+  }
+
+  function _loadMockDataFromDataPaths(dataPaths) {
+    let data = {};
+    let mockDataPath = find(dataPaths);
+    if(mockDataPath !== null) {
+      let fileContent = fs.readFileSync(mockDataPath, 'utf8');
+      try {
+        data = JSON.parse(fileContent);
+      }
+      catch(e) {
+
+      }
+    }
+    return data;
   }
 
   // Expose

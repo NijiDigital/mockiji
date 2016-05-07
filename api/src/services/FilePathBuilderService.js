@@ -59,7 +59,11 @@ let FilePathBuilderService = function() {
 
 
   /**
-   *
+   * Build paths to load the mock file according to the method, url and queryString
+   * @param method the request method
+   * @param url the request url
+   * @param queryString the request query string
+   * @returns object
    */
   function _buildSpecialPaths(method, url, marker) {
     let mockURLs = [];
