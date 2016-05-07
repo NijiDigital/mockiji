@@ -2,6 +2,7 @@
 
 let util = require('util');
 let fs = require('fs');
+let url = require('url');
 let glob = require('glob-all');
 
 // Configuration
@@ -70,7 +71,7 @@ let FileLoaderService = function() {
       delete require.cache[require.resolve(path)];
       let jsMock = require(path);
       try {
-        let response = new jsMock(request, mockData);
+        let response = new jsMock(_buildMockRequestObject(request), mockData);
         content = response.content;
         httpCode = response.httpCode || httpCode;
       } catch(e) {
@@ -101,6 +102,21 @@ let FileLoaderService = function() {
       notices
     }
     return data;
+  }
+
+  /**
+   * Build an object containing the method, url (pathname) and query (queryString) from the request
+   * @return object the built object
+   */
+  function _buildMockRequestObject(request) {
+
+    let urlComponents = url.parse(request.url, true);
+
+    return {
+      'method': request.method,
+      'url': urlComponents.pathname,
+      'query': urlComponents.query
+    }
   }
 
   /**
