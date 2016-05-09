@@ -114,6 +114,7 @@ let FileLoaderService = function() {
 
     return {
       'method': request.method,
+      'body': request.body,
       'url': urlComponents.pathname,
       'query': urlComponents.query
     }
