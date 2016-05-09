@@ -158,9 +158,7 @@ let FileLoaderService = function() {
   function _loadMockData(paths) {
     let dataPaths = _convertMockPathsToDataPaths(paths);
     let data = _loadMockDataFromDataPaths(dataPaths);
-    return {
-      "woot": data
-    }
+    return data;
   }
 
   function _convertMockPathsToDataPaths(paths) {
