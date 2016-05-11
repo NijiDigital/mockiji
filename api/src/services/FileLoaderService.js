@@ -2,6 +2,7 @@
 
 let util = require('util');
 let fs = require('fs');
+let merge = require('merge');
 let url = require('url');
 let glob = require('glob-all');
 
@@ -17,6 +18,11 @@ let log = bunyan.createLogger({name: config.logger.name});
  * This service is for loading the right file
  */
 let FileLoaderService = function() {
+
+  /**
+   * UTF8 Encoding
+   */
+  const UTF8 = 'utf8';
 
   /**
    * Find the right file to load
@@ -50,20 +56,25 @@ let FileLoaderService = function() {
   /**
    * Load the file located at the path
    */
-  function load(path, request, paths) {
+  function load(pPath, request, paths) {
 
-    let fileContent = fs.readFileSync(path, 'utf8');
+    let fileContent = fs.readFileSync(pPath, 'utf8');
     let content = null;
     let notices = [];
+    let path = null;
 
-    let isScriptMock = _isScriptMockFilePath(path);
-    let httpCode = _extractHttpCodeFromFileName(path);
+    let isScriptMock = _isScriptMockFilePath(pPath);
+    let httpCode = _extractHttpCodeFromFileName(pPath);
     let mockData = {};
 
     if(isScriptMock) {
+      let scriptFilePath = pPath;
+      mockData = _loadMockData(scriptFilePath, paths.mocks);
       path = find(paths.scripts);
       log.warn({'path':path},'Loading a script file');
-      mockData = _loadMockData(paths.mocks);
+    }
+    else {
+      path = pPath;
     }
 
     let extension = _extractExtensionFromFileName(path);
@@ -156,19 +167,33 @@ let FileLoaderService = function() {
     return false;
   }
 
-  function _loadMockData(paths) {
-    let dataPaths = _convertMockPathsToDataPaths(paths);
+  function _loadMockData(path, paths) {
+    let dataFileNames = _extractDataFileNamesFromScriptFile(path);
+    let dataPaths = _convertMockPathsToDataPaths(paths, dataFileNames);
     let data = _loadMockDataFromDataPaths(dataPaths);
     return data;
   }
 
-  function _convertMockPathsToDataPaths(paths) {
-    let dataPaths = [];
-    paths.forEach(function(element) {
-      let lastSlashPosition = element.lastIndexOf('/');
+  function _extractDataFileNamesFromScriptFile(path) {
+    let fileContent = fs.readFileSync(path, UTF8);
+    let paths = fileContent.trim().split(/\r?\n/);
+    return paths;
+  }
+
+  function _convertMockPathsToDataPaths(paths, files) {
+    let dataPaths = {};
+
+    files.forEach(function(file) {
+      dataPaths[file] = [];
+    });
+
+    paths.forEach(function(path) {
+      let lastSlashPosition = path.lastIndexOf('/');
       if(lastSlashPosition !== -1) {
-        let dataPath = element.substring(0, lastSlashPosition + 1) + '@data.json';
-        dataPaths.push(dataPath);
+        files.forEach(function(file) {
+          let dataPath = [path.substring(0, lastSlashPosition), '@data', file].join('/');
+          dataPaths[file].push(dataPath);
+        })
       }
     });
     return dataPaths;
@@ -176,14 +201,18 @@ let FileLoaderService = function() {
 
   function _loadMockDataFromDataPaths(dataPaths) {
     let data = {};
-    let mockDataPath = find(dataPaths);
-    if(mockDataPath !== null) {
-      let fileContent = fs.readFileSync(mockDataPath, 'utf8');
-      try {
-        data = JSON.parse(fileContent);
-      }
-      catch(e) {
+    for(let file in dataPaths) {
+      let paths = dataPaths[file];
+      let mockDataPath = find(paths);
+      if(mockDataPath !== null) {
+        let fileContent = fs.readFileSync(mockDataPath, 'utf8');
+        try {
+          let jsonContent = JSON.parse(fileContent);
+          data = merge.recursive(true, data, jsonContent);
+        }
+        catch(e) {
 
+        }
       }
     }
     return data;
@@ -191,8 +220,8 @@ let FileLoaderService = function() {
 
   // Expose
   return {
-    find: find,
-    load: load
+    find,
+    load
   }
 
 }

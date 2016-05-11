@@ -6,6 +6,7 @@
     "bunyan": "^1.8.0",
     "cors": "^2.7.1",
     "express": "3.x",
-    "glob-all": "^3.0.1"
+    "glob-all": "^3.0.1",
+    "merge": "^1.2.0"
   }
 }
