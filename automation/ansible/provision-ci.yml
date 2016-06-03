@@ -17,6 +17,8 @@
     consul_domain: "{{ maestro_domain_name }}"
     consul_datacenter: "{{ target }}"
     consul_use_systemd: true
+    consul_start_join:
+      - 192.168.222.2
 
   roles:
     - apt-proxy
