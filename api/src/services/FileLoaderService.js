@@ -27,27 +27,32 @@ let FileLoaderService = function() {
   /**
    * Find the right file to load
    */
-  function find(paths) {
+  function find(paths, unlimited) {
 
     let files = [];
 
     let fileMatch = false;
     paths.forEach(function(element) {
-      if(fileMatch) {
+      if(fileMatch && !unlimited) {
         return;
       }
 
-      files = glob.sync(element);
-      if(files.length > 0) {
+      let candidateFile = glob.sync(element);
+      if(candidateFile.length > 0) {
         log.info({'files': util.inspect(files), 'key': element}, 'FILE MATCH!');
+        files.push(candidateFile[0]);
         fileMatch = true;
       }
     });
 
+    if (unlimited) {
+      log.info('Multiple files found, return all:', files);
+      return files;
+    }
+
     if(files.length > 0) {
-      log.warn('Multiple files found, selecting the first one: ' + files);
-      let file = files[0];
-      return file;
+      log.info('Multiple files found, selecting the first one: ' + files[0]);
+      return files[0];
     }
 
     return null;
@@ -71,7 +76,7 @@ let FileLoaderService = function() {
       let scriptFilePath = pPath;
       mockData = _loadMockData(scriptFilePath, paths.mocks);
       path = find(paths.scripts);
-      log.warn({'path':path},'Loading a script file');
+      log.info({'path':path},'Loading a script file');
     }
     else {
       path = pPath;
@@ -192,6 +197,8 @@ let FileLoaderService = function() {
       let lastSlashPosition = path.lastIndexOf('/');
       if(lastSlashPosition !== -1) {
         files.forEach(function(file) {
+          let dataDefaultPath = [path.substring(0, lastSlashPosition), '@default/@data', file].join('/');
+          dataPaths[file].push(dataDefaultPath);
           let dataPath = [path.substring(0, lastSlashPosition), '@data', file].join('/');
           dataPaths[file].push(dataPath);
         })
@@ -204,16 +211,18 @@ let FileLoaderService = function() {
     let data = {};
     for(let file in dataPaths) {
       let paths = dataPaths[file];
-      let mockDataPath = find(paths);
-      if(mockDataPath !== null) {
-        let fileContent = fs.readFileSync(mockDataPath, 'utf8');
-        try {
-          let jsonContent = JSON.parse(fileContent);
-          data = merge.recursive(true, data, jsonContent);
-        }
-        catch(e) {
-
-        }
+      let mockDataPaths = find(paths, true);
+      if(mockDataPaths !== null) {
+        mockDataPaths.forEach(function(mockDataPath) {
+          let fileContent = fs.readFileSync(mockDataPath, 'utf8');
+          try {
+            let jsonContent = JSON.parse(fileContent);
+            data = merge.recursive(true, data, jsonContent);
+          }
+          catch (e) {
+            log.warn('Error parsing file: ', mockDataPath);
+          }
+        });
       }
     }
     return data;
