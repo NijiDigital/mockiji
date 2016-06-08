@@ -91,7 +91,7 @@ let FileLoaderService = function() {
         content = response.content;
         httpCode = response.httpCode || httpCode;
       } catch(e) {
-        let message = 'The mock file is not valid';
+        let message = 'The mock file is not valid (' + path + ')';
         content = { 'error': message, 'e': util.inspect(e, false, 2, true) };
         notices.push(message);
       }
@@ -213,7 +213,7 @@ let FileLoaderService = function() {
       let paths = dataPaths[file];
       let mockDataPaths = find(paths, true);
       if(mockDataPaths !== null) {
-        mockDataPaths.forEach(function(mockDataPath) {
+        mockDataPaths.reverse().forEach(function(mockDataPath) {
           let fileContent = fs.readFileSync(mockDataPath, 'utf8');
           try {
             let jsonContent = JSON.parse(fileContent);
