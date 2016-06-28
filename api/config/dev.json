@@ -24,6 +24,10 @@
       "token_replacement_key": "site_id"
     },
     {
+      "regexp": "/api-with-external-id/v1/offer-families/-/persons/-/sites/(-)",
+      "token_replacement_key": "site_id"
+    },
+    {
       "regexp": "/api/v1/persons/(-)",
       "token_replacement_key": "site_id"
     }
