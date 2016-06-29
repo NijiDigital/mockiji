@@ -5,6 +5,7 @@ let fs = require('fs');
 let merge = require('merge');
 let url = require('url');
 let glob = require('glob-all');
+let jsonfile = require('jsonfile');
 
 // Configuration
 let env = require('../../config/env.json');
@@ -84,12 +85,23 @@ let FileLoaderService = function() {
 
     let extension = _extractExtensionFromFileName(path);
     if(extension === 'js') {
+
+      // Load the possible memory file
+      let memory = _loadMemoryFile(path);
+
       delete require.cache[require.resolve(path)];
       let jsMock = require(path);
+
       try {
-        let response = new jsMock(_buildMockRequestObject(request), mockData);
+        let response = new jsMock(_buildMockRequestObject(request), mockData, memory);
         content = response.content;
         httpCode = response.httpCode || httpCode;
+
+        // Save memory if returned
+        if(response.memory) {
+          _updateMemoryFile(path, response.memory);
+        }
+
       } catch(e) {
         let message = 'The mock file is not valid (' + path + ')';
         content = { 'error': message, 'e': util.inspect(e, false, 2, true) };
@@ -116,8 +128,35 @@ let FileLoaderService = function() {
       rawContent: content,
       httpCode,
       notices
-    }
+    };
     return data;
+  }
+
+  /**
+   * Check if the memory file fitting the mockPath exist and returns its content
+   * @return object from the memory file or {} if the file does not exist
+   */
+  function _loadMemoryFile(mockPath) {
+    let memoryPath = mockPath.replace('.js','.memory.json');
+    try {
+      return jsonfile.readFileSync(memoryPath);
+    } catch(e) {
+      log.info(memoryPath, 'this memory file does not exist');
+      return {};
+    }
+  }
+
+  /**
+   * Update (or create) the memory file fitting the mockPath with the memory content
+   */
+  function _updateMemoryFile(mockPath, memory) {
+    let memoryPath = mockPath.replace('.js','.memory.json');
+    try {
+      log.info(memoryPath, 'this memory file can be created');
+      jsonfile.writeFileSync(memoryPath, memory, {spaces:2});
+    } catch(e) {
+      log.error(memoryPath, 'this memory file cannot be created');
+    }
   }
 
   /**
