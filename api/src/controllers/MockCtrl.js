@@ -51,6 +51,7 @@ let MockCtrl = function() {
       httpCode = fileData.httpCode;
       responseHeaders['X-Mockiji-File'] = fileToLoad;
       responseHeaders['X-Mockiji-Notices'] = fileData.notices;
+      responseHeaders['Cache-Control'] = 'no-cache';
     } else {
       httpCode = config.mock_file_not_found_http_code;
       rawContent = {
