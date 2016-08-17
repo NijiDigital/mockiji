@@ -108,6 +108,11 @@ let FileLoaderService = function() {
         notices.push(message);
       }
     }
+    else if(extension === 'html') {
+      log.warn(fileContent);
+      content = fileContent;
+      httpCode = 200;
+    }
     else {
       try {
         if(fileContent.length > 0) {
@@ -126,6 +131,7 @@ let FileLoaderService = function() {
 
     let data = {
       rawContent: content,
+      extension: extension,
       httpCode,
       notices
     };

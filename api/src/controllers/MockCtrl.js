@@ -29,6 +29,7 @@ let MockCtrl = function() {
     let queryString = null;
     let httpCode = 201;
     let rawContent = null;
+    let extension = 'json';
 
     // Get the URL
     let urlRecomposer = new URLRecomposerService();
@@ -49,6 +50,7 @@ let MockCtrl = function() {
       let fileData = fileLoader.load(fileToLoad, request, paths);
       rawContent = fileData.rawContent;
       httpCode = fileData.httpCode;
+      extension = fileData.extension;
       responseHeaders['X-Mockiji-File'] = fileToLoad;
       responseHeaders['X-Mockiji-Notices'] = fileData.notices;
       responseHeaders['Cache-Control'] = 'no-cache';
@@ -66,7 +68,9 @@ let MockCtrl = function() {
     response.set(responseHeaders);
 
     // Send Response
-    if(rawContent !== null) {
+    if(rawContent !== null && extension === 'html') {
+      response.status(httpCode).send(rawContent);
+    } else if(rawContent !== null) {
       response.status(httpCode).json(rawContent);
     } else {
       response.set('X-Mockiji-Empty-Response-Body', true);
