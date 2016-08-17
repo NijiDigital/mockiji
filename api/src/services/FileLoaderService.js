@@ -68,6 +68,7 @@ let FileLoaderService = function() {
     let content = null;
     let notices = [];
     let path = null;
+    let extension = null;
 
     let isScriptMock = _isScriptMockFilePath(pPath);
     let httpCode = _extractHttpCodeFromFileName(pPath);
@@ -83,7 +84,7 @@ let FileLoaderService = function() {
       path = pPath;
     }
 
-    let extension = _extractExtensionFromFileName(path);
+    extension = _extractExtensionFromFileName(path);
     if(extension === 'js') {
 
       // Load the possible memory file
@@ -96,6 +97,9 @@ let FileLoaderService = function() {
         let response = new jsMock(_buildMockRequestObject(request), mockData, memory);
         content = response.content;
         httpCode = response.httpCode || httpCode;
+        if (response.hasOwnProperty('extension')) {
+          extension = response.extension;
+        }
 
         // Save memory if returned
         if(response.memory) {
