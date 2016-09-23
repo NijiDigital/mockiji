@@ -30,6 +30,10 @@
     {
       "regexp": "/api/v1/persons/(-)",
       "token_replacement_key": "site_id"
+    },
+    {
+      "regexp": "/api/v1/mails/sites/(-)",
+      "token_replacement_key": "site_id"
     }
   ]
 }

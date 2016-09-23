@@ -35,14 +35,26 @@ let FilePathBuilderService = function() {
     mockURLs = mockURLs.concat(_buildSpecialPaths(method, url, false));
 
     // ../@default/method.json
+    // @default/../method.json
     // ../../@default/method_lastElement.json
+    // ../@default/../method_lastElement.json
+    // @default/../../method_lastElement.json
     // ../../../@default/method_beforeLastElement_lastElement.json
+    // ../../@default/../method_beforeLastElement_lastElement.json
+    // ../@default/../../method_beforeLastElement_lastElement.json
+    // @default/../../../method_beforeLastElement_lastElement.json
     // etc.
     mockURLs = mockURLs.concat(_buildSpecialPaths(method, url, '@default'));
 
     // ../@scripts/method.js
+    // @scripts/../method.js
     // ../../@scripts/method_lastElement.js
+    // ../@scripts/../method_lastElement.js
+    // @scripts/../../method_lastElement.js
     // ../../../@scripts/method_beforeLastElement_lastElement.js
+    // ../../@scripts/../method_beforeLastElement_lastElement.js
+    // ../@scripts/../../method_beforeLastElement_lastElement.js
+    // @scripts/../../../method_beforeLastElement_lastElement.js
     // etc.
     let scriptURLs = _buildSpecialPaths(method, url, '@scripts');
 
@@ -73,23 +85,38 @@ let FilePathBuilderService = function() {
 
     let allParts = path.split('/');
     let partsCount = allParts.length;
+    // allParts : Array form : [elmt1, elmt2, elmt3, elmt4, elmt5, elmt6]
+    // This algorithm splits it into 2 arrays, for example :
+    // pathParts : [elmt1, elmt2, elmt3, elmt4]
+    // fileBodyName : [elmt5, elmt6]
+    // Then joins pathParts with "/" and fileBodyName with "_" to form one full path
+    // url : elmt1/elmt2/elmt3/elmt4/elmt5_elmt6
+    // p : separator between pathParts and fileBodyName
     for(let p=0; p <= (partsCount-2); ++p) {
-      let pathParts = [];
-      let fileBodyName = [method];
-      let fileExtensionName = '\\.*';
-      for(let i=0; i<partsCount; ++i) {
-          if(i < partsCount - (p)) {
-              pathParts.push(allParts[i]);
+      // j : allows to replace every element of the path with the specified marker if the marker is specified
+      for (let j=(partsCount-p-1); j >= 1; --j) {
+        let pathParts = [];
+        let fileBodyName = [method];
+        let fileExtensionName = '\\.*';
+        // Go through allParts and split it according to p (and j if marker is defined)
+        for(let i=0; i<partsCount; ++i) {
+          if(marker != false && i == j) {
+            pathParts.push(marker);
           }
-          else if(marker != false && i == partsCount - (p)) {
-              pathParts.push(marker);
+          else if(i < partsCount - (p)) {
+            pathParts.push(allParts[i]);
           }
           else {
-              fileBodyName.push(allParts[i]);
+            fileBodyName.push(allParts[i]);
           }
+        }
+        let url = pathParts.join('/') + '/' + fileBodyName.join('_') + fileExtensionName;
+        mockURLs.push(url);
+        // if no marker is defined, then there is no use about incrementing j so we break the "j" for loop
+        if (!marker) {
+          break;
+        }
       }
-      let url = pathParts.join('/') + '/' + fileBodyName.join('_') + fileExtensionName;
-      mockURLs.push(url);
     }
     return mockURLs;
   }
