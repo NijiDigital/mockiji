@@ -6,8 +6,6 @@
     }
   ],
   "require": {
-  },
-  "require-dev": {
     "niji/ansible": "dev-release/2.1"
   },
   "config": {
