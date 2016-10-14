@@ -4,10 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d3d7b57ea3265d637b64d2dfa5fe2864",
-    "content-hash": "4f3a6be9e34d8b593bc3ac4deb0da97a",
-    "packages": [],
-    "packages-dev": [
+    "hash": "1efaafc3c6343056dc44efd3ee4d6c61",
+    "content-hash": "08c65c07e7f057eba95edfa508d191a1",
+    "packages": [
         {
             "name": "niji/ansible",
             "version": "dev-release/2.1",
@@ -37,6 +36,7 @@
             "time": "2016-09-09 12:22:36"
         }
     ],
+    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
