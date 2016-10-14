@@ -21,7 +21,6 @@
       - 192.168.225.2
 
   roles:
-    - apt-proxy
     - consul
     - server-tools
     - monitoring-tools
