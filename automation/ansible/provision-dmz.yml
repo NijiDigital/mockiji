@@ -1,0 +1,30 @@
+---
+
+
+- name: Deploy Mockiji app dependencies
+  hosts: webservers
+  user: root
+
+  vars:
+    apps:
+      - framework: "nodejs"
+        name: "{{maestro_project_name}}-{{ maestro_app_name }}"
+        fqdn: "{{maestro_project_name}}-{{ maestro_app_name }}.service.{{ consul_datacenter }}.{{ consul_domain }}"
+        port: 8080
+        subdomains:
+          - "www"
+    env: "{{target}}"
+    consul_domain: "{{ maestro_domain_name }}"
+    consul_datacenter: "{{ target }}"
+    consul_use_systemd: true
+    consul_start_join:
+      - 192.168.225.2
+
+  roles:
+    - apt-proxy
+    - consul
+    - server-tools
+    - monitoring-tools
+    - git-tools
+    - nodejs
+    - pm2
