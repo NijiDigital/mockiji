@@ -1,6 +1,5 @@
 ---
 
-
 - name: Deploy Mockiji app dependencies
   hosts: webservers
   user: root
@@ -27,3 +26,4 @@
     - git-tools
     - nodejs
     - pm2
+    - pm2-port-capabilities
