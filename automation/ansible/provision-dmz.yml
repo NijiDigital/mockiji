@@ -10,7 +10,7 @@
       - framework: "nodejs"
         name: "{{maestro_project_name}}-{{ maestro_app_name }}"
         fqdn: "{{maestro_project_name}}-{{ maestro_app_name }}.service.{{ consul_datacenter }}.{{ consul_domain }}"
-        port: 8080
+        port: 80
         subdomains:
           - "www"
     env: "{{target}}"
