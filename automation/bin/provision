@@ -14,8 +14,6 @@ if ! type ansible > /dev/null ; then
   sudo apt-get update
   sudo apt-get install build-essential -y || exit 1
   sudo apt-get install python-pip python-dev libffi-dev libssl-dev  -y || exit 1
-  # pycparser 2.15 crashes on install. Remove the line below if pycparser gets fixed.
-  sudo pip install pycparser==2.14 || exit 1
   sudo pip install http://releases.ansible.com/ansible/ansible-1.9.4.tar.gz || exit 1
 fi
 
