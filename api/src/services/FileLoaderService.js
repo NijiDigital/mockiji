@@ -73,6 +73,7 @@ let FileLoaderService = function() {
     let isScriptMock = _isScriptMockFilePath(pPath);
     let httpCode = _extractHttpCodeFromFileName(pPath);
     let mockData = {};
+    let delay = 1;
 
     if(isScriptMock) {
       let scriptFilePath = pPath;
@@ -100,6 +101,7 @@ let FileLoaderService = function() {
         if (response.hasOwnProperty('extension')) {
           extension = response.extension;
         }
+        delay = response.delay || delay;
 
         // Save memory if returned
         if(response.memory) {
@@ -137,6 +139,7 @@ let FileLoaderService = function() {
       rawContent: content,
       extension: extension,
       httpCode,
+      delay,
       notices
     };
     return data;
