@@ -30,6 +30,7 @@ let MockCtrl = function() {
     let httpCode = 201;
     let rawContent = null;
     let extension = 'json';
+    let location = null;
     let delay = 1;
 
     // Get the URL
@@ -52,10 +53,14 @@ let MockCtrl = function() {
       rawContent = fileData.rawContent;
       httpCode = fileData.httpCode;
       extension = fileData.extension;
+      location = fileData.location;
       delay = fileData.delay;
       responseHeaders['X-Mockiji-File'] = fileToLoad;
       responseHeaders['X-Mockiji-Notices'] = fileData.notices;
       responseHeaders['Cache-Control'] = 'no-cache';
+      if (location) {
+        responseHeaders['Location'] = location;
+      }
     } else {
       httpCode = config.mock_file_not_found_http_code;
       rawContent = {

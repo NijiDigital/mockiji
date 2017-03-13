@@ -69,6 +69,7 @@ let FileLoaderService = function() {
     let notices = [];
     let path = null;
     let extension = null;
+    let location = null;
 
     let isScriptMock = _isScriptMockFilePath(pPath);
     let httpCode = _extractHttpCodeFromFileName(pPath);
@@ -100,6 +101,9 @@ let FileLoaderService = function() {
         httpCode = response.httpCode || httpCode;
         if (response.hasOwnProperty('extension')) {
           extension = response.extension;
+        }
+        if (response.hasOwnProperty('location')) {
+          location = response.location;
         }
         delay = response.delay || delay;
 
@@ -138,6 +142,7 @@ let FileLoaderService = function() {
     let data = {
       rawContent: content,
       extension: extension,
+      location,
       httpCode,
       delay,
       notices
