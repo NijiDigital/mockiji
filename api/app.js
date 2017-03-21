@@ -41,7 +41,7 @@ let log = new Logger({
 
 // Routes
 let routes = require('./src/routes/index');
-routes(app);
+routes(app, log);
 
 // Launch server
 http.listen(config.app_listening_port, function() {

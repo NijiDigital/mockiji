@@ -3,7 +3,7 @@ let util = require('util');
 var MockCtrl = require('../controllers/MockCtrl');
 var cors = require('cors');
 
-module.exports = function(pApp) {
+module.exports = function(pApp, pLog) {
 
   // Cross-domain management
   pApp.use(cors());
@@ -15,7 +15,7 @@ module.exports = function(pApp) {
 
   // Main route
   pApp.all('/api*', function(req, res) {
-    new MockCtrl().buildResponse(req, res);
+    new MockCtrl(pLog).buildResponse(req, res);
 	});
 
 };
