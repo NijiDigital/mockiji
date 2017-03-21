@@ -6,7 +6,10 @@
   "logger": {
     "name": "api-mockiji",
     "filepath": "../logs/api-mockiji.log",
-    "level": "trace"
+    "level": "trace",
+    "type": "rotating-file",
+    "period": "1d",
+    "count": 7
   },
   "enable_extra_http_responses_headers": {
     "mock_file_not_found": true,

@@ -5,7 +5,10 @@
   "logger": {
     "name": "api-mockiji",
     "filepath": "../logs/api-mockiji.log",
-    "level": "trace"
+    "level": "trace",
+    "type": "rotating-file",
+    "period": "1d",
+    "count": 7
   },
   "api_base_urls": {
     "api": "../data"

@@ -30,8 +30,11 @@ let log = new Logger({
       level: 'debug'
     },
     {
+      type:  config.logger.type,
       path: config.logger.filepath,
-      level: config.logger.level
+      level: config.logger.level,
+      period:  config.logger.period,
+      count:  config.logger.count
     }
   ]
 });
