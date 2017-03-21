@@ -1,0 +1,15 @@
+{
+  "app_listening_port": 8080,
+  "mock_file_not_found_http_code": 404,
+  "mock_file_invalid_http_code": 500,
+  "logger": {
+    "name": "api-mockiji",
+    "filepath": "../logs/api-mockiji.log",
+    "level": "trace"
+  },
+  "api_base_urls": {
+    "api": "../data"
+  },
+  "authorization_token": []
+}
+
