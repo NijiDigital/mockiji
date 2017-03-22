@@ -10,7 +10,7 @@
     "period": "1d",
     "count": 10
   },
-  "api_base_urls": {
+  "listen_to_these_api_base_urls": {
     "api": "../data"
   },
   "authorization_token": []
