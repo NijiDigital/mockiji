@@ -4,33 +4,14 @@
 let express = require('express');
 let app = express();
 
-// Configuration
-let configuration = require('./configuration');
-let config = configuration();
-
 // Server configuration
 app.use(express.json());
 app.use(express.urlencoded());
 let http = require('http').Server(app);
 
-// Logger
-let Logger = require('bunyan');
-let log = new Logger({
-  name: config.logger.name,
-  streams: [
-    {
-      stream: process.stdout,
-      level: 'debug'
-    },
-    {
-      type:  config.logger.type,
-      path: config.logger.filepath,
-      level: config.logger.level,
-      period:  config.logger.period,
-      count:  config.logger.count
-    }
-  ]
-});
+// Configuration and logger
+let config = require('./src/utils/configuration');
+let log = require('./src/utils/logger');
 
 // Routes
 let routes = require('./src/routes/index');

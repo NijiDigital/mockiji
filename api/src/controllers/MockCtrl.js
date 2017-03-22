@@ -5,9 +5,9 @@ let URLRecomposerService = require('../services/URLRecomposerService.js');
 let FilePathBuilderService = require('../services/FilePathBuilderService.js');
 let FileLoaderService = require('../services/FileLoaderService.js');
 
-// Configuration
-let env = require('../../config/env.json');
-let config = require('../../config/'+ env.name +'.json');
+// Configuration and logger
+let config = require('../utils/configuration');
+let log = require('../utils/logger');
 
 /**
  * This controller is for building the response

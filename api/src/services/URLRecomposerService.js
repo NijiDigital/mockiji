@@ -3,13 +3,9 @@
 let util = require('util');
 let Toolbox = require('../utils/Toolbox.js');
 
-// Configuration
-let env = require('../../config/env.json');
-let config = require('../../config/'+ env.name +'.json');
-
-// Logger
-let bunyan = require('bunyan');
-let log = bunyan.createLogger({name: config.logger.name});
+// Configuration and logger
+let config = require('../utils/configuration');
+let log = require('../utils/logger');
 
 /**
  * This Controller is for recomposing the URL from both the original URL and the authorization token

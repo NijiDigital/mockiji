@@ -7,13 +7,9 @@ let url = require('url');
 let glob = require('glob-all');
 let jsonfile = require('jsonfile');
 
-// Configuration
-let env = require('../../config/env.json');
-let config = require('../../config/'+ env.name +'.json');
-
-// Logger
-let bunyan = require('bunyan');
-let log = bunyan.createLogger({name: config.logger.name});
+// Configuration and logger
+let config = require('../utils/configuration');
+let log = require('../utils/logger');
 
 /**
  * This service is for loading the right file
@@ -40,19 +36,19 @@ let FileLoaderService = function() {
 
       let candidateFile = glob.sync(element);
       if(candidateFile.length > 0) {
-        log.info({'files': util.inspect(files), 'key': element}, 'FILE MATCH!');
+        log.debug({'files': util.inspect(files), 'key': element}, 'FILE MATCH!');
         files.push(candidateFile[0]);
         fileMatch = true;
       }
     });
 
     if (unlimited) {
-      log.info('Multiple files found, return all:', files);
+      log.debug('Multiple files found, return all:', files);
       return files;
     }
 
     if(files.length > 0) {
-      log.info('Multiple files found, selecting the first one: ' + files[0]);
+      log.debug('Multiple files found, selecting the first one: ' + files[0]);
       return files[0];
     }
 
