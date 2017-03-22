@@ -5,15 +5,8 @@ let express = require('express');
 let app = express();
 
 // Configuration
-let env = require('./config/env.json');
-let config;
-try {
-    config = require('./config/'+ env.name +'.json');
-} catch(e) {
-    console.error('ERROR - Impossible to load the configuration file.');
-    console.error('ERROR - Maybe the config/env.json file is not set to the right environment.');
-    throw e;
-}
+let configuration = require('./configuration');
+let config = configuration();
 
 // Server configuration
 app.use(express.json());
@@ -45,7 +38,7 @@ routes(app, log);
 
 // Launch server
 http.listen(config.app_listening_port, function() {
-    log.info("Server listening on port: " + config.app_listening_port);
+  log.info("Server listening on port: " + config.app_listening_port);
 });
 
 // Expose
