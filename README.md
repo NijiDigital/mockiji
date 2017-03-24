@@ -1,11 +1,9 @@
 # What is Mockiji?
- 
 Mockiji is a generic Node.js REST API server.  
 Provided a JSON/HTML file, named along rules, it will create a REST route which will serve the file as the response.  
-Plus you can algo provide a JavaScript file to generate a response according to the request context.
+Plus, you can also provide a JavaScript file to generate a response according to the request context.
 
 ## Basic examples
- 
 ```json
 {
 	"title": "The response to GET /api/of/mine (HTTP 200 OK)",
@@ -21,11 +19,10 @@ Plus you can algo provide a JavaScript file to generate a response according to 
 ```
 
 ## How does it work? (How can I use it?)
-When Mockiji receives a request, it looks at the verb (GET, POST, etc.) and its path (/api/elem1/elem2).
-With these, mockiji will search for files that match the name rules.
+When Mockiji receives a request, it looks at the HTTP verb (`GET`, `POST`, etc.) and its path (`/api/elem1/elem2`).  
+With these, Mockiji will search for files that match the name rules.
 
-The request : GET api/user/tom/books/8
-Mockiji will search for files from it's `mocks` folder in this order:
+For example, when it receives the request `GET api/user/tom/books/8`, Mockiji will search for files from its `mocks` folder in the following order:
 * mocks/api/user/tom/books/8/get.*
 * mocks/api/user/tom/books/get_8.*
 * mocks/api/user/tom/get_books_8.*
@@ -47,28 +44,28 @@ Mockiji will search for files from it's `mocks` folder in this order:
 * mocks/@default/user/get_tom_books_8.*
 * mocks/@default/get_user_tom_books_8.*
 
-As soon as it finds one file matching one of these searchs, it will serve it.
+As soon as it finds a file matching one of these patterns, it will serve it.
+
 As you can see, Mockiji will try to match specific requests first, 
-then it will try to get more generic thanks to the token "@default" 
+then it will try to get more generic thanks to the `@default` token 
 which may fit a folder name in the mocks folder hierarchy.
 
 ## How to change the returned HTTP code?
-You can set the return code in the mock filename with this form: 
-`basename`.`returnCode`.`format`
+You can set the return code in the mock filename using the following naming: 
+`basename`.`returnCode`.`format`  
+
 The `returnCode` is optional and defaults to `200`.
 
-Example for a 403 HTTP code:
-`/api/books/BK8.403.json` will generate a 403 HTTP code if fetched.
+As an example, if you want to return a 403 HTTP code you can use the following path: `/api/books/BK8.403.json`
 
 ## Configuration
-Mockiji always load the configuration file: `api/config/default.json`.  
-You can edit this file or override this file (totally or partially) with a custom configuration file.  
+Mockiji always loads the following configuration file: `api/config/default.json`.  
+You can edit this file or override it (totally or partially) with a custom configuration file.  
 In this case, you have to point this custom configuration file into the `api/config/env.json` file.
 
 ## Log
-
-Log files are located in `logs/` and can be configured in a configuration file (`api/config/default.json`).  
-The configuration system is described on the Bunyan  [https://github.com/trentm/node-bunyan](https://github.com/trentm/node-bunyan#stream-type-rotating-file).
+Log files are located in the `logs/` folder and can be configured in a configuration file (`api/config/default.json`).  
+The configuration system is described in the [Bunyan repository](https://github.com/trentm/node-bunyan#stream-type-rotating-file).
 
 
 ```json
