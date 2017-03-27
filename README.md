@@ -32,27 +32,27 @@ Plus, you can also provide a JavaScript file to generate a response according to
 When Mockiji receives a request, it looks at the HTTP verb (`GET`, `POST`, etc.) and its path (`/api/elem1/elem2`).  
 With these, Mockiji will search for files that match the name rules.
 
-For example, when it receives the request `GET api/user/tom/books/8`, Mockiji will search for files from its `mocks` folder in the following order:
-* `mocks/api/user/tom/books/8/get.*`
-* `mocks/api/user/tom/books/get_8.*`
-* `mocks/api/user/tom/get_books_8.*`
-* `mocks/api/user/get_tom_books_8.*`
-* `mocks/api/get_user_tom_books_8.*`
-* `mocks/api/user/tom/books/@default/get.*`
-* `mocks/api/user/tom/@default/8/get.*`
-* `mocks/api/user/@default/books/8/get.*`
+For example, when it receives the request `GET api/users/tom/books/8`, Mockiji will search for files from its `mocks` folder in the following order:
+* `mocks/api/users/tom/books/8/get.*`
+* `mocks/api/users/tom/books/get_8.*`
+* `mocks/api/users/tom/get_books_8.*`
+* `mocks/api/users/get_tom_books_8.*`
+* `mocks/api/get_users_tom_books_8.*`
+* `mocks/api/users/tom/books/@default/get.*`
+* `mocks/api/users/tom/@default/8/get.*`
+* `mocks/api/users/@default/books/8/get.*`
 * `mocks/api/@default/tom/books/8/get.*`
-* `mocks/@default/user/tom/books/8/get.*`
-* `mocks/api/user/tom/@default/get_8.*`
-* `mocks/api/user/@default/books/get_8.*`
+* `mocks/@default/users/tom/books/8/get.*`
+* `mocks/api/users/tom/@default/get_8.*`
+* `mocks/api/users/@default/books/get_8.*`
 * `mocks/api/@default/tom/books/get_8.*`
-* `mocks/@default/user/tom/books/get_8.*`
-* `mocks/api/user/@default/get_books_8.*`
+* `mocks/@default/users/tom/books/get_8.*`
+* `mocks/api/users/@default/get_books_8.*`
 * `mocks/api/@default/tom/get_books_8.*`
-* `mocks/@default/user/tom/get_books_8.*`
+* `mocks/@default/users/tom/get_books_8.*`
 * `mocks/api/@default/get_tom_books_8.*`
-* `mocks/@default/user/get_tom_books_8.*`
-* `mocks/@default/get_user_tom_books_8.*`
+* `mocks/@default/users/get_tom_books_8.*`
+* `mocks/@default/get_users_tom_books_8.*`
 
 As soon as it finds a file matching one of these patterns, it will serve it.
 
