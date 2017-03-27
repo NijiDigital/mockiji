@@ -1,0 +1,7 @@
+---
+
+- name: "Install libcap2-bin"
+  apt: name=libcap2-bin state=latest
+
+- name: "Set capabilities on nodejs to allow the user to run pm2 on port 80"
+  capabilities: path=/usr/bin/nodejs capability=cap_net_bind_service=+ep state=present

@@ -3,7 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bunyan": "^1.8.0",
+    "cors": "^2.7.1",
     "express": "3.x",
-    "glob-fs": "^0.1.6"
+    "glob-all": "^3.0.1",
+    "jsonfile": "^2.3.1",
+    "merge": "^1.2.0"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }

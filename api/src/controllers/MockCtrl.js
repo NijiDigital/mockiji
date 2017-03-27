@@ -1,68 +1,93 @@
 'use strict';
 
 let util = require('util');
-let Toolbox = require('../utils/Toolbox.js');
+let URLRecomposerService = require('../services/URLRecomposerService.js');
 let FilePathBuilderService = require('../services/FilePathBuilderService.js');
 let FileLoaderService = require('../services/FileLoaderService.js');
+
+// Configuration and logger
+let config = require('../utils/configuration');
+let log = require('../utils/logger');
 
 /**
  * This controller is for building the response
  */
-let MockCtrl = function() {
+let MockCtrl = function(log) {
 
-    /**
-     *
-     */
-    function _buildResponse(request, response) {
-        let toolbox = new Toolbox();
+  /**
+   *
+   * @param request
+   * @param response
+   */
+  function _buildResponse(request, response) {
 
-        let method = request.method.toLowerCase();
-        let url = toolbox.removeTrailingSlash(request.url);
-        let queryString = null;
-        let httpCode = 201;
-        let rawContent = null;
+    let method = request.method.toLowerCase();
+    let queryString = null;
+    let httpCode = 201;
+    let rawContent = null;
+    let extension = 'json';
+    let location = null;
+    let delay = 1;
 
-        // List every possible paths
-        let pathBuilder = new FilePathBuilderService();
-        let paths = pathBuilder.generatePaths(method, url, queryString);
+    // Get the URL
+    let urlRecomposer = new URLRecomposerService();
+    let url = urlRecomposer.recompose(request);
+    log.debug({'method': method, 'url': url}, 'Incoming request');
 
-        // Find the file to load and extract the content
-        let fileLoader = new FileLoaderService();
-        let fileToLoad = fileLoader.find(paths);
+    // List every possible paths
+    let pathBuilder = new FilePathBuilderService();
+    let paths = pathBuilder.generatePaths(method, url, queryString);
 
-        let responseHeaders = {};
+    // Find the file to load and extract the content
+    let fileLoader = new FileLoaderService();
+    let fileToLoad = fileLoader.find(paths.mocks);
 
-        if(fileToLoad !== null) {
-            let fileData = fileLoader.load(fileToLoad);
-            rawContent = fileData.rawContent;
-            httpCode = fileData.httpCode;
-            responseHeaders['X-Mockiji-File'] = fileToLoad;
-            responseHeaders['X-Mockiji-Notices'] = fileData.notices;
-        } else {
-            httpCode = 404;
-            rawContent = {
-                'errorCode': httpCode,
-                'errorDescription': 'No mock file was found',
-                'evaluatedMockFilePaths': paths
-            };
-        }
+    let responseHeaders = {};
 
-        // Set Response Headers
-        response.set(responseHeaders);
-
-        // Send Response
-        if(rawContent !== null) {
-            response.status(httpCode).json(rawContent);
-        } else {
-            response.set('X-Mockiji-Empty-Response-Body', true);
-            response.status(httpCode).send('');
-        }
+    if(fileToLoad !== null) {
+      let fileData = fileLoader.load(fileToLoad, request, paths);
+      rawContent = fileData.rawContent;
+      httpCode = fileData.httpCode;
+      extension = fileData.extension;
+      location = fileData.location;
+      delay = fileData.delay;
+      responseHeaders['X-Mockiji-File'] = fileToLoad;
+      responseHeaders['X-Mockiji-Notices'] = fileData.notices;
+      responseHeaders['Cache-Control'] = 'no-cache';
+      if (location) {
+        responseHeaders['Location'] = location;
+      }
+      log.info({'method': method, 'url': url}, '[Response] ' + httpCode);
+    } else {
+      httpCode = config.mock_file_not_found_http_code;
+      rawContent = {
+        'errorCode': httpCode,
+        'errorDescription': 'No mock file was found',
+        'evaluatedMockFilePaths': paths.mocks
+      };
+      log.info(rawContent, '[Response] Not Found');
     }
 
-    return {
-        buildResponse: _buildResponse
-    }
+    // Set Response Headers
+    response.set(responseHeaders);
 
-}
+    // Send Response
+    setTimeout(function() {
+      if(rawContent !== null && extension === 'html') {
+        response.status(httpCode).send(rawContent);
+      } else if(rawContent !== null) {
+        response.status(httpCode).json(rawContent);
+      } else {
+        response.set('X-Mockiji-Empty-Response-Body', true);
+        response.status(httpCode).send('');
+      }
+    }, delay);
+  }
+
+  return {
+    buildResponse: _buildResponse
+  }
+
+};
 
 module.exports = MockCtrl;

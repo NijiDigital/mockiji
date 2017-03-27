@@ -1,0 +1,36 @@
+#!/bin/bash
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd $DIR
+
+echo "Loading common file"
+source ./.common
+
+###################################
+# Initialisation
+
+PROJECT_DIR=$(readlink -f "${DIR}/../../")
+
+cd ${PROJECT_DIR}
+
+echo ===========================================================
+echo ===========================================================
+echo     INSTALL mockiji
+
+#hook pre
+pre_bin
+
+pwd
+cd api
+npm install
+
+pm2 start processes.json
+pm2 save
+
+#hook post
+post_bin
+
+
+echo
+echo ===========================================================
+echo     Install finished

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="43.158089mm"
+   height="16.536459mm"
+   viewBox="0 0 43.158089 16.536459"
+   version="1.1"
+   id="SVGRoot"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="logo-mockiji.svg"
+   inkscape:export-filename="C:\Users\Loic DIRINGER\Desktop\logo-mockiji.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2"
+     inkscape:cx="154.20313"
+     inkscape:cy="-42.81634"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1600"
+     inkscape:window-height="847"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <defs
+     id="defs5086" />
+  <metadata
+     id="metadata5089">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Calque 1"
+     transform="translate(-0.83302387,1.7949751)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5645"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:1.25;font-family:Andy;-inkscape-font-specification:Andy;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="scale(0.26458333)"><flowRegion
+         id="flowRegion5647"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Andy;-inkscape-font-specification:Andy"><rect
+           id="rect5649"
+           width="304"
+           height="189.5"
+           x="6.5"
+           y="6.8740082"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Andy;-inkscape-font-specification:Andy" /></flowRegion><flowPara
+         id="flowPara5651"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Andy;-inkscape-font-specification:Andy" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:16.82294655px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#55d400;fill-opacity:1;stroke:none;stroke-width:0.42057368"
+       x="-0.070552364"
+       y="10.921821"
+       id="text5655"><tspan
+         sodipodi:role="line"
+         id="tspan5653"
+         x="-0.070552364"
+         y="10.921821"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Andy;-inkscape-font-specification:Andy;fill:#55d400;stroke-width:0.42057368">Mockiji</tspan></text>
+    <path
+       sodipodi:type="star"
+       style="fill:#55d400;stroke:none;stroke-width:0.26458332;stroke-opacity:1"
+       id="path5759"
+       sodipodi:sides="5"
+       sodipodi:cx="39.197605"
+       sodipodi:cy="1.1154413"
+       sodipodi:r1="2.9846358"
+       sodipodi:r2="1.4923179"
+       sodipodi:arg1="-1.3473197"
+       sodipodi:arg2="-0.71900119"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 39.859063,-1.7949751 0.461458,1.92752595 1.849457,0.71260662 -1.690589,1.03451003 -0.106215,1.9791457 -1.506298,-1.2881636 -1.915102,0.5105726 0.759645,-1.8306389 -1.077383,-1.6635944 1.975785,0.15676652 z"
+       inkscape:transform-center-x="-0.20440169"
+       inkscape:transform-center-y="-0.083522402" />
+  </g>
+</svg>

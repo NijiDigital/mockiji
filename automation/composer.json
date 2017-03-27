@@ -1,0 +1,15 @@
+{
+  "repositories": [
+    {
+      "url": "git@git.niji.fr:web/ansible.git",
+      "type": "git"
+    }
+  ],
+  "require": {
+    "niji/ansible": "dev-release/2.1"
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "minimum-stability": "dev"
+}

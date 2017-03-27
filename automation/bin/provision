@@ -1,0 +1,28 @@
+#!/bin/bash
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd ${DIR}
+
+#load commun script code
+source ./.common
+
+#hook pre
+pre_bin
+
+ANSIBLE_DIR_PATH=${AUTOMATION_DIR_PATH}/ansible
+# check if ansible is installed
+if ! type ansible > /dev/null ; then
+  sudo apt-get update
+  sudo apt-get install build-essential -y || exit 1
+  sudo apt-get install python-pip python-dev libffi-dev libssl-dev  -y || exit 1
+  sudo pip install http://releases.ansible.com/ansible/ansible-1.9.4.tar.gz || exit 1
+fi
+
+# run
+if [[ -d ${ANSIBLE_DIR_PATH} ]]; then
+  # sudo with $HOME set to /root
+  cd ${ANSIBLE_DIR_PATH}
+  HOME=/root sudo ansible-playbook -i ./inventory/${TARGET} provision-${TARGET}.yml --extra-vars "target=${TARGET}" --extra-vars "@../.maestro.yml" || exit 1
+fi
+
+#hook post
+post_bin || exit 1

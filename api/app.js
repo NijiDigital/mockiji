@@ -4,35 +4,23 @@
 let express = require('express');
 let app = express();
 
+// Server configuration
 app.use(express.json());
 app.use(express.urlencoded());
 let http = require('http').Server(app);
 
-var livereload = require('livereload');
-var reloadServer = livereload.createServer();
-reloadServer.watch(__dirname);  // Enable watch on complete app folder
-
-let Logger = require('bunyan');
-let log = new Logger({
-  name: 'helloapi',
-  streams: [
-    {
-      stream: process.stdout,
-      level: 'debug'
-    },
-    {
-      path: 'logs/hello.log',
-      level: 'trace'
-    }
-  ]
-});
+// Configuration and logger
+let config = require('./src/utils/configuration');
+let log = require('./src/utils/logger');
 
 // Routes
 let routes = require('./src/routes/index');
-routes(app);
+routes(app, log);
 
 // Launch server
-http.listen('3030');
+http.listen(config.app_listening_port, function() {
+  log.info("Server listening on port: " + config.app_listening_port);
+});
 
 // Expose
 module.exports = app;

@@ -1,11 +1,21 @@
 'use strict';
 let util = require('util');
 var MockCtrl = require('../controllers/MockCtrl');
+var cors = require('cors');
 
-module.exports = function(pApp) {
+module.exports = function(pApp, pLog) {
 
-    pApp.all('/api*', function(req, res) {
-        new MockCtrl().buildResponse(req, res);
+  // Cross-domain management
+  pApp.use(cors());
+
+  // HeartBeat test
+  pApp.get('/', function(req, res) {
+    res.end('Mockiji server is alive!');
+	});
+
+  // Main route
+  pApp.all('/api*', function(req, res) {
+    new MockCtrl(pLog).buildResponse(req, res);
 	});
 
 };
