@@ -4,13 +4,9 @@ let Toolbox = require('../utils/Toolbox.js');
 let util = require('util');
 let fs = require('fs');
 
-// Configuration
-let env = require('../../config/env.json');
-let config = require('../../config/'+ env.name +'.json');
-
-// Logger
-let bunyan = require('bunyan');
-let log = bunyan.createLogger({name: config.logger.name});
+// Configuration and logger
+let config = require('../utils/configuration');
+let log = require('../utils/logger');
 
 /**
  * This Controller is for building the response

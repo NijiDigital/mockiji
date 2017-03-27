@@ -5,18 +5,14 @@ let URLRecomposerService = require('../services/URLRecomposerService.js');
 let FilePathBuilderService = require('../services/FilePathBuilderService.js');
 let FileLoaderService = require('../services/FileLoaderService.js');
 
-// Configuration
-let env = require('../../config/env.json');
-let config = require('../../config/'+ env.name +'.json');
-
-// Logger
-let bunyan = require('bunyan');
-let log = bunyan.createLogger({name: config.logger.name});
+// Configuration and logger
+let config = require('../utils/configuration');
+let log = require('../utils/logger');
 
 /**
  * This controller is for building the response
  */
-let MockCtrl = function() {
+let MockCtrl = function(log) {
 
   /**
    *
@@ -36,7 +32,7 @@ let MockCtrl = function() {
     // Get the URL
     let urlRecomposer = new URLRecomposerService();
     let url = urlRecomposer.recompose(request);
-    log.info({'method': method, 'url': url}, 'Incoming request');
+    log.debug({'method': method, 'url': url}, 'Incoming request');
 
     // List every possible paths
     let pathBuilder = new FilePathBuilderService();
@@ -61,6 +57,7 @@ let MockCtrl = function() {
       if (location) {
         responseHeaders['Location'] = location;
       }
+      log.info({'method': method, 'url': url}, '[Response] ' + httpCode);
     } else {
       httpCode = config.mock_file_not_found_http_code;
       rawContent = {
@@ -91,6 +88,6 @@ let MockCtrl = function() {
     buildResponse: _buildResponse
   }
 
-}
+};
 
 module.exports = MockCtrl;
