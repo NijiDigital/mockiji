@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Mockiji" src="docs/images/logo-mockiji.svg" width="546">
+  <img alt="Mockiji" src="https://raw.githubusercontent.com/NijiDigital/mockiji/master/docs/images/logo-mockiji.png">
 </p>
 
 <p align="center">
