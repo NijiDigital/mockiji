@@ -1,3 +1,13 @@
+<p align="center">
+  <img alt="Mockiji" src="docs/images/logo-mockiji.svg" width="546">
+</p>
+
+<p align="center">
+  Simple, Fast and powerful file-based Node.js mock server
+</p>
+
+---
+
 # What is Mockiji?
 Mockiji is a generic Node.js REST API server.  
 Provided a JSON/HTML file, named along rules, it will create a REST route which will serve the file as the response.  
@@ -23,26 +33,26 @@ When Mockiji receives a request, it looks at the HTTP verb (`GET`, `POST`, etc.)
 With these, Mockiji will search for files that match the name rules.
 
 For example, when it receives the request `GET api/user/tom/books/8`, Mockiji will search for files from its `mocks` folder in the following order:
-* mocks/api/user/tom/books/8/get.*
-* mocks/api/user/tom/books/get_8.*
-* mocks/api/user/tom/get_books_8.*
-* mocks/api/user/get_tom_books_8.*
-* mocks/api/get_user_tom_books_8.*
-* mocks/api/user/tom/books/@default/get.*
-* mocks/api/user/tom/@default/8/get.*
-* mocks/api/user/@default/books/8/get.*
-* mocks/api/@default/tom/books/8/get.*
-* mocks/@default/user/tom/books/8/get.*
-* mocks/api/user/tom/@default/get_8.*
-* mocks/api/user/@default/books/get_8.*
-* mocks/api/@default/tom/books/get_8.*
-* mocks/@default/user/tom/books/get_8.*
-* mocks/api/user/@default/get_books_8.*
-* mocks/api/@default/tom/get_books_8.*
-* mocks/@default/user/tom/get_books_8.*
-* mocks/api/@default/get_tom_books_8.*
-* mocks/@default/user/get_tom_books_8.*
-* mocks/@default/get_user_tom_books_8.*
+* `mocks/api/user/tom/books/8/get.*`
+* `mocks/api/user/tom/books/get_8.*`
+* `mocks/api/user/tom/get_books_8.*`
+* `mocks/api/user/get_tom_books_8.*`
+* `mocks/api/get_user_tom_books_8.*`
+* `mocks/api/user/tom/books/@default/get.*`
+* `mocks/api/user/tom/@default/8/get.*`
+* `mocks/api/user/@default/books/8/get.*`
+* `mocks/api/@default/tom/books/8/get.*`
+* `mocks/@default/user/tom/books/8/get.*`
+* `mocks/api/user/tom/@default/get_8.*`
+* `mocks/api/user/@default/books/get_8.*`
+* `mocks/api/@default/tom/books/get_8.*`
+* `mocks/@default/user/tom/books/get_8.*`
+* `mocks/api/user/@default/get_books_8.*`
+* `mocks/api/@default/tom/get_books_8.*`
+* `mocks/@default/user/tom/get_books_8.*`
+* `mocks/api/@default/get_tom_books_8.*`
+* `mocks/@default/user/get_tom_books_8.*`
+* `mocks/@default/get_user_tom_books_8.*`
 
 As soon as it finds a file matching one of these patterns, it will serve it.
 
@@ -67,7 +77,6 @@ In this case, you have to point this custom configuration file into the `api/con
 Log files are located in the `logs/` folder and can be configured in a configuration file (`api/config/default.json`).  
 The configuration system is described in the [Bunyan repository](https://github.com/trentm/node-bunyan#stream-type-rotating-file).
 
-
 ```json
 {
     "name": "api-mockiji",
@@ -79,7 +88,7 @@ The configuration system is described in the [Bunyan repository](https://github.
 }
 ```
 
-# Docker usage
+# Docker Usage
 Mockiji is not yet available on Docker hub, however you can build an image easily.  
 You must have docker installed along with the `docker` command.
 
@@ -96,3 +105,42 @@ docker run -p 8080:8080 mockiji
 ```
 
 You should now be able to load `http://localhost:8080` in your browser or REST client now.
+
+# Classic Usage
+No docker? Use directly your favorite package manager and node process manager.
+
+## Requirements 
+You MUST have `Node >= 4` and `NPM >= 2`.  
+You MAY have `yarn` and `pm2`.
+
+## Install Mockiji
+Please choose one of the following install option:
+
+### Install with npm
+From the `api/` folder:  
+```sh
+npm install
+```
+
+### Install with yarn
+From the `api/` folder:
+```sh
+yarn
+```
+
+## Launch Mockiji
+Once launched, you should be able to load `http://localhost:8080` in your browser or REST client.  
+But first, you should choose on the following launch option:
+
+### Launch with Node
+From the `api/` folder:  
+```sh
+node app
+```
+
+### Launch with pm2
+From the `api/` folder:  
+```sh
+pm2 start processes.json
+```
+
