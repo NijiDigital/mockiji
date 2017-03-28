@@ -32,6 +32,7 @@ Plus, you can also provide a JavaScript file to generate a response according to
 When Mockiji receives a request, it looks at the HTTP verb (`GET`, `POST`, etc.) and its path (`/api/elem1/elem2`) before looking for a mock file matching it.
 
 As an example:
+
 ![Naming convention](docs/images/naming-convention.png)
 
 The first file matching one of these patterns is served.
