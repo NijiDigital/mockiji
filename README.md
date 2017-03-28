@@ -29,40 +29,20 @@ Plus, you can also provide a JavaScript file to generate a response according to
 ```
 
 ## How does it work? (How can I use it?)
-When Mockiji receives a request, it looks at the HTTP verb (`GET`, `POST`, etc.) and its path (`/api/elem1/elem2`).  
-With these, Mockiji will search for files that match the name rules.
+When Mockiji receives a request, it looks at the HTTP verb (`GET`, `POST`, etc.) and its path (`/api/elem1/elem2`) before looking for a mock file matching it.
 
-For example, when it receives the request `GET api/users/tom/books/8`, Mockiji will search for files from its `mocks` folder in the following order:
-* `mocks/api/users/tom/books/8/get.*`
-* `mocks/api/users/tom/books/get_8.*`
-* `mocks/api/users/tom/get_books_8.*`
-* `mocks/api/users/get_tom_books_8.*`
-* `mocks/api/get_users_tom_books_8.*`
-* `mocks/api/users/tom/books/@default/get.*`
-* `mocks/api/users/tom/@default/8/get.*`
-* `mocks/api/users/@default/books/8/get.*`
-* `mocks/api/@default/tom/books/8/get.*`
-* `mocks/@default/users/tom/books/8/get.*`
-* `mocks/api/users/tom/@default/get_8.*`
-* `mocks/api/users/@default/books/get_8.*`
-* `mocks/api/@default/tom/books/get_8.*`
-* `mocks/@default/users/tom/books/get_8.*`
-* `mocks/api/users/@default/get_books_8.*`
-* `mocks/api/@default/tom/get_books_8.*`
-* `mocks/@default/users/tom/get_books_8.*`
-* `mocks/api/@default/get_tom_books_8.*`
-* `mocks/@default/users/get_tom_books_8.*`
-* `mocks/@default/get_users_tom_books_8.*`
+As an example:
 
-As soon as it finds a file matching one of these patterns, it will serve it.
+![Naming convention](docs/images/naming-convention.png)
+
+The first file matching one of these patterns is served.
 
 As you can see, Mockiji will try to match specific requests first, 
 then it will try to get more generic thanks to the `@default` token 
 which may fit a folder name in the mocks folder hierarchy.
 
 ## How to change the returned HTTP code?
-You can set the return code in the mock filename using the following naming: 
-`basename`.`returnCode`.`format`  
+You can set the return code in the mock filename using the following naming convention: `basename`.`returnCode`.`format`
 
 The `returnCode` is optional and defaults to `200`.
 
