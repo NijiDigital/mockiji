@@ -1,36 +1,65 @@
 'use strict';
 
-function init() {
+/**
+ * This function loads the default configuration (default.json), then checks if
+ * an environment configuration has to be fetch by checking the "path" value
+ * (env.json).
+ *
+ * If the path is not blank, if will load the environment configuration file
+ * from this path and the environment "name"
+ */
+let loadConfigs = function() {
+
   let merge = require('merge');
-  let env = require('../../config/env.json');
+  let appRootPath = require('path').dirname(require.main.filename);
+  let toolbox = require('./Toolbox.js')();
 
-  let config;
-  let configDefault;
-  let configEnv;
+  let env;
+  let defaultConfig;
+  let envConfigFilePath;
+  let envConfig;
 
-  // First try load default configuration
+  // Load the env.json file
+  let envPath = appRootPath + '/config/env.json';
   try {
-    configDefault = require('../../config/default.json');
-    console.info('default config loaded');
-  } catch(e) {
-    console.error('ERROR - Impossible to load the default configuration file.');
+    env = require(envPath);
+    console.log('Env file from %s file has been found and loaded', envPath);
+    envConfigFilePath = toolbox.buildEnvConfigFilePath(appRootPath, env);
+  } catch (e) {
+    console.error('ERROR - Impossible to load the environment configuration file.');
+    console.error('The environment configuration file must be at ' + envPath);
     throw e;
   }
 
-  // Try load env configuration
+  // Load default configuration
+  let defaultConfigPath = appRootPath + '/config/default.json';
   try {
-    let path = env.path + env.name +'.json';
-    configEnv = require(path);
-    console.info(env.name + ' config loaded');
-  } catch(e) {
-    console.warn('ERROR - Impossible to load the env configuration file.');
-    console.warn('ERROR - Maybe the config/env.json file is not set to the right environment.');
+    defaultConfig = require(defaultConfigPath);
+    if (env.path) {
+      console.log('Config from %s file is loaded and will be merge with %s', defaultConfigPath, envConfigFilePath);
+    } else {
+      console.info('Config from %s file is loaded and will be used as is.', defaultConfigPath);
+    }
+  } catch (e) {
+    console.error('ERROR - Impossible to load the default configuration file');
+    console.error('The default configuration file must be at ' + defaultConfigPath);
+    throw e;
+  }
+
+  // Load the env configuration and merge it over the default one
+  if (env.path) {
+    try {
+      envConfig = require(envConfigFilePath);
+      console.info('Config from %s file is loaded and will be merged over %s', envConfigFilePath, defaultConfigPath);
+    } catch (e) {
+      console.error('ERROR - Impossible to load the env configuration file (%s) defined with env.json', envConfigFilePath);
+      console.error('Please check the "path" value in %s file.', envPath);
+      throw e;
+    }
   }
 
   // Merge default and env configuration
-  config = merge(configDefault, configEnv);
-
-  return config;
+  return merge(defaultConfig, envConfig);
 }
 
-module.exports = init();
+module.exports = loadConfigs();

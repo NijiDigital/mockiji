@@ -11,7 +11,7 @@
     "count": 10
   },
   "listen_to_these_api_base_urls": {
-    "api": "../../../mocks"
+    "api": "../mocks"
   },
   "authorization_token": []
 }

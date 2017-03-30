@@ -55,7 +55,8 @@ let FilePathBuilderService = function() {
     let scriptURLs = _buildSpecialPaths(method, url, '@scripts');
 
     let toolbox = new Toolbox();
-    let basePath = config.listen_to_these_api_base_urls.api;
+    let appRootPath = require('path').dirname(require.main.filename) + '/';
+    let basePath = toolbox.buildAbsolutePaths(appRootPath, [config.listen_to_these_api_base_urls.api]);
     let absoluteMocksURLs = toolbox.buildAbsolutePaths(basePath, mockURLs);
     let absoluteScriptURLs = toolbox.buildAbsolutePaths(basePath, scriptURLs);
 
