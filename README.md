@@ -143,3 +143,70 @@ From the `api/` folder:
 pm2 start processes.json
 ```
 
+## Get Started with the default configuration
+Mockiji contains some mocks to start playing with and help you understand how it works.
+This first API is a library (the ones with books) where users kate and tom has borrowed some books.
+Please install and launch Mockiji without editing the default configuration or the `env.json` file and let's get started.
+
+### A simple request
+Start by loading `http://localhost:8080/api-simple-library/users/tom/books` in your browser or REST Client (`GET` verb).
+These are the books borrowed by tom.  
+
+If you look at the **Response Headers** you will see a `X-Mockiji-File` like this:  
+`X-Mockiji-File: /srv/www/mockiji/mocks/api-simple-library/users/tom/books/get.json`
+
+It means the response content has been served from this file.
+You can verify this by yourself by checking the content of this local file defined by `X-Mockiji-File`.  
+
+### Mockiji's @default token
+If you replace "tom" by "alex" in the URL, you will receive another response.  
+`X-Mockiji-File: /srv/www/mockiji/mocks/api-simple-library/users/@default/get_books.json`  
+
+What is this `@default` part in the path? It is a special token used by Mockiji.
+Mockiji has tried to load a file with an "alex" in the path but he has not found any.
+Then it tried to replace some parts from the URL with this special token `@default`.
+That's why this file has been served. Look at the file hierarchy in the `api-simple-library` to understand.  
+
+### Mockiji's 404 page
+Now we will request a non-existing request for this api.  
+Try this one: `http://localhost:8080/api-simple-library/users/kate/comics`  
+You should get a page looking like this one:  
+```json
+{
+  "errorCode": 404,
+  "errorDescription": "No mock file was found",
+  "evaluatedMockFilePaths": [
+    "/srv/www/mockiji/mocks/api-simple-library/users/kate/comics/get.*",
+    "/srv/www/mockiji/mocks/api-simple-library/users/kate/get_comics.*",
+    "/srv/www/mockiji/mocks/api-simple-library/users/get_kate_comics.*",
+    "/srv/www/mockiji/mocks/api-simple-library/get_users_kate_comics.*",
+    "/srv/www/mockiji/mocks/api-simple-library/users/kate/@default/get.*",
+    "/srv/www/mockiji/mocks/api-simple-library/users/@default/comics/get.*",
+    "/srv/www/mockiji/mocks/api-simple-library/@default/kate/comics/get.*",
+    "/srv/www/mockiji/mocks/@default/users/kate/comics/get.*",
+    "/srv/www/mockiji/mocks/api-simple-library/users/@default/get_comics.*",
+    "/srv/www/mockiji/mocks/api-simple-library/@default/kate/get_comics.*",
+    "/srv/www/mockiji/mocks/@default/users/kate/get_comics.*",
+    "/srv/www/mockiji/mocks/api-simple-library/@default/get_kate_comics.*",
+    "/srv/www/mockiji/mocks/@default/users/get_kate_comics.*",
+    "/srv/www/mockiji/mocks/@default/get_users_kate_comics.*"
+  ]
+}
+```
+No mock file was found and Mockiji tells you where it searched for mock files.
+This page is useful to understand why your mock file has not been found.
+You can also use theses paths to choose where to create your files for improving the API.  
+
+If you create one file and put it on one of these paths, you will be able to refresh your URL and see it served.
+
+### Mockiji's 500 page
+What happens if you create one JSON mock file but screwed up and put XML in it?  
+Try it by yourself you will get:
+```json
+{
+  "error": "The mock file contains invalid JSON"
+}
+```
+As usual, you can locate the served file with the `X-Mockiji-File` response header and fix it with nice and valid JSON.
+
+
