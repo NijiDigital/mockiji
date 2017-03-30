@@ -30,7 +30,7 @@ let FileLoaderService = function() {
 
     let fileMatch = false;
     paths.forEach(function(element) {
-      if(fileMatch && !unlimited) {
+      if (fileMatch && !unlimited) {
         return;
       }
 
@@ -47,7 +47,7 @@ let FileLoaderService = function() {
       return files;
     }
 
-    if(files.length > 0) {
+    if (files.length > 0) {
       log.debug('Multiple files found, selecting the first one: ' + files[0]);
       return files[0];
     }

@@ -7,10 +7,9 @@ let FileLoaderService = require('../services/FileLoaderService.js');
 
 // Configuration and logger
 let config = require('../utils/configuration');
-let log = require('../utils/logger');
 
 /**
- * This controller is for building the response
+ * This controller is for processing the requests and building the response
  */
 let MockCtrl = function(log) {
 
@@ -44,7 +43,7 @@ let MockCtrl = function(log) {
 
     let responseHeaders = {};
 
-    if(fileToLoad !== null) {
+    if (fileToLoad !== null) {
       let fileData = fileLoader.load(fileToLoad, request, paths);
       rawContent = fileData.rawContent;
       httpCode = fileData.httpCode;
