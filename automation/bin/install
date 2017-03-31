@@ -24,6 +24,15 @@ pwd
 cd api
 npm install
 
+cd config
+cat > env.json << EOF
+{
+  "name": "dev",
+  "path": "../../mocks/data"
+}
+EOF
+cd ../
+
 pm2 start processes.json
 pm2 save
 
