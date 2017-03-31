@@ -46,102 +46,6 @@ As you can see, Mockiji will try to match specific requests first,
 then it will try to get more generic thanks to the `@default` token 
 which may fit a folder name in the mocks folder hierarchy.
 
-## How to change the returned HTTP code?
-You can set the return code in the mock filename using the following naming convention: `basename`.`returnCode`.`format`  
-The `returnCode` is optional and defaults to `200`.
-
-As an example, if you want to return a `403` HTTP code you can use the following path: `/api/books/get_BK8.403.json`
-
-## Configuration
-Mockiji always loads the following configuration file: `api/config/default.json`.  
-You can edit this default file or override it (totally or partially) with a custom configuration file.  
-In this case, you have to point this custom configuration file into the `api/config/env.json` file.
-
-Example of `env.json` file:  
-```json
-{
-  "name": "dev",
-  "path": "/srv/www/my-frontend-app/mocks/"
-}
-```
-This file tells Mockiji to load a `dev.json` file from the `/srv/www/my-frontend-app/mocks/` folder.  
-Mockiji will throw an explicit error on boot if this custom configuration has not been found.  
-
-You will have to restart Mockiji if you want the configuration to change.  
-If you use pm2, you can do it with `pm2 restart 0` (provided 0 is your mockiji pm2-process id)
-
-## Log
-Log files are located in the `logs/` folder and can be configured in a configuration file (eg. `api/config/default.json`).  
-If you use pm2, you can view them with `pm2 logs 0` (provided 0 is your mockiji pm2-process id)
-
-The configuration system is described in the [Bunyan repository](https://github.com/trentm/node-bunyan#stream-type-rotating-file).
-
-```json
-{
-    "name": "api-mockiji",
-    "filepath": "../logs/api-mockiji.log",
-    "level": "info",
-    "type": "rotating-file",
-    "period": "1d",
-    "count": 10
-}
-```
-
-# Docker Usage
-Mockiji is not yet available on Docker hub, however you can build an image easily.  
-You must have docker installed along with the `docker` command.
-
-## Docker build image
-From the app root folder:  
-```sh
-docker build -t mockiji .
-```
-
-## Docker run
-From the app root folder:  
-```sh
-docker run -p 8080:8080 mockiji
-```
-
-You should now be able to load `http://localhost:8080` in your browser or REST client now.
-
-# Classic Usage
-No docker? Use directly your favorite package manager and node process manager.
-
-## Requirements 
-You MUST have `Node >= 6` and `NPM >= 3`.  
-You MAY have `yarn` and `pm2`.
-
-## Install Mockiji
-Please choose one of the following install option:
-
-### Install with npm
-From the `api/` folder:  
-```sh
-npm install
-```
-
-### Install with yarn
-From the `api/` folder:
-```sh
-yarn
-```
-
-## Launch Mockiji
-Once launched, you should be able to load `http://localhost:8080` in your browser or REST client.  
-But first, you should choose on the following launch option:
-
-### Launch with Node
-From the `api/` folder:  
-```sh
-node app
-```
-
-### Launch with pm2
-From the `api/` folder:  
-```sh
-pm2 start processes.json
-```
 
 ## Get Started with the default configuration
 Mockiji contains some mocks to start playing with and help you understand how it works.
@@ -209,4 +113,102 @@ Try it by yourself you will get:
 ```
 As usual, you can locate the served file with the `X-Mockiji-File` response header and fix it with nice and valid JSON.
 
+# Install and launch
+<details>
+<summary>With Docker</summary>
+Mockiji is not yet available on Docker hub, however you can build an image easily.  
+You must have docker installed along with the `docker` command.
 
+## Docker build image
+From the app root folder:  
+```sh
+docker build -t mockiji .
+```
+
+## Docker run
+From the app root folder:  
+```sh
+docker run -p 8080:8080 mockiji
+```
+
+</details>
+<details>
+<summary>Without Docker</summary>
+You can use your favorite package manager and node process manager.
+
+## Requirements 
+You MUST have `Node >= 6` and `NPM >= 3`.  
+You MAY have `yarn` and `pm2`.
+
+## Install Mockiji
+Please choose one of the following install option:
+
+<details open="1">
+<summary>Install with yarn</summary>
+From the `api/` folder:
+```sh
+yarn
+```
+</details>
+<details>
+<summary>Install with npm</summary>
+From the `api/` folder:  
+```sh
+npm install
+```
+</details>
+
+## Launch Mockiji
+
+<details open="1">
+<summary>Launch with pm2</summary>
+From the `api/` folder:  
+```sh
+pm2 start processes.json
+```
+</details>
+<details>
+<summary>Launch with Node</summary>
+From the `api/` folder:  
+```sh
+node app
+```
+</details>
+</details>
+
+You should now be able to load `http://localhost:8080` in your browser or REST client now.
+
+## Configuration
+Mockiji always loads the following configuration file: `api/config/default.json`.  
+You can edit this default file or override it (totally or partially) with a custom configuration file.  
+In this case, you have to point this custom configuration file into the `api/config/env.json` file.
+
+Example of `env.json` file:  
+```json
+{
+  "name": "dev",
+  "path": "/srv/www/my-frontend-app/mocks/"
+}
+```
+This file tells Mockiji to load a `dev.json` file from the `/srv/www/my-frontend-app/mocks/` folder.  
+Mockiji will throw an explicit error on boot if this custom configuration has not been found.  
+
+You will have to restart Mockiji if you want the configuration to change.  
+If you use pm2, you can do it with `pm2 restart 0` (provided 0 is your mockiji pm2-process id)
+
+## Log
+Log files are located in the `logs/` folder and can be configured in a configuration file (eg. `api/config/default.json`).  
+If you use pm2, you can view them with `pm2 logs 0` (provided 0 is your mockiji pm2-process id)
+
+The configuration system is described in the [Bunyan repository](https://github.com/trentm/node-bunyan#stream-type-rotating-file).
+
+```json
+{
+    "name": "api-mockiji",
+    "filepath": "../logs/api-mockiji.log",
+    "level": "info",
+    "type": "rotating-file",
+    "period": "1d",
+    "count": 10
+}
+```
