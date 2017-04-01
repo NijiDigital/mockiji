@@ -1,12 +1,12 @@
 'use strict';
 
-let Toolbox = require('../utils/Toolbox.js');
-let util = require('util');
-let fs = require('fs');
+const Toolbox = require('../utils/Toolbox.js');
+const util = require('util');
+const fs = require('fs');
 
 // Configuration and logger
-let config = require('../utils/configuration');
-let log = require('../utils/logger');
+const config = require('../utils/configuration');
+const log = require('../utils/logger');
 
 /**
  * This Controller is for building the response
@@ -56,7 +56,7 @@ let FilePathBuilderService = function() {
 
     let toolbox = new Toolbox();
     let appRootPath = require('path').dirname(require.main.filename) + '/';
-    let basePath = toolbox.buildAbsolutePaths(appRootPath, [config.listen_to_these_api_base_urls.api]);
+    let basePath = toolbox.buildAbsolutePaths(appRootPath, [config.get('api_base_path')]);
     let absoluteMocksURLs = toolbox.buildAbsolutePaths(basePath, mockURLs);
     let absoluteScriptURLs = toolbox.buildAbsolutePaths(basePath, scriptURLs);
 

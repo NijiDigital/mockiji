@@ -1,7 +1,8 @@
 'use strict';
-var url = require('url');
 
-var Toolbox = function() {
+const url = require('url');
+
+const Toolbox = function() {
 
   /**
    * Remove trailing slash to the parametered string if presents

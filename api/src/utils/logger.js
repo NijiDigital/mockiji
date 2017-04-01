@@ -1,22 +1,24 @@
 'use strict';
 
+const config = require('./configuration');
+const Logger = require('bunyan');
+
 function init() {
-  let config = require('./configuration');
-  let Logger = require('bunyan');
+  const loggerConfig = config.get('logger');
 
   let log = new Logger({
-    name: config.logger.name,
+    name: loggerConfig.name,
     streams: [
       {
         stream: process.stdout,
         level: 'debug'
       },
       {
-        type:  config.logger.type,
-        path: config.logger.filepath,
-        level: config.logger.level,
-        period:  config.logger.period,
-        count:  config.logger.count
+        type:  loggerConfig.type,
+        path: loggerConfig.filepath,
+        level: loggerConfig.level,
+        period:  loggerConfig.period,
+        count:  loggerConfig.count
       }
     ]
   });

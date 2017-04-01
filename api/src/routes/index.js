@@ -1,7 +1,7 @@
 'use strict';
-let util = require('util');
-var MockCtrl = require('../controllers/MockCtrl');
-var cors = require('cors');
+const util = require('util');
+const MockCtrl = require('../controllers/MockCtrl');
+const cors = require('cors');
 
 module.exports = function(pApp, pLog) {
 

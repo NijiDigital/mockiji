@@ -1,12 +1,13 @@
 'use strict';
 
-let util = require('util');
-let URLRecomposerService = require('../services/URLRecomposerService.js');
-let FilePathBuilderService = require('../services/FilePathBuilderService.js');
-let FileLoaderService = require('../services/FileLoaderService.js');
+const util = require('util');
+const URLRecomposerService = require('../services/URLRecomposerService.js');
+const FilePathBuilderService = require('../services/FilePathBuilderService.js');
+const FileLoaderService = require('../services/FileLoaderService.js');
 
 // Configuration and logger
-let config = require('../utils/configuration');
+const config = require('../utils/configuration');
+const log = require('../utils/logger');
 
 /**
  * This controller is for processing the requests and building the response
@@ -58,7 +59,7 @@ let MockCtrl = function(log) {
       }
       log.info({'method': method, 'url': url}, '[Response] ' + httpCode);
     } else {
-      httpCode = config.mock_file_not_found_http_code;
+      httpCode = config.get('http_codes.mock_file_not_found');
       rawContent = {
         'errorCode': httpCode,
         'errorDescription': 'No mock file was found',

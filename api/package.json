@@ -4,11 +4,13 @@
   "private": true,
   "dependencies": {
     "bunyan": "^1.8.0",
+    "convict": "^3.0.0",
     "cors": "^2.7.1",
     "express": "3.x",
     "glob-all": "^3.0.1",
     "jsonfile": "^2.3.1",
-    "merge": "^1.2.0"
+    "merge": "^1.2.0",
+    "yargs": "^7.0.2"
   },
   "scripts": {
     "start": "node app.js"

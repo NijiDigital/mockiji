@@ -1,11 +1,11 @@
 'use strict';
 
-let util = require('util');
-let Toolbox = require('../utils/Toolbox.js');
+const util = require('util');
+const Toolbox = require('../utils/Toolbox.js');
 
 // Configuration and logger
-let config = require('../utils/configuration');
-let log = require('../utils/logger');
+const config = require('../utils/configuration');
+const log = require('../utils/logger');
 
 /**
  * This Controller is for recomposing the URL from both the original URL and the authorization token
@@ -43,13 +43,14 @@ let URLRecomposerService = function() {
         }
 
         // If the token is an object
-        if(typeof(config.authorization_token) === 'object') {
-          let tokenConfigs = config.authorization_token;
+        const authorizationToken = config.get('authorization_token');
+        if(typeof(authorizationToken) === 'object') {
+          let tokenConfigs = authorizationToken;
 
           // We browse the token configs array
           for(let i in tokenConfigs) {
-            let config = tokenConfigs[i];
-            let rawRegexp = config.regexp;
+            let tokenConfig = tokenConfigs[i];
+            let rawRegexp = tokenConfig.regexp;
             var regexp = new RegExp(rawRegexp, 'i');
 
             // We test the config regexp
@@ -60,7 +61,7 @@ let URLRecomposerService = function() {
               let iRegExp = new RegExp(invertedRegExp,'i');
 
               // We fetch the replacement data to replace the group
-              let replacementKey = config.token_replacement_key;
+              let replacementKey = tokenConfig.token_replacement_key;
               let replacement = token[replacementKey];
 
               // We recompose the url with the replacement

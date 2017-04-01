@@ -1,15 +1,15 @@
 'use strict';
 
-let util = require('util');
-let fs = require('fs');
-let merge = require('merge');
-let url = require('url');
-let glob = require('glob-all');
-let jsonfile = require('jsonfile');
+const util = require('util');
+const fs = require('fs');
+const merge = require('merge');
+const url = require('url');
+const glob = require('glob-all');
+const jsonfile = require('jsonfile');
 
 // Configuration and logger
-let config = require('../utils/configuration');
-let log = require('../utils/logger');
+const config = require('../utils/configuration');
+const log = require('../utils/logger');
 
 /**
  * This service is for loading the right file
@@ -128,7 +128,7 @@ let FileLoaderService = function() {
         }
       }
       catch(e) {
-        httpCode = config.mock_file_invalid_http_code;
+        httpCode = config.get('http_codes.mock_file_invalid');
         let message = 'The mock file contains invalid JSON';
         content =  {'error': message};
         notices.push(message);

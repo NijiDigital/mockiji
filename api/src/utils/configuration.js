@@ -1,5 +1,85 @@
 'use strict';
 
+const convict = require('convict');
+const argv = require('yargs').argv;
+
+const SETTINGS_SCHEMA = {
+  port: {
+    doc: 'Listening port',
+    format: 'port',
+    default: 8080,
+    env: 'PORT',
+    arg: 'port',
+  },
+  env: {
+    doc: 'Application environment',
+    format: String,
+    default: 'dev',
+    env: 'NODE_ENV',
+    arg: 'env',
+  },
+  api_base_path: {
+    doc: 'Base path of the mock files',
+    format: String,
+    default: '../mocks',
+    arg: 'api-base-path',
+  },
+  http_codes: {
+    mock_file_not_found: {
+      doc: 'HTTP code returned in case of a mock file that could not be found',
+      format: 'int',
+      default: 404,
+    },
+    mock_file_invalid: {
+      doc: 'HTTP code return in case of an invalid mock file (that could not be parsed or interpreted)',
+      format: 'int',
+      default: 500,
+    }
+  },
+  logger: {
+    name: {
+      doc: 'Name of the logger',
+      format: String,
+      default: 'api-mockiji',
+    },
+    filepath: {
+      doc: 'Path of the log file',
+      format: String,
+      default: '../logs/api-mockiji.log',
+      env: 'LOGGER_PATH',
+      arg: 'logger-path',
+    },
+    level: {
+      doc: 'Logs level',
+      format: ['trace', 'debug', 'info', 'warn', 'error', 'fatal'],
+      default: 'warn',
+      env: 'LOGGER_LEVEL',
+      arg: 'logger-level',
+    },
+    type: {
+      doc: 'Logs stream type',
+      format: ['stream', 'file', 'rotating-file', 'raw'],
+      default: 'rotating-file',
+    },
+    period: {
+      doc: 'Logs rotating file period',
+      format: String,
+      default: '1d',
+    },
+    count: {
+      doc: 'How many log files are kept in rotating mode',
+      format: 'int',
+      default: 3,
+    }
+  },
+  authorization_token: {
+    // TODO Add a better explanation for authorization_token parameter
+    doc: 'Authorization token regexes',
+    format: '*',
+    default: {},
+  }
+}
+
 /**
  * This function loads the default configuration (default.json), then checks if
  * an environment configuration has to be fetch by checking the "path" value
@@ -8,58 +88,35 @@
  * If the path is not blank, if will load the environment configuration file
  * from this path and the environment "name"
  */
-let loadConfigs = function() {
+function loadConfigs() {
+  // Initialize default configuration
+  console.info('Loading default configuration...');
+  const config = convict(SETTINGS_SCHEMA);
 
-  let merge = require('merge');
-  let appRootPath = require('path').dirname(require.main.filename);
-  let toolbox = require('./Toolbox.js')();
-
-  let env;
-  let defaultConfig;
-  let envConfigFilePath;
-  let envConfig;
-
-  // Load the env.json file
-  let envPath = appRootPath + '/config/env.json';
-  try {
-    env = require(envPath);
-    console.log('Env file from %s file has been found and loaded', envPath);
-    envConfigFilePath = toolbox.buildEnvConfigFilePath(appRootPath, env);
-  } catch (e) {
-    console.error('ERROR - Impossible to load the environment configuration file.');
-    console.error('The environment configuration file must be at ' + envPath);
-    throw e;
-  }
-
-  // Load default configuration
-  let defaultConfigPath = appRootPath + '/config/default.json';
-  try {
-    defaultConfig = require(defaultConfigPath);
-    if (env.path) {
-      console.log('Config from %s file is loaded and will be merge with %s', defaultConfigPath, envConfigFilePath);
-    } else {
-      console.info('Config from %s file is loaded and will be used as is.', defaultConfigPath);
-    }
-  } catch (e) {
-    console.error('ERROR - Impossible to load the default configuration file');
-    console.error('The default configuration file must be at ' + defaultConfigPath);
-    throw e;
-  }
-
-  // Load the env configuration and merge it over the default one
-  if (env.path) {
+  // Load an optional config file (e.g.: node app.js --config-file config.json)
+  const configFile = argv.configFile;
+  if (configFile) {
+    console.info(`Loading configuration file "${configFile}"...`);
     try {
-      envConfig = require(envConfigFilePath);
-      console.info('Config from %s file is loaded and will be merged over %s', envConfigFilePath, defaultConfigPath);
+      config.loadFile(configFile);
     } catch (e) {
-      console.error('ERROR - Impossible to load the env configuration file (%s) defined with env.json', envConfigFilePath);
-      console.error('Please check the "path" value in %s file.', envPath);
+      console.error(`Error: Could not load configuration file "${configFile}"`);
       throw e;
     }
   }
 
-  // Merge default and env configuration
-  return merge(defaultConfig, envConfig);
+  // Validate configuration
+  console.info('Validating configuration...')
+  config.validate({allowed: 'strict'});
+
+  // Return convict object so it can directly be used
+  // to retrieve settings.
+  //
+  //   const config = require('./configuration');
+  //   config.get('env');
+  //
+  console.info(`Configuration loaded successfuly!`);
+  return config;
 }
 
 module.exports = loadConfigs();
