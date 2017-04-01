@@ -50,7 +50,7 @@ which may fit a folder name in the mocks folder hierarchy.
 ## Get Started with the default configuration
 Mockiji contains some mocks to start playing with and help you understand how it works.
 This first API is a library (the ones with books) where users kate and tom has borrowed some books.
-Please install and launch Mockiji without editing the default configuration or the `env.json` file and let's get started.
+Please install and launch Mockiji without editing the default configuration or the `env.json.example` file and let's get started.
 
 ### A simple request
 Start by loading `http://localhost:8080/api-simple-library/users/tom/books` in your browser or REST Client (`GET` verb).
@@ -181,7 +181,8 @@ You should now be able to load `http://localhost:8080` in your browser or REST c
 ## Configuration
 Mockiji always loads the following configuration file: `api/config/default.json`.  
 You can edit this default file or override it (totally or partially) with a custom configuration file.  
-In this case, you have to point this custom configuration file into the `api/config/env.json` file.
+In this case, you have to point this custom configuration file into the `api/config/env.json` file.  
+`api/config/env.json` will be copied automatically from `api/config/env.json.example` if it does not exist when pm2 starts.
 
 Example of `env.json` file:  
 ```json
