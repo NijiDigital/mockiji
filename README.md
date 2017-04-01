@@ -183,32 +183,29 @@ Mockiji embeds a default configuration that works out of the box and loads mocks
 You can override it using the following methods.
 
 ### Environment variables
-
 Usage: `PORT=8001 node app`
 
-| Name          | Type                                                 | Default                 | Description            |
-|---------------|------------------------------------------------------|-------------------------|------------------------|
-| PORT          | port                                                 | 8080                    | Listening port         |
-| NODE_ENV      | string                                               | dev                     | Environment name       |
-| API_BASE_PATH | string                                               | ../mocks                | Path to the mock files |
-| LOGGER_PATH   | string                                               | ../logs/api-mockiji.log | Path to the log file   |
-| LOGGER_LEVEL  | ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] | warn                    | Logs level             |
+| Name          | Type                                                 | Default                 | Description                            |
+|---------------|------------------------------------------------------|-------------------------|----------------------------------------|
+| PORT          | port                                                 | 8080                    | Listening port                         |
+| NODE_ENV      | string                                               | dev                     | Environment name                       |
+| API_BASE_PATH | path                                                 | ../mocks                | Path to the folder containg mock files |
+| LOGGER_PATH   | path                                                 | ../logs/api-mockiji.log | Path to the log file                   |
+| LOGGER_LEVEL  | ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] | warn                    | Logs level                             |
 
 ### CLI parameters
-
 Usage: `node app --port 8001`
 
-| Name          | Type                                                 | Default                 | Description                  |
-|---------------|------------------------------------------------------|-------------------------|------------------------------|
-| config-file   | string                                               |                         | Path to a configuration file |
-| port          | port                                                 | 8080                    | Listening port               |
-| env           | string                                               | dev                     | Environment name             |
-| api-base-path | string                                               | ../mocks                | Path to the mock files       |
-| logger-path   | string                                               | ../logs/api-mockiji.log | Path to the log file         |
-| logger-level  | ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] | warn                    | Logs level                   |
+| Name          | Type                                                 | Default                 | Description                            |
+|---------------|------------------------------------------------------|-------------------------|----------------------------------------|
+| config-file   | string                                               |                         | Path to a configuration file           |
+| port          | port                                                 | 8080                    | Listening port                         |
+| env           | string                                               | dev                     | Environment name                       |
+| api-base-path | path                                                 | ../mocks                | Path to the folder containg mock files |
+| logger-path   | path                                                 | ../logs/api-mockiji.log | Path to the log file                   |
+| logger-level  | ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] | warn                    | Logs level                             |
 
 ### Configuration file
-
 The whole [node-convict configuration schema](https://github.com/mozilla/node-convict#the-schema) can be found in the `api/src/utils/configuration.js` file.
 
 You can override the default values by specifying a JSON configuration file when running Mockiji, e.g. `node app --config-file mockiji.json`.
@@ -217,18 +214,23 @@ You will have to restart Mockiji if you want the configuration to change.
 If you use pm2, you can do it with `pm2 restart 0` (provided 0 is your mockiji pm2-process id)
 
 ## Log
-Log files are located in the `logs/` folder and can be configured in a configuration file (eg. `api/config/default.json`).  
-If you use pm2, you can view them with `pm2 logs 0` (provided 0 is your mockiji pm2-process id)
+Log files are generated by [Bunyan](https://github.com/trentm/node-bunyan) and are saved by default in the `logs/` folder. This behavior can be modified using the configuration system described previously.
 
-The configuration system is described in the [Bunyan repository](https://github.com/trentm/node-bunyan#stream-type-rotating-file).
-
+As an example, using a config file:
 ```json
 {
+  "logger": {
     "name": "api-mockiji",
     "filepath": "../logs/api-mockiji.log",
-    "level": "info",
+    "level": "warn",
     "type": "rotating-file",
     "period": "1d",
-    "count": 10
+    "count": 3
+  }
 }
 ```
+
+Most parameters and their description can be found in the [Bunyan documentation](https://github.com/trentm/node-bunyan#stream-type-rotating-file).
+
+If you use pm2, you can also view the logs using `pm2 logs 0` (provided `0` is your mockiji pm2-process id)
+
