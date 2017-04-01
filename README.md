@@ -179,19 +179,39 @@ node app
 You should now be able to load `http://localhost:8080` in your browser or REST client now.
 
 ## Configuration
-Mockiji always loads the following configuration file: `api/config/default.json`.  
-You can edit this default file or override it (totally or partially) with a custom configuration file.  
-In this case, you have to point this custom configuration file into the `api/config/env.json` file.
+Mockiji embeds a default configuration that works out of the box and loads mocks from the `mocks/` folder.  
+You can override it using the following methods.
 
-Example of `env.json` file:  
-```json
-{
-  "name": "dev",
-  "path": "/srv/www/my-frontend-app/mocks/"
-}
-```
-This file tells Mockiji to load a `dev.json` file from the `/srv/www/my-frontend-app/mocks/` folder.  
-Mockiji will throw an explicit error on boot if this custom configuration has not been found.  
+### Environment variables
+
+Usage: `PORT=8001 node app`
+
+| Name          | Type                                                 | Default                 | Description            |
+|---------------|------------------------------------------------------|-------------------------|------------------------|
+| PORT          | port                                                 | 8080                    | Listening port         |
+| NODE_ENV      | string                                               | dev                     | Environment name       |
+| API_BASE_PATH | string                                               | ../mocks                | Path to the mock files |
+| LOGGER_PATH   | string                                               | ../logs/api-mockiji.log | Path to the log file   |
+| LOGGER_LEVEL  | ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] | warn                    | Logs level             |
+
+### CLI parameters
+
+Usage: `node app --port 8001`
+
+| Name          | Type                                                 | Default                 | Description                  |
+|---------------|------------------------------------------------------|-------------------------|------------------------------|
+| config-file   | string                                               |                         | Path to a configuration file |
+| port          | port                                                 | 8080                    | Listening port               |
+| env           | string                                               | dev                     | Environment name             |
+| api-base-path | string                                               | ../mocks                | Path to the mock files       |
+| logger-path   | string                                               | ../logs/api-mockiji.log | Path to the log file         |
+| logger-level  | ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] | warn                    | Logs level                   |
+
+### Configuration file
+
+The whole [node-convict configuration schema](https://github.com/mozilla/node-convict#the-schema) can be found in the `api/src/utils/configuration.js` file.
+
+You can override the default values by specifying a JSON configuration file when running Mockiji, e.g. `node app --config-file mockiji.json`.
 
 You will have to restart Mockiji if you want the configuration to change.  
 If you use pm2, you can do it with `pm2 restart 0` (provided 0 is your mockiji pm2-process id)

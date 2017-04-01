@@ -23,6 +23,7 @@ const SETTINGS_SCHEMA = {
     format: String,
     default: '../mocks',
     arg: 'api-base-path',
+    env: 'API_BASE_PATH',
   },
   http_codes: {
     mock_file_not_found: {
