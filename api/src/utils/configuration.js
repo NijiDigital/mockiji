@@ -11,6 +11,7 @@
 let loadConfigs = function() {
 
   let merge = require('merge');
+  let fs = require('fs');
   let appRootPath = require('path').dirname(require.main.filename);
   let toolbox = require('./Toolbox.js')();
 
@@ -18,6 +19,12 @@ let loadConfigs = function() {
   let defaultConfig;
   let envConfigFilePath;
   let envConfig;
+
+  // Create the default env.json file (copied from env.json.example) if it does not exist
+  if (!fs.existsSync(appRootPath + '/config/env.json')) {
+    let contents = fs.readFileSync(appRootPath + '/config/env.json.example', 'utf-8');
+    fs.writeFileSync(appRootPath + '/config/env.json', contents);
+  }
 
   // Load the env.json file
   let envPath = appRootPath + '/config/env.json';
@@ -60,6 +67,6 @@ let loadConfigs = function() {
 
   // Merge default and env configuration
   return merge(defaultConfig, envConfig);
-}
+};
 
 module.exports = loadConfigs();
