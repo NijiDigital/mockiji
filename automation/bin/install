@@ -24,7 +24,7 @@ pwd
 cd api
 npm install
 
-pm2 start processes.json
+pm2 start app.js --name="mockiji-api" -- --config-file ../../mocks/data/dev.json
 pm2 save
 
 #hook post

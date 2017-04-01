@@ -164,7 +164,7 @@ npm install
 <summary>Launch with pm2</summary>
 From the `api/` folder:  
 ```sh
-pm2 start processes.json
+pm2 start app.js --name="mockiji-api"
 ```
 </details>
 <details>
