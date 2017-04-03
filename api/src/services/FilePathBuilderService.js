@@ -3,6 +3,7 @@
 const Toolbox = require('../utils/Toolbox.js');
 const util = require('util');
 const fs = require('fs');
+const path = require('path');
 
 // Configuration and logger
 const config = require('../utils/configuration');
@@ -55,8 +56,7 @@ let FilePathBuilderService = function() {
     let scriptURLs = _buildSpecialPaths(method, url, '@scripts');
 
     let toolbox = new Toolbox();
-    let appRootPath = require('path').dirname(require.main.filename) + '/';
-    let basePath = toolbox.buildAbsolutePaths(appRootPath, [config.get('api_base_path')]);
+    let basePath = path.join(process.cwd(), config.get('api_base_path'));
     let absoluteMocksURLs = toolbox.buildAbsolutePaths(basePath, mockURLs);
     let absoluteScriptURLs = toolbox.buildAbsolutePaths(basePath, scriptURLs);
 

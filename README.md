@@ -50,7 +50,7 @@ which may fit a folder name in the mocks folder hierarchy.
 ## Get Started with the default configuration
 Mockiji contains some mocks to start playing with and help you understand how it works.
 This first API is a library (the ones with books) where users kate and tom has borrowed some books.
-Please install and launch Mockiji without editing the default configuration or the `env.json` file and let's get started.
+Please install and launch Mockiji without editing the default configuration and let's get started.
 
 ### A simple request
 Start by loading `http://localhost:8080/api-simple-library/users/tom/books` in your browser or REST Client (`GET` verb).
@@ -114,18 +114,38 @@ Try it by yourself you will get:
 As usual, you can locate the served file with the `X-Mockiji-File` response header and fix it with nice and valid JSON.
 
 # Install and launch
+## Using npm
+You can install Mockiji using npm, either globally or as a dev dependency of your project:
+
+```
+# Globally
+npm install -g mockiji
+
+# As a dev dependency
+npm install --save-dev mockiji
+```
+
+Then to run it, just execute the `mockiji` binary:
+
+```
+mockiji
+```
+
+Note: By default Mockiji will expect a `mocks/` directory where the command is executed. You can use the one at the root of this repository as an example.
+
+## By cloning this repository
 <details>
 <summary>With Docker</summary>
 Mockiji is not yet available on Docker hub, however you can build an image easily.  
 You must have docker installed along with the `docker` command.
 
-## Docker build image
+### Docker build image
 From the app root folder:  
 ```sh
 docker build -t mockiji .
 ```
 
-## Docker run
+### Docker run
 From the app root folder:  
 ```sh
 docker run -p 8080:8080 mockiji
@@ -136,11 +156,11 @@ docker run -p 8080:8080 mockiji
 <summary>Without Docker</summary>
 You can use your favorite package manager and node process manager.
 
-## Requirements 
+### Requirements
 You MUST have `Node >= 6` and `NPM >= 3`.  
 You MAY have `yarn` and `pm2`.
 
-## Install Mockiji
+### Install Mockiji
 Please choose one of the following install option:
 
 <details open="1">
@@ -158,20 +178,20 @@ npm install
 ```
 </details>
 
-## Launch Mockiji
+### Launch Mockiji
 
 <details open="1">
 <summary>Launch with pm2</summary>
 From the `api/` folder:  
 ```sh
-pm2 start app.js --name="mockiji-api"
+pm2 start app.js --name="mockiji-api" -- --api-base-path ../mocks
 ```
 </details>
 <details>
 <summary>Launch with Node</summary>
 From the `api/` folder:  
 ```sh
-node app
+node app --api-base-path ../mocks
 ```
 </details>
 </details>
@@ -182,33 +202,35 @@ You should now be able to load `http://localhost:8080` in your browser or REST c
 Mockiji embeds a default configuration that works out of the box and loads mocks from the `mocks/` folder.  
 You can override it using the following methods.
 
+Note: All path are relative to the directory Mockiji is started from.
+
 ### Environment variables
-Usage: `PORT=8001 node app`
+Usage: `PORT=8001 API_BASE_PATH=./my-mocks/ mockiji`
 
 | Name          | Type                                                 | Default                 | Description                            |
 |---------------|------------------------------------------------------|-------------------------|----------------------------------------|
 | PORT          | port                                                 | 8080                    | Listening port                         |
 | NODE_ENV      | string                                               | dev                     | Environment name                       |
-| API_BASE_PATH | path                                                 | ../mocks                | Path to the folder containg mock files |
-| LOGGER_PATH   | path                                                 | ../logs/api-mockiji.log | Path to the log file                   |
+| API_BASE_PATH | path                                                 | ./mocks                | Path to the folder containg mock files |
+| LOGGER_PATH   | path                                                 | ./logs/api-mockiji.log | Path to the log file                   |
 | LOGGER_LEVEL  | ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] | warn                    | Logs level                             |
 
 ### CLI parameters
-Usage: `node app --port 8001`
+Usage: `mockiji --port 8001 --api-base-path ./my-mocks/`
 
 | Name          | Type                                                 | Default                 | Description                            |
 |---------------|------------------------------------------------------|-------------------------|----------------------------------------|
 | config-file   | string                                               |                         | Path to a configuration file           |
 | port          | port                                                 | 8080                    | Listening port                         |
 | env           | string                                               | dev                     | Environment name                       |
-| api-base-path | path                                                 | ../mocks                | Path to the folder containg mock files |
-| logger-path   | path                                                 | ../logs/api-mockiji.log | Path to the log file                   |
+| api-base-path | path                                                 | ./mocks                | Path to the folder containg mock files |
+| logger-path   | path                                                 | ./logs/api-mockiji.log | Path to the log file                   |
 | logger-level  | ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] | warn                    | Logs level                             |
 
 ### Configuration file
 The whole [node-convict configuration schema](https://github.com/mozilla/node-convict#the-schema) can be found in the `api/src/utils/configuration.js` file.
 
-You can override the default values by specifying a JSON configuration file when running Mockiji, e.g. `node app --config-file mockiji.json`.
+You can override the default values by specifying a JSON configuration file when running Mockiji, e.g. `mockiji --config-file mockiji.json`.
 
 You will have to restart Mockiji if you want the configuration to change.  
 If you use pm2, you can do it with `pm2 restart 0` (provided 0 is your mockiji pm2-process id)

@@ -21,7 +21,7 @@ const SETTINGS_SCHEMA = {
   api_base_path: {
     doc: 'Base path of the mock files',
     format: String,
-    default: '../mocks',
+    default: './mocks',
     arg: 'api-base-path',
     env: 'API_BASE_PATH',
   },
@@ -46,7 +46,7 @@ const SETTINGS_SCHEMA = {
     filepath: {
       doc: 'Path of the log file',
       format: String,
-      default: '../logs/api-mockiji.log',
+      default: './logs/api-mockiji.log',
       env: 'LOGGER_PATH',
       arg: 'logger-path',
     },

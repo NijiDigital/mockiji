@@ -1,6 +1,6 @@
 {
-  "name": "Mockiji",
-  "version": "0.1.0",
+  "name": "mockiji",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "bunyan": "^1.8.0",
@@ -13,6 +13,9 @@
     "yargs": "^7.0.2"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "app.js"
+  },
+  "bin": {
+    "mockiji": "app.js"
   }
 }

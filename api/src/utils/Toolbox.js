@@ -41,25 +41,10 @@ const Toolbox = function() {
     return absolutePaths;
   }
 
-  /**
-   * Build the absolute path where the config file is supposed to be.
-   * @param string appRootPath the app root directory path for this app
-   * @param env object contains two string attributes path and name for the config file
-   * @returns string the absolute path to the environment config file
-   */
-  function buildEnvConfigFilePath(appRootPath, env) {
-    let configPath = env.path + '/' + env.name + '.json';
-    if (env.path[0] === '/') {
-      return configPath;
-    }
-    return appRootPath + '/' + configPath;
-  }
-
   return {
     buildAbsolutePaths,
     removeTrailingSlash,
     resolveAbsolutePath,
-    buildEnvConfigFilePath
   }
 
 }
