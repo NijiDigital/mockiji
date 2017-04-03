@@ -118,6 +118,6 @@ function loadConfigs() {
   //
   console.info(`Configuration loaded successfuly!`);
   return config;
-}
+};
 
 module.exports = loadConfigs();
