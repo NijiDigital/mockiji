@@ -165,14 +165,14 @@ Please choose one of the following install option:
 
 <details open="1">
 <summary>Install with yarn</summary>
-From the `api/` folder:
+From the root folder:
 ```sh
 yarn
 ```
 </details>
 <details>
 <summary>Install with npm</summary>
-From the `api/` folder:  
+From the root folder:  
 ```sh
 npm install
 ```
@@ -182,16 +182,16 @@ npm install
 
 <details open="1">
 <summary>Launch with pm2</summary>
-From the `api/` folder:  
+From the root folder:  
 ```sh
-pm2 start app.js --name="mockiji-api" -- --api-base-path ../mocks
+pm2 start app.js --name="mockiji-api"
 ```
 </details>
 <details>
 <summary>Launch with Node</summary>
-From the `api/` folder:  
+From the root folder:  
 ```sh
-node app --api-base-path ../mocks
+node app
 ```
 </details>
 </details>
@@ -228,7 +228,7 @@ Usage: `mockiji --port 8001 --api-base-path ./my-mocks/`
 | logger-level  | ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] | warn                    | Logs level                             |
 
 ### Configuration file
-The whole [node-convict configuration schema](https://github.com/mozilla/node-convict#the-schema) can be found in the `api/src/utils/configuration.js` file.
+The whole [node-convict configuration schema](https://github.com/mozilla/node-convict#the-schema) can be found in the `src/utils/configuration.js` file.
 
 You can override the default values by specifying a JSON configuration file when running Mockiji, e.g. `mockiji --config-file mockiji.json`.
 
@@ -243,7 +243,7 @@ As an example, using a config file:
 {
   "logger": {
     "name": "api-mockiji",
-    "filepath": "../logs/api-mockiji.log",
+    "filepath": "./logs/api-mockiji.log",
     "level": "warn",
     "type": "rotating-file",
     "period": "1d",
