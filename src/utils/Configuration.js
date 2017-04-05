@@ -97,7 +97,7 @@ function Configuration({configuration, configFile} = {}) {
   // If there is a provided configuration
   if (configuration) {
     console.info('Loading provided configuration...');
-    config.load(settings);
+    config.load(configuration);
   }
 
   // Load an optional config file (e.g.: node app.js --config-file config.json)
