@@ -4,7 +4,7 @@ const bunyan = require('bunyan');
 const path = require('path');
 const fs = require('fs');
 
-function Logger({Configuration}) {
+function initLogger({Configuration}) {
   const loggerConfig = Configuration.get('logger');
 
   // Create logs directory if it doesn't exist yet
@@ -40,4 +40,4 @@ function Logger({Configuration}) {
   });
 }
 
-module.exports = Logger;
+module.exports = initLogger;

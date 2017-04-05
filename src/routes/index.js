@@ -1,7 +1,7 @@
 'use strict';
 const util = require('util');
-const MockCtrl = require('../controllers/MockCtrl');
 const cors = require('cors');
+const MockCtrl = require('../controllers/MockCtrl');
 
 module.exports = function({Configuration, Logger, app}) {
   // Cross-domain management

@@ -89,7 +89,7 @@ const SETTINGS_SCHEMA = {
  * If the path is not blank, if will load the environment configuration file
  * from this path and the environment "name"
  */
-function Configuration({configuration, configFile} = {}) {
+function initConfiguration({configuration, configFile} = {}) {
   // Initialize default configuration
   console.info('Loading default configuration...');
   const config = convict(SETTINGS_SCHEMA);
@@ -125,4 +125,4 @@ function Configuration({configuration, configFile} = {}) {
   return config;
 };
 
-module.exports = Configuration;
+module.exports = initConfiguration;
