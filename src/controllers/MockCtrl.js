@@ -5,14 +5,13 @@ const URLRecomposerService = require('../services/URLRecomposerService.js');
 const FilePathBuilderService = require('../services/FilePathBuilderService.js');
 const FileLoaderService = require('../services/FileLoaderService.js');
 
-// Configuration and logger
-const config = require('../utils/configuration');
-const log = require('../utils/logger');
-
 /**
  * This controller is for processing the requests and building the response
  */
-let MockCtrl = function(log) {
+let MockCtrl = function({Configuration, Logger}) {
+  const urlRecomposer = new URLRecomposerService({Configuration, Logger});
+  const pathBuilder = new FilePathBuilderService({Configuration, Logger});
+  const fileLoader = new FileLoaderService({Configuration, Logger});
 
   /**
    *
@@ -30,16 +29,13 @@ let MockCtrl = function(log) {
     let delay = 1;
 
     // Get the URL
-    let urlRecomposer = new URLRecomposerService();
     let url = urlRecomposer.recompose(request);
-    log.debug({'method': method, 'url': url}, 'Incoming request');
+    Logger.debug({'method': method, 'url': url}, 'Incoming request');
 
     // List every possible paths
-    let pathBuilder = new FilePathBuilderService();
     let paths = pathBuilder.generatePaths(method, url, queryString);
 
     // Find the file to load and extract the content
-    let fileLoader = new FileLoaderService();
     let fileToLoad = fileLoader.find(paths.mocks);
 
     let responseHeaders = {};
@@ -57,15 +53,15 @@ let MockCtrl = function(log) {
       if (location) {
         responseHeaders['Location'] = location;
       }
-      log.info({'method': method, 'url': url}, '[Response] ' + httpCode);
+      Logger.info({'method': method, 'url': url}, '[Response] ' + httpCode);
     } else {
-      httpCode = config.get('http_codes.mock_file_not_found');
+      httpCode = Configuration.get('http_codes.mock_file_not_found');
       rawContent = {
         'errorCode': httpCode,
         'errorDescription': 'No mock file was found',
         'evaluatedMockFilePaths': paths.mocks
       };
-      log.info(rawContent, '[Response] Not Found');
+      Logger.info(rawContent, '[Response] Not Found');
     }
 
     // Set Response Headers

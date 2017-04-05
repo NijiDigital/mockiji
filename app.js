@@ -11,18 +11,18 @@ app.use(express.json());
 app.use(express.urlencoded());
 const http = require('http').Server(app);
 
-// Configuration and logger
-const config = require('./src/utils/configuration');
-const log = require('./src/utils/logger');
+// Create Configuration and Logger
+const Configuration = require('./src/utils/Configuration')();
+const Logger = require('./src/utils/Logger')({Configuration});
 
 // Routes
 const routes = require('./src/routes/index');
-routes(app, log);
+routes({Configuration, Logger, app});
 
 // Launch server
-const port = config.get('port');
+const port = Configuration.get('port');
 http.listen(port, function() {
-  log.info("Server listening on port: " + port);
+  Logger.info("Server listening on port: " + port);
 });
 
 // Expose

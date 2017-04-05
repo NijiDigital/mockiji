@@ -1,12 +1,11 @@
 'use strict';
 
-const config = require('./configuration');
-const Logger = require('bunyan');
+const bunyan = require('bunyan');
 const path = require('path');
 const fs = require('fs');
 
-function init() {
-  const loggerConfig = config.get('logger');
+function Logger({Configuration}) {
+  const loggerConfig = Configuration.get('logger');
 
   // Create logs directory if it doesn't exist yet
   const logsPath = loggerConfig.filepath;
@@ -18,7 +17,12 @@ function init() {
     }
   }
 
-  const log = new Logger({
+  // Return bunyan object so it can directly be used
+  // to log things.
+  //
+  //   Logger.log('foo');
+  //
+  return bunyan.createLogger({
     name: loggerConfig.name,
     streams: [
       {
@@ -34,8 +38,6 @@ function init() {
       }
     ]
   });
-
-  return log;
 }
 
-module.exports = init();
+module.exports = Logger;

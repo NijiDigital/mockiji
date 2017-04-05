@@ -7,19 +7,15 @@ const url = require('url');
 const glob = require('glob-all');
 const jsonfile = require('jsonfile');
 
-// Configuration and logger
-const config = require('../utils/configuration');
-const log = require('../utils/logger');
+/**
+ * UTF8 Encoding
+ */
+const UTF8 = 'utf8';
 
 /**
  * This service is for loading the right file
  */
-let FileLoaderService = function() {
-
-  /**
-   * UTF8 Encoding
-   */
-  const UTF8 = 'utf8';
+function FileLoaderService({Configuration, Logger}) {
 
   /**
    * Find the right file to load
@@ -36,19 +32,19 @@ let FileLoaderService = function() {
 
       let candidateFile = glob.sync(element);
       if(candidateFile.length > 0) {
-        log.debug({'files': util.inspect(files), 'key': element}, 'FILE MATCH!');
+        Logger.debug({'files': util.inspect(files), 'key': element}, 'FILE MATCH!');
         files.push(candidateFile[0]);
         fileMatch = true;
       }
     });
 
     if (unlimited) {
-      log.debug('Multiple files found, return all:', files);
+      Logger.debug('Multiple files found, return all:', files);
       return files;
     }
 
     if (files.length > 0) {
-      log.debug('Multiple files found, selecting the first one: ' + files[0]);
+      Logger.debug('Multiple files found, selecting the first one: ' + files[0]);
       return files[0];
     }
 
@@ -76,7 +72,7 @@ let FileLoaderService = function() {
       let scriptFilePath = pPath;
       mockData = _loadMockData(scriptFilePath, paths.mocks);
       path = find(paths.scripts);
-      log.info({'path':path},'Loading a script file');
+      Logger.info({'path':path},'Loading a script file');
     }
     else {
       path = pPath;
@@ -115,7 +111,7 @@ let FileLoaderService = function() {
       }
     }
     else if(extension === 'html') {
-      log.warn(fileContent);
+      Logger.warn(fileContent);
       content = fileContent;
       httpCode = 200;
     }
@@ -128,7 +124,7 @@ let FileLoaderService = function() {
         }
       }
       catch(e) {
-        httpCode = config.get('http_codes.mock_file_invalid');
+        httpCode = Configuration.get('http_codes.mock_file_invalid');
         let message = 'The mock file contains invalid JSON';
         content =  {'error': message};
         notices.push(message);
@@ -155,7 +151,7 @@ let FileLoaderService = function() {
     try {
       return jsonfile.readFileSync(memoryPath);
     } catch(e) {
-      log.info(memoryPath, 'this memory file does not exist');
+      Logger.info(memoryPath, 'this memory file does not exist');
       return {};
     }
   }
@@ -166,10 +162,10 @@ let FileLoaderService = function() {
   function _updateMemoryFile(mockPath, memory) {
     let memoryPath = mockPath.replace('.js','.memory.json');
     try {
-      log.info(memoryPath, 'this memory file can be created');
+      Logger.info(memoryPath, 'this memory file can be created');
       jsonfile.writeFileSync(memoryPath, memory, {spaces:2});
     } catch(e) {
-      log.error(memoryPath, 'this memory file cannot be created');
+      Logger.error(memoryPath, 'this memory file cannot be created');
     }
   }
 
@@ -273,7 +269,7 @@ let FileLoaderService = function() {
             data = merge.recursive(true, data, jsonContent);
           }
           catch (e) {
-            log.warn('Error parsing file: ', mockDataPath);
+            Logger.warn('Error parsing file: ', mockDataPath);
           }
         });
       }

@@ -89,13 +89,19 @@ const SETTINGS_SCHEMA = {
  * If the path is not blank, if will load the environment configuration file
  * from this path and the environment "name"
  */
-function loadConfigs() {
+function Configuration({configuration, configFile} = {}) {
   // Initialize default configuration
   console.info('Loading default configuration...');
   const config = convict(SETTINGS_SCHEMA);
 
+  // If there is a provided configuration
+  if (configuration) {
+    console.info('Loading provided configuration...');
+    config.load(settings);
+  }
+
   // Load an optional config file (e.g.: node app.js --config-file config.json)
-  const configFile = argv.configFile;
+  configFile = configFile || argv.configFile;
   if (configFile) {
     console.info(`Loading configuration file "${configFile}"...`);
     try {
@@ -113,11 +119,10 @@ function loadConfigs() {
   // Return convict object so it can directly be used
   // to retrieve settings.
   //
-  //   const config = require('./configuration');
-  //   config.get('env');
+  //   Configuration.get('env');
   //
   console.info(`Configuration loaded successfuly!`);
   return config;
 };
 
-module.exports = loadConfigs();
+module.exports = Configuration;

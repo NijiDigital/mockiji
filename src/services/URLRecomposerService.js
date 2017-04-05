@@ -3,14 +3,10 @@
 const util = require('util');
 const Toolbox = require('../utils/Toolbox.js');
 
-// Configuration and logger
-const config = require('../utils/configuration');
-const log = require('../utils/logger');
-
 /**
  * This Controller is for recomposing the URL from both the original URL and the authorization token
  */
-let URLRecomposerService = function() {
+function URLRecomposerService({Configuration, Logger}) {
 
   /**
    * Recompose the URL from the request url and authorization token
@@ -19,9 +15,7 @@ let URLRecomposerService = function() {
    * @private
    */
   function recompose(request) {
-
-      let toolbox = new Toolbox();
-      let rawUrl = toolbox.removeTrailingSlash(request.url);
+      let rawUrl = Toolbox.removeTrailingSlash(request.url);
 
       // Read the authorization token if provided and rebuild the request url
       let authorizationHeader = request.headers.authorization;
@@ -29,28 +23,28 @@ let URLRecomposerService = function() {
       if(authorizationHeader) {
 
         // Authorization token is present
-        log.debug(
+        Logger.debug(
           {"authorizationHeader": authorizationHeader},
           'Credentials sent!');
         var token = _decodeAuthorizationToken(request);
 
         // If the authorization token is invalid
         if(token === null) {
-          log.warn(
+          Logger.warn(
             {"authorizationHeader": authorizationHeader},
             "The authorization token was present but was not base64 encoded valid JSON");
           return rawUrl;
         }
 
         // If the token is an object
-        const authorizationToken = config.get('authorization_token');
+        const authorizationToken = Configuration.get('authorization_token');
         if(typeof(authorizationToken) === 'object') {
           let tokenConfigs = authorizationToken;
 
           // We browse the token configs array
           for(let i in tokenConfigs) {
             let tokenConfig = tokenConfigs[i];
-            let rawRegexp = tokenConfig.regexp;
+            let rawRegexp = tokenConfiguration.regexp;
             var regexp = new RegExp(rawRegexp, 'i');
 
             // We test the config regexp
@@ -61,7 +55,7 @@ let URLRecomposerService = function() {
               let iRegExp = new RegExp(invertedRegExp,'i');
 
               // We fetch the replacement data to replace the group
-              let replacementKey = tokenConfig.token_replacement_key;
+              let replacementKey = tokenConfiguration.token_replacement_key;
               let replacement = token[replacementKey];
 
               // We recompose the url with the replacement

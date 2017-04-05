@@ -3,19 +3,18 @@ const util = require('util');
 const MockCtrl = require('../controllers/MockCtrl');
 const cors = require('cors');
 
-module.exports = function(pApp, pLog) {
-
+module.exports = function({Configuration, Logger, app}) {
   // Cross-domain management
-  pApp.use(cors());
+  app.use(cors());
 
   // HeartBeat test
-  pApp.get('/', function(req, res) {
+  app.get('/', function(req, res) {
     res.end('Mockiji server is alive!');
 	});
 
   // Main route
-  pApp.all('/api*', function(req, res) {
-    new MockCtrl(pLog).buildResponse(req, res);
+  app.all('/api*', function(req, res) {
+    new MockCtrl({Configuration, Logger}).buildResponse(req, res);
 	});
 
 };

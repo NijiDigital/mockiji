@@ -5,14 +5,10 @@ const util = require('util');
 const fs = require('fs');
 const path = require('path');
 
-// Configuration and logger
-const config = require('../utils/configuration');
-const log = require('../utils/logger');
-
 /**
  * This Controller is for building the response
  */
-let FilePathBuilderService = function() {
+function FilePathBuilderService({Configuration, Logger}) {
 
   /**
    * Build paths to load the mock file according to the method, url and queryString
@@ -55,10 +51,9 @@ let FilePathBuilderService = function() {
     // etc.
     let scriptURLs = _buildSpecialPaths(method, url, '@scripts');
 
-    let toolbox = new Toolbox();
-    let basePath = path.join(process.cwd(), config.get('api_base_path'));
-    let absoluteMocksURLs = toolbox.buildAbsolutePaths(basePath, mockURLs);
-    let absoluteScriptURLs = toolbox.buildAbsolutePaths(basePath, scriptURLs);
+    let basePath = path.join(process.cwd(), Configuration.get('api_base_path'));
+    let absoluteMocksURLs = Toolbox.buildAbsolutePaths(basePath, mockURLs);
+    let absoluteScriptURLs = Toolbox.buildAbsolutePaths(basePath, scriptURLs);
 
     return {
       mocks: absoluteMocksURLs,
