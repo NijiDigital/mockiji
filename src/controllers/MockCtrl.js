@@ -1,6 +1,5 @@
 'use strict';
 
-const util = require('util');
 const URLRecomposerService = require('../services/URLRecomposerService.js');
 const FilePathBuilderService = require('../services/FilePathBuilderService.js');
 const FileLoaderService = require('../services/FileLoaderService.js');
@@ -28,7 +27,6 @@ class MockCtrl {
    */
   buildResponse(request, response) {
     let method = request.method.toLowerCase();
-    let queryString = null;
     let httpCode = 201;
     let rawContent = null;
     let extension = 'json';
@@ -40,7 +38,7 @@ class MockCtrl {
     this.Logger.debug({'method': method, 'url': url}, 'Incoming request');
 
     // List every possible paths
-    let paths = this.pathBuilder.generatePaths(method, url, queryString);
+    let paths = this.pathBuilder.generatePaths(method, url);
 
     // Find the file to load and extract the content
     let fileToLoad = this.fileLoader.find(paths.mocks);

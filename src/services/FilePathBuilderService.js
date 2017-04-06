@@ -1,8 +1,6 @@
 'use strict';
 
 const Toolbox = require('../utils/Toolbox.js');
-const util = require('util');
-const fs = require('fs');
 const path = require('path');
 
 /**
@@ -24,7 +22,7 @@ class FilePathBuilderService {
    * @param queryString the request query string
    * @returns object
    */
-  generatePaths(method, url, queryString) {
+  generatePaths(method, url) {
     let mockURLs = [];
 
     // ../method.json
@@ -72,7 +70,6 @@ class FilePathBuilderService {
    * Build paths to load the mock file according to the method, url and queryString
    * @param method the request method
    * @param url the request url
-   * @param queryString the request query string
    * @returns object
    */
   _buildSpecialPaths(method, url, marker) {

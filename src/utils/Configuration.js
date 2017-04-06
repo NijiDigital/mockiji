@@ -90,6 +90,8 @@ const SETTINGS_SCHEMA = {
  * from this path and the environment "name"
  */
 function initConfiguration({configuration, configFile} = {}) {
+  /* eslint-disable no-console */
+
   // Initialize default configuration
   console.info('Loading default configuration...');
   const config = convict(SETTINGS_SCHEMA);
@@ -122,7 +124,9 @@ function initConfiguration({configuration, configFile} = {}) {
   //   Configuration.get('env');
   //
   console.info(`Configuration loaded successfuly!`);
+
+  /* eslint-enable no-console */
   return config;
-};
+}
 
 module.exports = initConfiguration;

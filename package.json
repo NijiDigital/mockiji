@@ -13,9 +13,13 @@
   },
   "main": "./src/index.js",
   "scripts": {
-    "start": "mockiji"
+    "start": "mockiji",
+    "lint": "eslint ./src"
   },
   "bin": {
     "mockiji": "./bin/mockiji"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0"
   }
 }

@@ -1,6 +1,5 @@
 'use strict';
 
-const util = require('util');
 const Toolbox = require('../utils/Toolbox.js');
 
 /**
@@ -33,7 +32,7 @@ class URLRecomposerService {
       this.Logger.debug(
         {"authorizationHeader": authorizationHeader},
         'Credentials sent!');
-      var token = this._decodeAuthorizationToken(request);
+      const token = this._decodeAuthorizationToken(request);
 
       // If the authorization token is invalid
       if(token === null) {
@@ -46,30 +45,26 @@ class URLRecomposerService {
       // If the token is an object
       const authorizationToken = this.Configuration.get('authorization_token');
       if(typeof(authorizationToken) === 'object') {
-        let tokenConfigs = authorizationToken;
+        const tokenConfigs = authorizationToken;
 
         // We browse the token configs array
         for(let i in tokenConfigs) {
-          let tokenConfig = tokenConfigs[i];
-          let rawRegexp = tokenthis.Configuration.regexp;
-          var regexp = new RegExp(rawRegexp, 'i');
+          const tokenConfig = tokenConfigs[i];
+          const rawRegexp = tokenConfig.regexp;
+          const regexp = new RegExp(rawRegexp, 'i');
 
           // We test the config regexp
           if(regexp.test(rawUrl)) {
-
             // If matched, we invert the replacing group to replace the good ones
-            var invertedRegExp = this._invertRegexpGroups(rawRegexp);
-            let iRegExp = new RegExp(invertedRegExp,'i');
+            const invertedRegExp = this._invertRegexpGroups(rawRegexp);
+            const iRegExp = new RegExp(invertedRegExp,'i');
 
             // We fetch the replacement data to replace the group
-            let replacementKey = tokenthis.Configuration.token_replacement_key;
-            let replacement = token[replacementKey];
+            const replacementKey = tokenConfig.token_replacement_key;
+            const replacement = token[replacementKey];
 
             // We recompose the url with the replacement
-            let url = rawUrl.replace(iRegExp, ['$1',replacement,'$2'].join(''));
-
-            return url;
-
+            return rawUrl.replace(iRegExp, ['$1',replacement,'$2'].join(''));
           }
         }
       }
@@ -98,8 +93,8 @@ class URLRecomposerService {
    * @private
    */
   _decodeAuthorizationToken(request) {
-    var encoded = request.headers.authorization.split(' ')[1];
-    var decoded = new Buffer(encoded, 'base64').toString('utf8');
+    const encoded = request.headers.authorization.split(' ')[1];
+    const decoded = new Buffer(encoded, 'base64').toString('utf8');
     try {
       return JSON.parse(decoded);
     } catch(e) {
