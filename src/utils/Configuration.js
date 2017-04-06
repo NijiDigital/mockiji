@@ -82,12 +82,13 @@ const SETTINGS_SCHEMA = {
 }
 
 /**
- * This function loads the default configuration (default.json), then checks if
- * an environment configuration has to be fetch by checking the "path" value
- * (env.json).
- *
- * If the path is not blank, if will load the environment configuration file
- * from this path and the environment "name"
+ * This function creates and returns a new node-convict configuration.
+ * It tries to load settings using the following sources :
+ * - default values as defined in the SETTINGS_SCHEMA constant
+ * - CLI arguments as defined in the SETTINGS_SCHEMA constant
+ * - Environment variables as defined in the SETTINGS_SCHEMA constant
+ * - inline configuration passed through the 'configuration' option
+ * - JSON file whose path is provided in the 'configFile' option or in the '--config-file' CLI argument
  */
 function initConfiguration({configuration, configFile} = {}) {
   /* eslint-disable no-console */
