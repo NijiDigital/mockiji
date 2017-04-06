@@ -44,14 +44,14 @@ class Mockiji {
     const port = this.Configuration.get('port');
     return new Promise((resolve, reject) => {
       if (this.http && this.http.listening) {
-        reject('Server is already listening');
+        reject(new Error('Server is already listening'));
         return;
       }
 
       this.http.once('error', reject);
       this.http.listen(port, resolve);
     }).then(
-      () => {this.Logger.info(`Server listening on port ${port}`); },
+      () => { this.Logger.info(`Server listening on port ${port}`); },
       (error) => {
         this.Logger.error(`Could not start server on port ${port}`);
         throw error;
@@ -67,14 +67,14 @@ class Mockiji {
   stop() {
     return new Promise((resolve, reject) => {
       if (!this.http || !this.http.listening) {
-        reject('Server is not currently listening');
+        reject(new Error('Server is not currently listening'));
         return;
       }
 
       this.http.once('error', reject);
-      this.http.close(port, resolve);
+      this.http.close(resolve);
     }).then(
-      () => {this.Logger.info(`Server stopped listening`); },
+      () => { this.Logger.info(`Server stopped listening`); },
       (error) => {
         this.Logger.error(`Could not stop server`);
         throw error;
