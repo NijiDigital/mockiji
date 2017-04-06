@@ -1,19 +1,30 @@
 'use strict';
 
 const bunyan = require('bunyan');
-const path = require('path');
-const fs = require('fs');
+const argv = require('yargs').argv;
 
 function initLogger({Configuration}) {
-  const loggerConfig = Configuration.get('logger');
+  const environment = Configuration.get('env');
+  const loggerConfig = Configuration.get('logs');
 
-  // Create logs directory if it doesn't exist yet
-  const logsPath = loggerConfig.filepath;
+  const streams = []
 
-  if (logsPath) {
-    const logsDirectory = path.dirname(logsPath);
-    if (!fs.existsSync(logsDirectory)) {
-      fs.mkdirSync(logsDirectory);
+  // If Mockiji is not in silent mode, add a stdout stream
+  if (!argv.silent) {
+    streams.push({
+      stream: process.stdout,
+      level: (environment === 'dev') ? 'debug' : 'info',
+    });
+  }
+
+  // Create log streams based on the configuration
+  if (loggerConfig) {
+    if (Array.isArray(loggerConfig)) {
+      for (let stream of loggerConfig) {
+        streams.push(stream);
+      }
+    } else {
+      streams.push(loggerConfig);
     }
   }
 
@@ -23,20 +34,8 @@ function initLogger({Configuration}) {
   //   Logger.log('foo');
   //
   return bunyan.createLogger({
-    name: loggerConfig.name,
-    streams: [
-      {
-        stream: process.stdout,
-        level: 'debug'
-      },
-      {
-        type:  loggerConfig.type,
-        path: loggerConfig.filepath,
-        level: loggerConfig.level,
-        period:  loggerConfig.period,
-        count:  loggerConfig.count
-      }
-    ]
+    name: 'mockiji',
+    streams
   });
 }
 

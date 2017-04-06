@@ -37,41 +37,16 @@ const SETTINGS_SCHEMA = {
       default: 500,
     }
   },
-  logger: {
-    name: {
-      doc: 'Name of the logger',
-      format: String,
-      default: 'api-mockiji',
-    },
-    filepath: {
-      doc: 'Path of the log file',
-      format: String,
-      default: './logs/api-mockiji.log',
-      env: 'LOGGER_PATH',
-      arg: 'logger-path',
-    },
-    level: {
-      doc: 'Logs level',
-      format: ['trace', 'debug', 'info', 'warn', 'error', 'fatal'],
-      default: 'warn',
-      env: 'LOGGER_LEVEL',
-      arg: 'logger-level',
-    },
-    type: {
-      doc: 'Logs stream type',
-      format: ['stream', 'file', 'rotating-file', 'raw'],
-      default: 'rotating-file',
-    },
-    period: {
-      doc: 'Logs rotating file period',
-      format: String,
-      default: '1d',
-    },
-    count: {
-      doc: 'How many log files are kept in rotating mode',
-      format: 'int',
-      default: 3,
-    }
+  logs: {
+    doc: 'Logs configuration as an object or array of node-bunyan streams',
+    format: Array,
+    default: [{
+      type:  'rotating-file',
+      path: './logs/api-mockiji.log',
+      level: 'warn',
+      period:  '1d',
+      count:  3,
+    }]
   },
   authorization_token: {
     // TODO Add a better explanation for authorization_token parameter
@@ -91,32 +66,25 @@ const SETTINGS_SCHEMA = {
  * - JSON file whose path is provided in the 'configFile' option or in the '--config-file' CLI argument
  */
 function initConfiguration({configuration, configFile} = {}) {
-  /* eslint-disable no-console */
-
   // Initialize default configuration
-  console.info('Loading default configuration...');
   const config = convict(SETTINGS_SCHEMA);
 
   // If there is a provided configuration
   if (configuration) {
-    console.info('Loading provided configuration...');
     config.load(configuration);
   }
 
   // Load an optional config file (e.g.: node app.js --config-file config.json)
   configFile = configFile || argv.configFile;
   if (configFile) {
-    console.info(`Loading configuration file "${configFile}"...`);
     try {
       config.loadFile(configFile);
     } catch (e) {
-      console.error(`Error: Could not load configuration file "${configFile}"`);
       throw e;
     }
   }
 
   // Validate configuration
-  console.info('Validating configuration...')
   config.validate({allowed: 'strict'});
 
   // Return convict object so it can directly be used
@@ -124,9 +92,6 @@ function initConfiguration({configuration, configFile} = {}) {
   //
   //   Configuration.get('env');
   //
-  console.info(`Configuration loaded successfuly!`);
-
-  /* eslint-enable no-console */
   return config;
 }
 
