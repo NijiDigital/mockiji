@@ -38,7 +38,7 @@ const SETTINGS_SCHEMA = {
     }
   },
   logs: {
-    doc: 'Logs configuration as an object or array of node-bunyan streams',
+    doc: 'Logs configuration as an object or an array of node-bunyan streams',
     format: Array,
     default: [{
       type:  'rotating-file',
@@ -48,11 +48,10 @@ const SETTINGS_SCHEMA = {
       count:  3,
     }]
   },
-  authorization_token: {
-    // TODO Add a better explanation for authorization_token parameter
-    doc: 'Authorization token regexes',
-    format: '*',
-    default: {},
+  authorization_header_replacements: {
+    doc: 'An array of regexes and token replacement keys that can be used to change an URL part based on the content of the Authorization header',
+    format: Array,
+    default: [],
   }
 }
 

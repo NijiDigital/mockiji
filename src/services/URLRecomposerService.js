@@ -43,7 +43,7 @@ class URLRecomposerService {
       }
 
       // If the token is an object
-      const authorizationToken = this.Configuration.get('authorization_token');
+      const authorizationToken = this.Configuration.get('authorization_header_replacements');
       if(typeof(authorizationToken) === 'object') {
         const tokenConfigs = authorizationToken;
 
