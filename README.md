@@ -140,8 +140,10 @@ mockiji
 Note: By default Mockiji will expect a `mocks/` directory where the command is executed. You can use the one at the root of this repository as an example.
 
 ## By cloning this repository
+
 <details>
 <summary>With Docker</summary>
+
 Mockiji is not yet available on Docker hub, however you can build an image easily.  
 You must have docker installed along with the `docker` command.
 
@@ -156,12 +158,14 @@ docker build -t mockiji .
 From the app root folder:
 
 ```sh
-docker run -p 8080:8080 mockiji
+docker run -d -p 8080:8080 mockiji ./bin/mockiji
 ```
 
 </details>
+
 <details>
 <summary>Without Docker</summary>
+
 You can use your favorite package manager and node process manager.
 
 ### Requirements
