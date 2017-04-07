@@ -24,7 +24,12 @@
       "version": "0.5.3"
     },
     "body-parser": {
-      "version": "1.13.3"
+      "version": "1.13.3",
+      "dependencies": {
+        "debug": {
+          "version": "2.2.0"
+        }
+      }
     },
     "brace-expansion": {
       "version": "1.1.6"
@@ -33,13 +38,7 @@
       "version": "1.1.1"
     },
     "bunyan": {
-      "version": "1.8.9",
-      "dependencies": {
-        "moment": {
-          "version": "2.18.1",
-          "optional": true
-        }
-      }
+      "version": "1.8.9"
     },
     "bytes": {
       "version": "2.1.0"
@@ -60,16 +59,34 @@
       "version": "2.0.10"
     },
     "compression": {
-      "version": "1.5.2"
+      "version": "1.5.2",
+      "dependencies": {
+        "debug": {
+          "version": "2.2.0"
+        },
+        "vary": {
+          "version": "1.0.1"
+        }
+      }
     },
     "concat-map": {
       "version": "0.0.1"
     },
     "connect": {
-      "version": "2.30.2"
+      "version": "2.30.2",
+      "dependencies": {
+        "debug": {
+          "version": "2.2.0"
+        }
+      }
     },
     "connect-timeout": {
-      "version": "1.6.2"
+      "version": "1.6.2",
+      "dependencies": {
+        "debug": {
+          "version": "2.2.0"
+        }
+      }
     },
     "content-disposition": {
       "version": "0.5.0"
@@ -82,6 +99,9 @@
       "dependencies": {
         "depd": {
           "version": "1.1.0"
+        },
+        "moment": {
+          "version": "2.17.1"
         }
       }
     },
@@ -98,12 +118,7 @@
       "version": "1.0.2"
     },
     "cors": {
-      "version": "2.8.1",
-      "dependencies": {
-        "vary": {
-          "version": "1.1.1"
-        }
-      }
+      "version": "2.8.1"
     },
     "crc": {
       "version": "3.3.0"
@@ -120,7 +135,12 @@
       "version": "1.8.3"
     },
     "debug": {
-      "version": "2.2.0"
+      "version": "2.6.3",
+      "dependencies": {
+        "ms": {
+          "version": "0.7.2"
+        }
+      }
     },
     "decamelize": {
       "version": "1.2.0"
@@ -133,6 +153,8 @@
     },
     "dtrace-provider": {
       "version": "0.8.1",
+      "from": "dtrace-provider@>=0.8.0 <0.9.0",
+      "resolved": "https://registry.npmjs.org/dtrace-provider/-/dtrace-provider-0.8.1.tgz",
       "optional": true
     },
     "ee-first": {
@@ -147,17 +169,16 @@
         "accepts": {
           "version": "1.3.3"
         },
+        "escape-html": {
+          "version": "1.0.3"
+        },
         "negotiator": {
           "version": "0.6.1"
         }
       }
     },
     "escape-html": {
-      "version": "1.0.3"
-    },
-    "esprima": {
-      "version": "3.0.0",
-      "optional": true
+      "version": "1.0.2"
     },
     "etag": {
       "version": "1.7.0"
@@ -165,19 +186,27 @@
     "express": {
       "version": "3.21.2",
       "dependencies": {
-        "escape-html": {
-          "version": "1.0.2"
+        "debug": {
+          "version": "2.2.0"
+        },
+        "vary": {
+          "version": "1.0.1"
         }
       }
     },
     "express-session": {
-      "version": "1.11.3"
+      "version": "1.11.3",
+      "dependencies": {
+        "debug": {
+          "version": "2.2.0"
+        }
+      }
     },
     "finalhandler": {
       "version": "0.4.0",
       "dependencies": {
-        "escape-html": {
-          "version": "1.0.2"
+        "debug": {
+          "version": "2.2.0"
         }
       }
     },
@@ -246,9 +275,6 @@
     "is-utf8": {
       "version": "0.2.1"
     },
-    "isarray": {
-      "version": "0.0.1"
-    },
     "json5": {
       "version": "0.5.1"
     },
@@ -259,7 +285,12 @@
       "version": "1.0.0"
     },
     "load-json-file": {
-      "version": "1.1.0"
+      "version": "1.1.0",
+      "dependencies": {
+        "strip-bom": {
+          "version": "2.0.0"
+        }
+      }
     },
     "lodash.clonedeep": {
       "version": "4.5.0"
@@ -274,18 +305,7 @@
       "version": "1.0.0"
     },
     "method-override": {
-      "version": "2.3.8",
-      "dependencies": {
-        "debug": {
-          "version": "2.6.3"
-        },
-        "ms": {
-          "version": "0.7.2"
-        },
-        "vary": {
-          "version": "1.1.1"
-        }
-      }
+      "version": "2.3.8"
     },
     "methods": {
       "version": "1.1.2"
@@ -314,28 +334,44 @@
       }
     },
     "moment": {
-      "version": "2.17.1"
+      "version": "2.18.1",
+      "from": "moment@>=2.10.6 <3.0.0",
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.18.1.tgz",
+      "optional": true
     },
     "morgan": {
-      "version": "1.6.1"
+      "version": "1.6.1",
+      "dependencies": {
+        "debug": {
+          "version": "2.2.0"
+        }
+      }
     },
     "ms": {
       "version": "0.7.1"
     },
     "multiparty": {
-      "version": "3.3.2"
+      "version": "3.3.2",
+      "dependencies": {
+        "isarray": {
+          "version": "0.0.1"
+        },
+        "readable-stream": {
+          "version": "1.1.14"
+        }
+      }
     },
     "mv": {
       "version": "2.1.1",
-      "optional": true
+      "from": "mv@2.1.1",
+      "resolved": "https://registry.npmjs.org/mv/-/mv-2.1.1.tgz"
     },
     "nan": {
       "version": "2.5.1",
       "optional": true
     },
     "ncp": {
-      "version": "2.0.0",
-      "optional": true
+      "version": "2.0.0"
     },
     "negotiator": {
       "version": "0.5.3"
@@ -414,12 +450,15 @@
     "read-pkg-up": {
       "version": "1.0.1"
     },
-    "readable-stream": {
-      "version": "1.1.14"
-    },
     "redeyed": {
       "version": "1.0.1",
-      "optional": true
+      "optional": true,
+      "dependencies": {
+        "esprima": {
+          "version": "3.0.0",
+          "optional": true
+        }
+      }
     },
     "require-directory": {
       "version": "2.1.1"
@@ -437,11 +476,9 @@
     },
     "rimraf": {
       "version": "2.4.5",
-      "optional": true,
       "dependencies": {
         "glob": {
-          "version": "6.0.4",
-          "optional": true
+          "version": "6.0.4"
         }
       }
     },
@@ -450,6 +487,8 @@
     },
     "safe-json-stringify": {
       "version": "1.0.4",
+      "from": "safe-json-stringify@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/safe-json-stringify/-/safe-json-stringify-1.0.4.tgz",
       "optional": true
     },
     "semver": {
@@ -458,8 +497,8 @@
     "send": {
       "version": "0.13.0",
       "dependencies": {
-        "escape-html": {
-          "version": "1.0.2"
+        "debug": {
+          "version": "2.2.0"
         }
       }
     },
@@ -472,16 +511,30 @@
       }
     },
     "serve-index": {
-      "version": "1.7.3"
+      "version": "1.7.3",
+      "dependencies": {
+        "debug": {
+          "version": "2.2.0"
+        },
+        "escape-html": {
+          "version": "1.0.3"
+        }
+      }
     },
     "serve-static": {
       "version": "1.10.3",
       "dependencies": {
+        "debug": {
+          "version": "2.2.0"
+        },
         "depd": {
           "version": "1.1.0"
         },
         "destroy": {
           "version": "1.0.4"
+        },
+        "escape-html": {
+          "version": "1.0.3"
         },
         "send": {
           "version": "0.13.2"
@@ -504,7 +557,15 @@
       "version": "1.2.1"
     },
     "stream-counter": {
-      "version": "0.2.0"
+      "version": "0.2.0",
+      "dependencies": {
+        "isarray": {
+          "version": "0.0.1"
+        },
+        "readable-stream": {
+          "version": "1.1.14"
+        }
+      }
     },
     "string_decoder": {
       "version": "0.10.31"
@@ -515,12 +576,8 @@
     "strip-ansi": {
       "version": "3.0.1"
     },
-    "strip-bom": {
-      "version": "2.0.0"
-    },
     "through": {
-      "version": "2.3.8",
-      "optional": true
+      "version": "2.3.8"
     },
     "tsscmp": {
       "version": "1.0.5"
@@ -545,10 +602,12 @@
     },
     "varify": {
       "version": "0.2.0",
+      "from": "varify@0.2.0",
+      "resolved": "https://registry.npmjs.org/varify/-/varify-0.2.0.tgz",
       "optional": true
     },
     "vary": {
-      "version": "1.0.1"
+      "version": "1.1.1"
     },
     "vhost": {
       "version": "3.0.2"
