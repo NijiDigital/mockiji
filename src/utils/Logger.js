@@ -3,16 +3,16 @@
 const bunyan = require('bunyan');
 const path = require('path');
 const fs = require('fs');
-const argv = require('yargs').argv;
 
 function initLogger({Configuration}) {
   const environment = Configuration.get('env');
   const loggerConfig = Configuration.get('logs');
+  const silent = Configuration.get('silent');
 
   const streams = []
 
   // If Mockiji is not in silent mode, add a stdout stream
-  if (!argv.silent) {
+  if (!silent) {
     streams.push({
       stream: process.stdout,
       level: (environment === 'dev') ? 'debug' : 'info',
