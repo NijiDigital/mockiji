@@ -1,4 +1,4 @@
-FROM node:4
+FROM node:6
 MAINTAINER Jean-Philippe LAINÉ
 
 COPY . /usr/src/app
