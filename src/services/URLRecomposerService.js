@@ -29,16 +29,15 @@ class URLRecomposerService {
     if(authorizationHeader) {
 
       // Authorization token is present
-      this.Logger.debug(
-        {"authorizationHeader": authorizationHeader},
-        'Credentials sent!');
+      this.Logger.debug(`Found an Authorization header: "${authorizationHeader}"`);
       const token = this._decodeAuthorizationToken(request);
 
       // If the authorization token is invalid
       if(token === null) {
         this.Logger.warn(
-          {"authorizationHeader": authorizationHeader},
-          "The authorization token was present but was not base64 encoded valid JSON");
+          {'authorizationHeader': authorizationHeader},
+          `An autorization header was found but it did not contain a valid base64 encoded JSON object`
+        );
         return rawUrl;
       }
 

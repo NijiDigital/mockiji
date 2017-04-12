@@ -26,7 +26,7 @@ class MockCtrl {
    * @param response
    */
   buildResponse(request, response) {
-    let method = request.method.toLowerCase();
+    let method = request.method;
     let httpCode = 201;
     let rawContent = null;
     let extension = 'json';
@@ -35,10 +35,14 @@ class MockCtrl {
 
     // Get the URL
     let url = this.urlRecomposer.recompose(request);
-    this.Logger.debug({'method': method, 'url': url}, 'Incoming request');
+    this.Logger.info({
+      'type': 'request',
+      'method': method,
+      'url': url
+    }, `Received a request: "${method} ${url}"`);
 
     // List every possible paths
-    let paths = this.pathBuilder.generatePaths(method, url);
+    let paths = this.pathBuilder.generatePaths(method.toLowerCase(), url);
 
     // Find the file to load and extract the content
     let fileToLoad = this.fileLoader.find(paths.mocks);
@@ -58,22 +62,21 @@ class MockCtrl {
       if (location) {
         responseHeaders['Location'] = location;
       }
-      this.Logger.info({'method': method, 'url': url}, '[Response] ' + httpCode);
     } else {
       httpCode = this.Configuration.get('http_codes.mock_file_not_found');
-      rawContent = {
-        'errorCode': httpCode,
-        'errorDescription': 'No mock file was found',
-        'evaluatedMockFilePaths': paths.mocks
-      };
-      this.Logger.info(rawContent, '[Response] Not Found');
+      this.Logger.warn({
+        'method': request.method,
+        'url': url,
+        'httpCode': httpCode,
+        'evaluatedMocksPaths': paths.mocks,
+      }, `Could not find a mock file for "${request.method} ${url}"`);
     }
 
     // Set Response Headers
     response.set(responseHeaders);
 
     // Send Response
-    setTimeout(function() {
+    setTimeout(() => {
       if(rawContent !== null && extension === 'html') {
         response.status(httpCode).send(rawContent);
       } else if(rawContent !== null) {
@@ -82,6 +85,14 @@ class MockCtrl {
         response.set('X-Mockiji-Empty-Response-Body', true);
         response.status(httpCode).send('');
       }
+
+      this.Logger.info({
+        'type': 'response',
+        'method': method,
+        'url': url,
+        'httpCode': httpCode,
+        'mockPath': fileToLoad,
+      }, `Response sent for "${method} ${url}" (${httpCode})`);
     }, delay);
   }
 }
