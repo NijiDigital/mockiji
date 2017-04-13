@@ -1,5 +1,6 @@
 'use strict';
 
+const express = require('express');
 const cors = require('cors');
 const MockCtrl = require('../controllers/MockCtrl');
 
@@ -8,9 +9,7 @@ module.exports = function({Configuration, Logger, app}) {
   app.use(cors());
 
   // HeartBeat test
-  app.get('/', function(req, res) {
-    res.end('Mockiji server is alive!');
-  });
+  app.use(express.static('./public'));
 
   // Main route
   app.all('/api*', function(req, res) {
