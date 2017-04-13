@@ -113,7 +113,8 @@ Try it by yourself you will get:
 
 ```json
 {
-  "error": "The mock file contains invalid JSON"
+  "errorCode": 500,
+  "errorDescription": "The mock file contains invalid JSON"
 }
 ```
 

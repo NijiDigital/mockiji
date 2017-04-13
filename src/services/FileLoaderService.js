@@ -130,7 +130,10 @@ class FileLoaderService {
       catch(e) {
         httpCode = this.Configuration.get('http_codes.mock_file_invalid');
         let message = 'The mock file contains invalid JSON';
-        content =  {'error': message};
+        content =  {
+          'errorCode': 500,
+          'errorDescription': message
+        };
         notices.push(message);
       }
     }
