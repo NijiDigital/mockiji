@@ -97,7 +97,7 @@ class PrettyLogStream extends Writable {
     const method = entry.method || '?';
     const url = entry.url || '?';
 
-    return `${chalk.blue.bold('⇒')} ${chalk.bold(method)} ${url}`
+    return `${chalk.white.bold('▶')} ${chalk.bold(method)} ${url}`
   }
 
   /**
@@ -112,7 +112,7 @@ class PrettyLogStream extends Writable {
     const statusCode = entry.httpCode || 0;
     const statusColor = this._getHttpStatusColor(statusCode);
 
-    return `${chalk.blue.bold('⇐')} ${chalk.bold(method)} ${url} [${chalk.bold[statusColor](statusCode)}]`;
+    return `${chalk.bold[statusColor]('◀')} ${chalk.bold(method)} ${url} [${chalk.bold[statusColor](statusCode)}]`;
   }
 
   /**
