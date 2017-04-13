@@ -6,39 +6,39 @@ const Writable = require('stream').Writable;
 
 const LOG_LEVELS = {
   UNKNOWN: 'Unknown',
-  TRACE: 'Trace',
-  DEBUG: 'Debug',
-  INFO: 'Info',
-  WARN: 'Warn',
-  ERROR: 'Error',
-  FATAL: 'Fatal',
+  TRACE  : 'Trace',
+  DEBUG  : 'Debug',
+  INFO   : 'Info',
+  WARN   : 'Warn',
+  ERROR  : 'Error',
+  FATAL  : 'Fatal',
 };
 
 const LOG_LEVELS_MAP = {
   [bunyan.TRACE]: LOG_LEVELS.TRACE,
   [bunyan.DEBUG]: LOG_LEVELS.DEBUG,
-  [bunyan.INFO]: LOG_LEVELS.INFO,
-  [bunyan.WARN]: LOG_LEVELS.WARN,
+  [bunyan.INFO] : LOG_LEVELS.INFO,
+  [bunyan.WARN] : LOG_LEVELS.WARN,
   [bunyan.ERROR]: LOG_LEVELS.ERROR,
   [bunyan.FATAL]: LOG_LEVELS.FATAL,
 };
 
 const LOG_LEVELS_COLORS = {
   [LOG_LEVELS.UNKNOWN]: 'white',
-  [LOG_LEVELS.TRACE]: 'grey',
-  [LOG_LEVELS.DEBUG]: 'cyan',
-  [LOG_LEVELS.INFO]: 'green',
-  [LOG_LEVELS.WARN]: 'yellow',
-  [LOG_LEVELS.ERROR]: 'red',
-  [LOG_LEVELS.FATAL]: 'magenta',
+  [LOG_LEVELS.TRACE]  : 'grey',
+  [LOG_LEVELS.DEBUG]  : 'cyan',
+  [LOG_LEVELS.INFO]   : 'green',
+  [LOG_LEVELS.WARN]   : 'yellow',
+  [LOG_LEVELS.ERROR]  : 'red',
+  [LOG_LEVELS.FATAL]  : 'magenta',
 };
 
 const HTTP_COLORS = {
   DEFAULT: 'white',
-  SUCCESS: 'green',
-  REDIRECT: 'yellow',
-  CLIENT_ERROR: 'red',
-  SERVER_ERROR: 'magenta',
+  '200'  : 'green',
+  '300'  : 'yellow',
+  '400'  : 'red',
+  '500'  : 'magenta',
 };
 
 class PrettyLogStream extends Writable {
@@ -50,8 +50,9 @@ class PrettyLogStream extends Writable {
 
   /**
    * Format a log entry.
-   * @param {Object} entry Bunyan log entry
+   * @param {Object} entry - Bunyan log entry
    * @return {string} Formatted log entry
+   * @private
    */
   _formatEntry(entry) {
     try {
@@ -90,6 +91,7 @@ class PrettyLogStream extends Writable {
    * Format a "request" log entry
    * @param {Object} entry - Log entry previously parsed by _formatEntry
    * @return {string} Formatted message
+   * @private
    */
   _formatRequest(entry) {
     const method = entry.method || '?';
@@ -102,6 +104,7 @@ class PrettyLogStream extends Writable {
    * Format a "response" log entry
    * @param {Object} entry - Log entry previously parsed by _formatEntry
    * @return {string} Formatted message
+   * @private
    */
   _formatResponse(entry) {
     const method = entry.method || '?';
@@ -116,32 +119,21 @@ class PrettyLogStream extends Writable {
    * Return the name of a bunyan log level.
    * @param {number} logLevel - A bunyan log level
    * @return {string} Level name
+   * @private
    */
   _getLogLevelName(logLevel) {
-    if (LOG_LEVELS_MAP.hasOwnProperty(logLevel)) {
-      return LOG_LEVELS_MAP[logLevel];
-    }
-
-    return LOG_LEVELS.UNKNOWN;
+    return LOG_LEVELS_MAP.hasOwnProperty(logLevel) ? LOG_LEVELS_MAP[logLevel] : LOG_LEVELS.UNKNOWN;
   }
 
   /**
    * Return a color given a HTTP status code.
    * @param {number} statusCode - HTTP status code
    * @return {string} Chalk color name
+   * @private
    */
   _getHttpStatusColor(statusCode) {
-    if (statusCode >= 200 && statusCode < 300) {
-      return HTTP_COLORS.SUCCESS;
-    } else if (statusCode >= 300 && statusCode < 400) {
-      return HTTP_COLORS.REDIRECT;
-    } else if (statusCode >= 400 && statusCode < 500) {
-      return HTTP_COLORS.CLIENT_ERROR;
-    } else if (statusCode >= 500) {
-      return HTTP_COLORS.SERVER_ERROR;
-    }
-
-    return HTTP_COLORS.DEFAULT;
+    const codeCategory = Math.floor(statusCode / 100) * 100;
+    return HTTP_COLORS.hasOwnProperty(codeCategory) ? HTTP_COLORS[codeCategory] : HTTP_COLORS.DEFAULT;
   }
 }
 
