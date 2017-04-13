@@ -8,10 +8,10 @@ module.exports = function({Configuration, Logger, app}) {
   // Cross-domain management
   app.use(cors());
 
-  // HeartBeat test
+  // Index route
   app.use(express.static('./public'));
 
-  // Main route
+  // Mocks route
   app.use(function(req, res) {
     new MockCtrl({Configuration, Logger}).buildResponse(req, res);
   });
