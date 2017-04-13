@@ -12,7 +12,7 @@ module.exports = function({Configuration, Logger, app}) {
   app.use(express.static('./public'));
 
   // Main route
-  app.all('/api*', function(req, res) {
+  app.use(function(req, res) {
     new MockCtrl({Configuration, Logger}).buildResponse(req, res);
   });
 };
