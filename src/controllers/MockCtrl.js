@@ -64,11 +64,18 @@ class MockCtrl {
       }
     } else {
       httpCode = this.Configuration.get('http_codes.mock_file_not_found');
+
+      rawContent = {
+        'errorCode': httpCode,
+        'errorDescription': 'No mock file was found',
+        'evaluatedMockFilePaths': paths.mocks,
+      };
+
       this.Logger.warn({
         'method': request.method,
         'url': url,
         'httpCode': httpCode,
-        'evaluatedMocksPaths': paths.mocks,
+        'evaluatedMockFilePaths': paths.mocks,
       }, `Could not find a mock file for "${request.method} ${url}"`);
     }
 
