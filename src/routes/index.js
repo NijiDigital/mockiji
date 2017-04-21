@@ -2,6 +2,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const MockCtrl = require('../controllers/MockCtrl');
 
 module.exports = function({Configuration, Logger, app}) {
@@ -14,7 +15,7 @@ module.exports = function({Configuration, Logger, app}) {
   app.use(cors());
 
   // Public route
-  app.use(express.static('./public'));
+  app.use(express.static(path.join(__dirname, '../../public')));
 
   // Mocks route
   app.use(function(req, res) {
