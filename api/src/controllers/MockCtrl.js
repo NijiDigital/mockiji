@@ -1,86 +1,30 @@
 'use strict';
 
 let util = require('util');
+let fs = require('fs');
 let URLRecomposerService = require('../services/URLRecomposerService.js');
-let FilePathBuilderService = require('../services/FilePathBuilderService.js');
-let FileLoaderService = require('../services/FileLoaderService.js');
-
-// Configuration and logger
-let config = require('../utils/configuration');
+let RestClientProxyService = require('../services/RestClientProxyService.js');
+let ProxyConfigService = require('../services/ProxyConfigService.js');
+let MockService = require('../services/MockService.js');
+let envConfig = require('../utils/configuration');
+let proxyConfig = ProxyConfigService.load();
 
 /**
  * This controller is for processing the requests and building the response
  */
 let MockCtrl = function(log) {
 
-  /**
-   *
-   * @param request
-   * @param response
-   */
   function _buildResponse(request, response) {
-
-    let method = request.method.toLowerCase();
-    let queryString = null;
-    let httpCode = 201;
-    let rawContent = null;
-    let extension = 'json';
-    let location = null;
-    let delay = 1;
-
-    // Get the URL
     let urlRecomposer = new URLRecomposerService();
     let url = urlRecomposer.recompose(request);
-    log.debug({'method': method, 'url': url}, 'Incoming request');
 
-    // List every possible paths
-    let pathBuilder = new FilePathBuilderService();
-    let paths = pathBuilder.generatePaths(method, url, queryString);
+    log.debug({'url': url}, 'Incoming request');
 
-    // Find the file to load and extract the content
-    let fileLoader = new FileLoaderService();
-    let fileToLoad = fileLoader.find(paths.mocks);
-
-    let responseHeaders = {};
-
-    if (fileToLoad !== null) {
-      let fileData = fileLoader.load(fileToLoad, request, paths);
-      rawContent = fileData.rawContent;
-      httpCode = fileData.httpCode;
-      extension = fileData.extension;
-      location = fileData.location;
-      delay = fileData.delay;
-      responseHeaders['X-Mockiji-File'] = fileToLoad;
-      responseHeaders['X-Mockiji-Notices'] = fileData.notices;
-      responseHeaders['Cache-Control'] = 'no-cache';
-      if (location) {
-        responseHeaders['Location'] = location;
-      }
-      log.info({'method': method, 'url': url}, '[Response] ' + httpCode);
+    if (ProxyConfigService.isUrlProxyfied(proxyConfig, url)) {
+      RestClientProxyService.doHttpCall(request, response, url, proxyConfig);
     } else {
-      httpCode = config.mock_file_not_found_http_code;
-      rawContent = {
-        'errorCode': httpCode,
-        'errorDescription': 'No mock file was found',
-        'evaluatedMockFilePaths': paths.mocks
-      };
-      log.info(rawContent, '[Response] Not Found');
+      MockService.buildMockResponse(request, response, url, envConfig);
     }
-
-    // Set Response Headers
-    response.set(responseHeaders);
-
-    // Send Response
-    setTimeout(function() {
-      if(rawContent !== null && extension === 'html') {
-        response.status(httpCode).send(rawContent);
-      } else if(rawContent !== null) {
-        response.status(httpCode).json(rawContent);
-      } else {
-        response.set('X-Mockiji-Empty-Response-Body', true);
-        response.status(httpCode).send('');
-      }
-    }, delay);
   }
 
   return {
