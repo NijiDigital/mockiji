@@ -2,6 +2,7 @@
 let util = require('util');
 var MockCtrl = require('../controllers/MockCtrl');
 var cors = require('cors');
+var log = require('../utils/logger');
 
 module.exports = function(pApp, pLog) {
 

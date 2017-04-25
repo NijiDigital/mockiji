@@ -1,0 +1,35 @@
+{
+  "_meta" : {
+    "howTo" : "rename this file to proxyConfig",
+    "description" : "This file defines all urls which can be proxified (not mocked). In order to act as a simple proxy, the url must be define here with a value 'true'."
+  },
+  "host" : "localhost",
+  "port" : "9056",
+  "proxy" : {
+    "/api/.*/persons.*": false,
+    "/api/.*/sites/[^/]*/monthly-gas-consumptions.*": true,
+    "/api/.*/sites/[^/]*/compositions/gas-indexes": false,
+    "/api/.*/sites/[^/]*/yearly-gas-energies-comparisons.*": false,
+    "/api/.*/sites/[^/]*/gas-indexes.*": false,
+    "/api/.*/sites/[^/]*/gas-supply-contracts.*": false,
+    "/api/.*/sites/[^/]*/gas-supply-contract-changes.*": false,
+    "/api/.*/sites/[^/]*/gas-usage-breakdowns.*": false,
+    "/api/.*/sites/[^/]*/hourly-gas-heating-per-degree-savings.*": false,
+    "/api/.*/gas-indexes-contracts.*": false,
+    "/api/.*/offer-families/[^/]*/.*/gas-indexes-contracts.*": false,
+    "/api/.*/sites/[^/]*/gas-price-changes.*": false,
+    "/api/.*/sites/[^/]*/gas-analysis-parameters.*": false,
+    "/api/.*/sites/[^/]*/monthly-gas-usages-consumptions.*": false,
+    "/api/.*/sites/[^/]*/sensors/hourly-gas-consumptions.*": false,
+    "/api/.*/sites/[^/]*/sensors/daily-gas-consumptions.*": false,
+    "/api/.*/sites/[^/]*/sensors/monthly-gas-consumptions.*": false,
+    "/api/.*/sites/[^/]*/similar-home-monthly-gas-comparisons.*": false,
+    "/api/.*/sites/[^/]*/similar-home-yearly-gas-comparisons.*": false,
+    "/api/.*/sites/[^/]*/similar-home-monthly-elec-comparisons.*": false,
+    "/api/.*/sites/[^/]*/similar-home-yearly-elec-comparisons.*": false,
+    "/api/.*/sites/[^/]*/similar-home-yearly-target-elec-consumptions.*": false
+  }
+}
+
+
+
