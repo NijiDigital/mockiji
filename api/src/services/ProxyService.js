@@ -30,7 +30,7 @@ ProxyService.doHttpCall = function (request, response, url, envConfig) {
     method: request.method
   };
 
-  http.request(options, function(httpRestResponse) {
+  var request = http.request(options, function(httpRestResponse) {
     var responseAsString = '';
     httpRestResponse.setEncoding('utf8');
     httpRestResponse.on('data', function (chunk) {
@@ -41,7 +41,17 @@ ProxyService.doHttpCall = function (request, response, url, envConfig) {
       response.status(httpRestResponse.statusCode);
       response.send(responseAsString);
     });
-  }).end();
+  });
+  request.on('error', function(error) {
+    if (error.code == "ENOTFOUND") {
+      log.error("Bas proxy configuration: host '" +  error.hostname + "' not found, details: " + error);
+    } else {
+      log.error("Unknwon proxy error: ", error);
+    }
+    response.status(500);
+    response.send("");
+  });
+  request.end();
 };
 
 module.exports = ProxyService;
