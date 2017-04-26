@@ -13,6 +13,11 @@
   "listen_to_these_api_base_urls": {
     "api": "../mocks"
   },
-  "authorization_token": []
+  "authorization_token": [],
+  "proxy": {
+    "host" : "localhost",
+    "port" : "8080",
+    "urls" : {}
+  }
 }
 
