@@ -1,7 +1,6 @@
 'use strict';
 
 let util = require('util');
-let fs = require('fs');
 let URLRecomposerService = require('../services/URLRecomposerService.js');
 let ProxyService = require('../services/ProxyService.js');
 let MockService = require('../services/MockService.js');
