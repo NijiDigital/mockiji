@@ -60,6 +60,3 @@ mocks/api*
 
 # ignore env config file
 api/config/dev.json
-
-# ignore proxy config file
-api/config/proxyConfig.json

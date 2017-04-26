@@ -3,11 +3,9 @@
 let util = require('util');
 let fs = require('fs');
 let URLRecomposerService = require('../services/URLRecomposerService.js');
-let RestClientProxyService = require('../services/RestClientProxyService.js');
-let ProxyConfigService = require('../services/ProxyConfigService.js');
+let ProxyService = require('../services/ProxyService.js');
 let MockService = require('../services/MockService.js');
 let envConfig = require('../utils/configuration');
-let proxyConfig = ProxyConfigService.load();
 
 /**
  * This controller is for processing the requests and building the response
@@ -20,8 +18,8 @@ let MockCtrl = function(log) {
 
     log.debug({'url': url}, 'Incoming request');
 
-    if (ProxyConfigService.isUrlProxyfied(proxyConfig, url)) {
-      RestClientProxyService.doHttpCall(request, response, url, proxyConfig);
+    if (ProxyService.isUrlProxyfied(envConfig, url)) {
+      ProxyService.doHttpCall(request, response, url, envConfig);
     } else {
       MockService.buildMockResponse(request, response, url, envConfig);
     }

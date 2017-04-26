@@ -1,11 +1,27 @@
 'use strict';
+
+let fs = require('fs');
 let http = require('http');
 let log = require('../utils/logger');
 
-let RestClientProxyService = function() {};
+let ProxyService = function() {};
 
-RestClientProxyService.doHttpCall = function (request, response, url, proxyConfig) {
+ProxyService.isUrlProxyfied = function(envConfig, testedUrl) {
+  let urls = envConfig["proxy"]["urls"];
+  let result = false;
+  for (let urlPatternProperty in urls) {
+    let urlMatching = new RegExp(urlPatternProperty).test(testedUrl);
+    if (urlMatching) {
+      result = urls[urlPatternProperty];
+      break;
+    }
+  };
+  return result;
+};
+
+ProxyService.doHttpCall = function (request, response, url, envConfig) {
   log.debug("[PROXIFIED URL] HTTP CALL :" + url);
+  var proxyConfig = envConfig["proxy"];
 
   var options = {
     host: proxyConfig["host"],
@@ -28,4 +44,4 @@ RestClientProxyService.doHttpCall = function (request, response, url, proxyConfi
   }).end();
 };
 
-module.exports = RestClientProxyService;
+module.exports = ProxyService;
