@@ -1,39 +1,51 @@
 'use strict';
 
-let fs = require('fs');
 let http = require('http');
 let log = require('../utils/logger');
 
+/**
+ * This service is about proxyfing some requests to another server
+ */
 let ProxyService = function() {};
 
+/**
+ * Returns true if the testedUrl has to be proxyfied
+ * It tests the testedUrl against some patterns from the configuration
+ */
 ProxyService.isUrlProxyfied = function(envConfig, testedUrl) {
-  let urls = envConfig["proxy"]["urls"];
+  let urls = envConfig['proxy']['urls'];
   let result = false;
   for (let urlPatternProperty in urls) {
     let urlMatching = new RegExp(urlPatternProperty).test(testedUrl);
     if (urlMatching) {
-      result = urls[urlPatternProperty];
+      result = true;
       break;
     }
   };
   return result;
 };
 
+/**
+ * Proxify an incoming request to another server
+ * The destination server is set by the configuration
+ */
 ProxyService.doHttpCall = function (request, response, url, envConfig) {
-  log.debug("[PROXIFIED URL] HTTP CALL :" + url);
-  var proxyConfig = envConfig["proxy"];
 
-  var options = {
-    host: proxyConfig["host"],
-    port: proxyConfig["port"],
+  // Proxy request options
+  let options = {
+    host: envConfig['proxy']['host'],
+    port: envConfig['proxy']['port'],
     path: url,
     method: request.method
   };
 
-  var request = http.request(options, function(httpRestResponse) {
-    var responseAsString = '';
+  let proxifiedUrlString = [options.method, ' http://', options.host,':',options.port,options.path].join('');
+  log.debug('[PROXIFIED URL] Original request [' + url + '] => Transformed request [' + proxifiedUrlString + ']');
+
+  let proxyRequest = http.request(options, function(httpRestResponse) {
+    let responseAsString = '';
     httpRestResponse.setEncoding('utf8');
-    httpRestResponse.on('data', function (chunk) {
+    httpRestResponse.on('data', function(chunk) {
       responseAsString += chunk;
     });
     httpRestResponse.on('end', function() {
@@ -42,16 +54,18 @@ ProxyService.doHttpCall = function (request, response, url, envConfig) {
       response.send(responseAsString);
     });
   });
-  request.on('error', function(error) {
-    if (error.code == "ENOTFOUND") {
-      log.error("Bas proxy configuration: host '" +  error.hostname + "' not found, details: " + error);
+
+  proxyRequest.on('error', function(error) {
+    if (error.code === 'ENOTFOUND') {
+      log.error('Bad proxy configuration: host "' +  error.hostname + '" not found, details: ', error);
     } else {
-      log.error("Unknwon proxy error: ", error);
+      log.error('Unknwon proxy error: ', error);
     }
     response.status(500);
-    response.send("");
+    response.send('');
   });
-  request.end();
+
+  proxyRequest.end();
 };
 
 module.exports = ProxyService;
