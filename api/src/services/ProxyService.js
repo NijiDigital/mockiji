@@ -13,16 +13,17 @@ let ProxyService = function() {};
  * It tests the testedUrl against some patterns from the configuration
  */
 ProxyService.isUrlProxyfied = function(envConfig, testedUrl) {
-  let urls = envConfig['proxy']['urls'];
-  let result = false;
-  for (let urlPatternProperty in urls) {
-    let urlMatching = new RegExp(urlPatternProperty).test(testedUrl);
-    if (urlMatching) {
-      result = true;
-      break;
+  let proxyConfig = envConfig['proxy'];
+  let patterns = proxyConfig['urls'] || [];
+  let proxyEnabledPatterns = Object.keys(patterns).filter(function(pattern) {
+    return patterns[pattern];
+  });
+  for (let pattern of proxyEnabledPatterns) {
+    if (new RegExp(pattern).test(testedUrl)) {
+      return true;
     }
   };
-  return result;
+  return false;
 };
 
 /**
@@ -31,10 +32,12 @@ ProxyService.isUrlProxyfied = function(envConfig, testedUrl) {
  */
 ProxyService.doHttpCall = function (request, response, url, envConfig) {
 
+  let proxyConfig = envConfig['proxy'] || [];
+
   // Proxy request options
   let options = {
-    host: envConfig['proxy']['host'],
-    port: envConfig['proxy']['port'],
+    host: proxyConfig['host'],
+    port: proxyConfig['port'],
     path: url,
     method: request.method
   };
