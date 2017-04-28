@@ -110,7 +110,7 @@ class FileLoaderService {
         }
 
       } catch(e) {
-        let message = 'The mock file is not valid (' + path + ')';
+        const message = `The mock file is not valid (${path})`;
         content = { 'error': message, 'e': util.inspect(e, false, 2, true) };
         notices.push(message);
       }
@@ -129,9 +129,9 @@ class FileLoaderService {
       }
       catch(e) {
         httpCode = this.Configuration.get('http_codes.mock_file_invalid');
-        let message = 'The mock file contains invalid JSON';
+        const message = 'The mock file contains invalid JSON';
         content =  {
-          'errorCode': 500,
+          'errorCode': httpCode,
           'errorDescription': message
         };
         notices.push(message);
