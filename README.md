@@ -295,3 +295,70 @@ As an example, using the configuration file:
 ```
 
 Available parameters for each stream can be found in the [Bunyan documentation](https://github.com/trentm/node-bunyan#stream-type-rotating-file).
+
+## Middlewares
+
+A Mockiji middleware is a JavaScript function that is called by Mockiji (with the `logger` and the `configuration` as a parameter) and returns an [Express](http://expressjs.com/) middleware.  
+This [Express](http://expressjs.com/) middleware is then added before to the ones used by Mockiji.
+
+Here is a simple example that retrieves the response time for every request and logs it using Mockiji's logger:
+
+```js
+const Mockiji = require('mockiji');
+
+const server = new Mockiji({
+  configuration: {
+    middlewares: [
+      ({logger, configuration}) => {
+        logger.info('Response time middleware loaded');
+
+        return (req, res, next) => {
+          // On request received
+          const requestTime = Date.now();
+
+          // On request end
+          req.on('end', _ => {
+            const deltaTime = Date.now() - requestTime;
+            logger.debug(`Request ${req.method} ${req.originalUrl} took ${deltaTime}ms`);
+          });
+
+          // Call next middleware
+          next();
+        }
+      }
+    ]
+  }
+});
+
+server.start();
+```
+
+It is also possible to create a standalone middleware and then reuse it between projects:
+
+```js
+const express = require('express');
+
+module.exports = function({basePath} = {}) {
+  return ({logger, configuration}) => {
+    logger.info('Mockiji custom middleware loaded');
+
+    const app = express();
+    app.use(basePath, require('./routes'));
+    return app;
+  };
+}
+```
+
+```js
+const Mockiji = require('mockiji');
+
+const server = new Mockiji({
+  configuration: {
+    middlewares: [
+      require('my-custom-middleware')({basePath: '/dashboard'})
+    ]
+  }
+});
+
+server.start();
+```
