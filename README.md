@@ -113,6 +113,28 @@ Try it by yourself you will get:
 ```
 As usual, you can locate the served file with the `X-Mockiji-File` response header and fix it with nice and valid JSON.
 
+# Advanced features
+
+## Forwards some requests (proxy)
+You want to mock some requests but you also want some other requests to attack a running API?  
+You can enable and configure this feature in the configuration file:
+
+```json
+{
+  "proxy": {
+    "host" : "api.company.com",
+    "port" : "80",
+    "urls" : {
+      "api-simple-library/users/kate/.*": false,
+      "api-simple-library/users/tom/.*": true,
+      "api-simple-library/users/.*/books/([0-9])+": true,
+    }
+  }
+}
+```
+
+Any requests matching the patterns from the `urls` object keys will be forwarded to //api.company.com:80 (provided the pattern is enabled by setting it to `true`).
+
 # Install and launch
 <details>
 <summary>With Docker</summary>
