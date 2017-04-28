@@ -8,7 +8,10 @@ const MockCtrl = require('../controllers/MockCtrl');
 module.exports = function({Configuration, Logger, app}) {
   // Configuration middlewares
   for (let middleware of Configuration.get('middlewares')) {
-    app.use(middleware);
+    app.use(middleware({
+      configuration: Configuration,
+      logger: Logger,
+    }));
   }
 
   // Cross-domain management
