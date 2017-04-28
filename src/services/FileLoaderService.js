@@ -38,19 +38,19 @@ class FileLoaderService {
 
       let candidateFile = glob.sync(element);
       if(candidateFile.length > 0) {
-        this.Logger.debug({'files': util.inspect(files), 'key': element}, 'FILE MATCH!');
+        this.Logger.debug({'files': files}, `Mock file found: ${candidateFile[0]}`);
         files.push(candidateFile[0]);
         fileMatch = true;
       }
     });
 
     if (unlimited) {
-      this.Logger.debug('Multiple files found, return all:', files);
+      this.Logger.debug({'files': files}, `${files.length} matching file(s) found, returning all of them`);
       return files;
     }
 
     if (files.length > 0) {
-      this.Logger.debug('Multiple files found, selecting the first one: ' + files[0]);
+      this.Logger.debug({'files': files}, `${files.length} matching file(s) found, returning "${files[0]}"`);
       return files[0];
     }
 
@@ -77,7 +77,7 @@ class FileLoaderService {
       let scriptFilePath = pPath;
       mockData = this._loadMockData(scriptFilePath, paths.mocks);
       path = this.find(paths.scripts);
-      this.Logger.info({'path':path},'Loading a script file');
+      this.Logger.debug(`Loading script file "${path}"`);
     }
     else {
       path = pPath;
@@ -110,13 +110,12 @@ class FileLoaderService {
         }
 
       } catch(e) {
-        let message = 'The mock file is not valid (' + path + ')';
+        const message = `The mock file is not valid (${path})`;
         content = { 'error': message, 'e': util.inspect(e, false, 2, true) };
         notices.push(message);
       }
     }
     else if(extension === 'html') {
-      this.Logger.warn(fileContent);
       content = fileContent;
       httpCode = 200;
     }
@@ -130,8 +129,11 @@ class FileLoaderService {
       }
       catch(e) {
         httpCode = this.Configuration.get('http_codes.mock_file_invalid');
-        let message = 'The mock file contains invalid JSON';
-        content =  {'error': message};
+        const message = 'The mock file contains invalid JSON';
+        content =  {
+          'errorCode': httpCode,
+          'errorDescription': message
+        };
         notices.push(message);
       }
     }
@@ -156,7 +158,7 @@ class FileLoaderService {
     try {
       return jsonfile.readFileSync(memoryPath);
     } catch(e) {
-      this.Logger.info(memoryPath, 'this memory file does not exist');
+      this.Logger.debug({'exception': e}, `Could not open memory file "${memoryPath}"`);
       return {};
     }
   }
@@ -167,10 +169,10 @@ class FileLoaderService {
   _updateMemoryFile(mockPath, memory) {
     let memoryPath = mockPath.replace('.js','.memory.json');
     try {
-      this.Logger.info(memoryPath, 'this memory file can be created');
       jsonfile.writeFileSync(memoryPath, memory, {spaces:2});
+      this.Logger.info(`Wrote into memory file "${memoryPath}"`);
     } catch(e) {
-      this.Logger.error(memoryPath, 'this memory file cannot be created');
+      this.Logger.error({'exception': e}, `Could not write into memory file "${memoryPath}"`);
     }
   }
 
@@ -273,7 +275,7 @@ class FileLoaderService {
             data = merge.recursive(true, data, jsonContent);
           }
           catch (e) {
-            this.Logger.warn('Error parsing file: ', mockDataPath);
+            this.Logger.error({'exception': e}, `Could not parse mock file "${mockDataPath}"`);
           }
         });
       }

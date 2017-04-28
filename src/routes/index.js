@@ -1,19 +1,19 @@
 'use strict';
 
+const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const MockCtrl = require('../controllers/MockCtrl');
 
 module.exports = function({Configuration, Logger, app}) {
   // Cross-domain management
   app.use(cors());
 
-  // HeartBeat test
-  app.get('/', function(req, res) {
-    res.end('Mockiji server is alive!');
-  });
+  // Index route
+  app.use(express.static(path.join(__dirname, '../../public')));
 
-  // Main route
-  app.all('/api*', function(req, res) {
+  // Mocks route
+  app.use(function(req, res) {
     new MockCtrl({Configuration, Logger}).buildResponse(req, res);
   });
 };

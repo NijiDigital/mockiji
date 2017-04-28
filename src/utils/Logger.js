@@ -3,6 +3,7 @@
 const bunyan = require('bunyan');
 const path = require('path');
 const fs = require('fs');
+const PrettyLogStream = require('./PrettyLogStream');
 
 function initLogger({Configuration}) {
   const environment = Configuration.get('env');
@@ -14,7 +15,7 @@ function initLogger({Configuration}) {
   // If Mockiji is not in silent mode, add a stdout stream
   if (!silent) {
     streams.push({
-      stream: process.stdout,
+      stream: new PrettyLogStream(),
       level: (environment === 'dev') ? 'debug' : 'info',
     });
   }
