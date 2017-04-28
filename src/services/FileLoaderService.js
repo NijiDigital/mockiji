@@ -1,54 +1,56 @@
 'use strict';
 
-let util = require('util');
-let fs = require('fs');
-let merge = require('merge');
-let url = require('url');
-let glob = require('glob-all');
-let jsonfile = require('jsonfile');
+const util = require('util');
+const fs = require('fs');
+const merge = require('merge');
+const url = require('url');
+const glob = require('glob-all');
+const jsonfile = require('jsonfile');
 
-// Configuration and logger
-let config = require('../utils/configuration');
-let log = require('../utils/logger');
+/**
+ * UTF8 Encoding
+ */
+const UTF8 = 'utf8';
 
 /**
  * This service is for loading the right file
  */
-let FileLoaderService = function() {
-
+class FileLoaderService {
   /**
-   * UTF8 Encoding
+   * Constructor.
    */
-  const UTF8 = 'utf8';
+  constructor({Configuration, Logger}) {
+    this.Configuration = Configuration;
+    this.Logger = Logger;
+  }
 
   /**
    * Find the right file to load
    */
-  function find(paths, unlimited) {
-
+  find(paths, unlimited) {
     let files = [];
 
     let fileMatch = false;
-    paths.forEach(function(element) {
+    paths.forEach((element) => {
       if (fileMatch && !unlimited) {
         return;
       }
 
       let candidateFile = glob.sync(element);
       if(candidateFile.length > 0) {
-        log.debug({'files': util.inspect(files), 'key': element}, 'FILE MATCH!');
+        this.Logger.debug({'files': util.inspect(files), 'key': element}, 'FILE MATCH!');
         files.push(candidateFile[0]);
         fileMatch = true;
       }
     });
 
     if (unlimited) {
-      log.debug('Multiple files found, return all:', files);
+      this.Logger.debug('Multiple files found, return all:', files);
       return files;
     }
 
     if (files.length > 0) {
-      log.debug('Multiple files found, selecting the first one: ' + files[0]);
+      this.Logger.debug('Multiple files found, selecting the first one: ' + files[0]);
       return files[0];
     }
 
@@ -58,8 +60,7 @@ let FileLoaderService = function() {
   /**
    * Load the file located at the path
    */
-  function load(pPath, request, paths) {
-
+  load(pPath, request, paths) {
     let fileContent = fs.readFileSync(pPath, 'utf8');
     let content = null;
     let notices = [];
@@ -67,32 +68,32 @@ let FileLoaderService = function() {
     let extension = null;
     let location = null;
 
-    let isScriptMock = _isScriptMockFilePath(pPath);
-    let httpCode = _extractHttpCodeFromFileName(pPath);
+    let isScriptMock = this._isScriptMockFilePath(pPath);
+    let httpCode = this._extractHttpCodeFromFileName(pPath);
     let mockData = {};
     let delay = 1;
 
     if(isScriptMock) {
       let scriptFilePath = pPath;
-      mockData = _loadMockData(scriptFilePath, paths.mocks);
-      path = find(paths.scripts);
-      log.info({'path':path},'Loading a script file');
+      mockData = this._loadMockData(scriptFilePath, paths.mocks);
+      path = this.find(paths.scripts);
+      this.Logger.info({'path':path},'Loading a script file');
     }
     else {
       path = pPath;
     }
 
-    extension = _extractExtensionFromFileName(path);
+    extension = this._extractExtensionFromFileName(path);
     if(extension === 'js') {
 
       // Load the possible memory file
-      let memory = _loadMemoryFile(path);
+      let memory = this._loadMemoryFile(path);
 
       delete require.cache[require.resolve(path)];
       let jsMock = require(path);
 
       try {
-        let response = new jsMock(_buildMockRequestObject(request), mockData, memory);
+        let response = new jsMock(this._buildMockRequestObject(request), mockData, memory);
         content = response.content;
         httpCode = response.httpCode || httpCode;
         if (response.hasOwnProperty('extension')) {
@@ -105,7 +106,7 @@ let FileLoaderService = function() {
 
         // Save memory if returned
         if(response.memory) {
-          _updateMemoryFile(path, response.memory);
+          this._updateMemoryFile(path, response.memory);
         }
 
       } catch(e) {
@@ -115,7 +116,7 @@ let FileLoaderService = function() {
       }
     }
     else if(extension === 'html') {
-      log.warn(fileContent);
+      this.Logger.warn(fileContent);
       content = fileContent;
       httpCode = 200;
     }
@@ -128,7 +129,7 @@ let FileLoaderService = function() {
         }
       }
       catch(e) {
-        httpCode = config.mock_file_invalid_http_code;
+        httpCode = this.Configuration.get('http_codes.mock_file_invalid');
         let message = 'The mock file contains invalid JSON';
         content =  {'error': message};
         notices.push(message);
@@ -150,12 +151,12 @@ let FileLoaderService = function() {
    * Check if the memory file fitting the mockPath exist and returns its content
    * @return object from the memory file or {} if the file does not exist
    */
-  function _loadMemoryFile(mockPath) {
+  _loadMemoryFile(mockPath) {
     let memoryPath = mockPath.replace('.js','.memory.json');
     try {
       return jsonfile.readFileSync(memoryPath);
     } catch(e) {
-      log.info(memoryPath, 'this memory file does not exist');
+      this.Logger.info(memoryPath, 'this memory file does not exist');
       return {};
     }
   }
@@ -163,13 +164,13 @@ let FileLoaderService = function() {
   /**
    * Update (or create) the memory file fitting the mockPath with the memory content
    */
-  function _updateMemoryFile(mockPath, memory) {
+  _updateMemoryFile(mockPath, memory) {
     let memoryPath = mockPath.replace('.js','.memory.json');
     try {
-      log.info(memoryPath, 'this memory file can be created');
+      this.Logger.info(memoryPath, 'this memory file can be created');
       jsonfile.writeFileSync(memoryPath, memory, {spaces:2});
     } catch(e) {
-      log.error(memoryPath, 'this memory file cannot be created');
+      this.Logger.error(memoryPath, 'this memory file cannot be created');
     }
   }
 
@@ -177,8 +178,7 @@ let FileLoaderService = function() {
    * Build an object containing the method, url (pathname) and query (queryString) from the request
    * @return object the built object
    */
-  function _buildMockRequestObject(request) {
-
+  _buildMockRequestObject(request) {
     let urlComponents = url.parse(request.url, true);
 
     return {
@@ -193,7 +193,7 @@ let FileLoaderService = function() {
   /**
    * Extract the HTTP Code from the filename (just before the final extension)
    */
-  function _extractHttpCodeFromFileName(filename) {
+  _extractHttpCodeFromFileName(filename) {
     let httpCode = 200;
 
     let matches = filename.match(/\.([0-9]{3})\.[a-z0-9]+$/i);
@@ -207,7 +207,7 @@ let FileLoaderService = function() {
   /**
    * Extract the file extension from the filename
    */
-  function _extractExtensionFromFileName(filename) {
+  _extractExtensionFromFileName(filename) {
     let extension = null;
 
     let matches = filename.match(/\.([a-z0-9]+)$/i);
@@ -218,7 +218,7 @@ let FileLoaderService = function() {
     return extension;
   }
 
-  function _isScriptMockFilePath(filename) {
+  _isScriptMockFilePath(filename) {
     let matches = filename.match(/\.script$/i);
     if(matches != null) {
       return true;
@@ -226,30 +226,30 @@ let FileLoaderService = function() {
     return false;
   }
 
-  function _loadMockData(path, paths) {
-    let dataFileNames = _extractDataFileNamesFromScriptFile(path);
-    let dataPaths = _convertMockPathsToDataPaths(paths, dataFileNames);
-    let data = _loadMockDataFromDataPaths(dataPaths);
+  _loadMockData(path, paths) {
+    let dataFileNames = this._extractDataFileNamesFromScriptFile(path);
+    let dataPaths = this._convertMockPathsToDataPaths(paths, dataFileNames);
+    let data = this._loadMockDataFromDataPaths(dataPaths);
     return data;
   }
 
-  function _extractDataFileNamesFromScriptFile(path) {
+  _extractDataFileNamesFromScriptFile(path) {
     let fileContent = fs.readFileSync(path, UTF8);
     let paths = fileContent.trim().split(/\r?\n/);
     return paths;
   }
 
-  function _convertMockPathsToDataPaths(paths, files) {
+  _convertMockPathsToDataPaths(paths, files) {
     let dataPaths = {};
 
-    files.forEach(function(file) {
+    files.forEach((file) => {
       dataPaths[file] = [];
     });
 
-    paths.forEach(function(path) {
+    paths.forEach((path) => {
       let lastSlashPosition = path.lastIndexOf('/');
       if(lastSlashPosition !== -1) {
-        files.forEach(function(file) {
+        files.forEach((file) => {
           let dataDefaultPath = [path.substring(0, lastSlashPosition), '@default/@data', file].join('/');
           dataPaths[file].push(dataDefaultPath);
           let dataPath = [path.substring(0, lastSlashPosition), '@data', file].join('/');
@@ -260,33 +260,26 @@ let FileLoaderService = function() {
     return dataPaths;
   }
 
-  function _loadMockDataFromDataPaths(dataPaths) {
+  _loadMockDataFromDataPaths(dataPaths) {
     let data = {};
     for(let file in dataPaths) {
       let paths = dataPaths[file];
-      let mockDataPaths = find(paths, true);
+      let mockDataPaths = this.find(paths, true);
       if(mockDataPaths !== null) {
-        mockDataPaths.reverse().forEach(function(mockDataPath) {
+        mockDataPaths.reverse().forEach((mockDataPath) => {
           let fileContent = fs.readFileSync(mockDataPath, 'utf8');
           try {
             let jsonContent = JSON.parse(fileContent);
             data = merge.recursive(true, data, jsonContent);
           }
           catch (e) {
-            log.warn('Error parsing file: ', mockDataPath);
+            this.Logger.warn('Error parsing file: ', mockDataPath);
           }
         });
       }
     }
     return data;
   }
-
-  // Expose
-  return {
-    find,
-    load
-  }
-
 }
 
 module.exports = FileLoaderService;

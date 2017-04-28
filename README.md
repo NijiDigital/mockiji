@@ -16,7 +16,8 @@ Plus, you can also provide a JavaScript file to generate a response according to
 ## Basic examples
 
 **Request:** `GET /api/of/mine`  
-**Response:**  `HTTP 200 OK`  
+**Response:**  `HTTP 200 OK`
+
 ```json
 {
 	"title": "The response to GET /api/of/mine (HTTP 200 OK)",
@@ -25,7 +26,8 @@ Plus, you can also provide a JavaScript file to generate a response according to
 ```
 
 **Request:** `POST /api/books/`  
-**Response:**  `HTTP 503 Service Unavailable`  
+**Response:**  `HTTP 503 Service Unavailable`
+
 ```json
 {
 	"title": "This is a 503 HTTP Error to the request POST /api/books/",
@@ -50,7 +52,7 @@ which may fit a folder name in the mocks folder hierarchy.
 ## Get Started with the default configuration
 Mockiji contains some mocks to start playing with and help you understand how it works.
 This first API is a library (the ones with books) where users kate and tom has borrowed some books.
-Please install and launch Mockiji without editing the default configuration or the `env.json.example` file and let's get started.
+Please install and launch Mockiji without editing the default configuration and let's get started.
 
 ### A simple request
 Start by loading `http://localhost:8080/api-simple-library/users/tom/books` in your browser or REST Client (`GET` verb).
@@ -74,7 +76,8 @@ That's why this file has been served. Look at the file hierarchy in the `api-sim
 ### Mockiji's 404 page
 Now we will request a non-existing request for this api.  
 Try this one: `http://localhost:8080/api-simple-library/users/kate/comics`  
-You should get a page looking like this one:  
+You should get a page looking like this one:
+
 ```json
 {
   "errorCode": 404,
@@ -97,6 +100,7 @@ You should get a page looking like this one:
   ]
 }
 ```
+
 No mock file was found and Mockiji tells you where it searched for mock files.
 This page is useful to understand why your mock file has not been found.
 You can also use theses paths to choose where to create your files for improving the API.  
@@ -106,72 +110,104 @@ If you create one file and put it on one of these paths, you will be able to ref
 ### Mockiji's 500 page
 What happens if you create one JSON mock file but screwed up and put XML in it?  
 Try it by yourself you will get:
+
 ```json
 {
   "error": "The mock file contains invalid JSON"
 }
 ```
+
 As usual, you can locate the served file with the `X-Mockiji-File` response header and fix it with nice and valid JSON.
 
 # Install and launch
+## Using npm
+You can install Mockiji using npm, either globally or as a dev dependency of your project:
+
+```sh
+# Globally
+npm install -g mockiji
+
+# As a dev dependency
+npm install --save-dev mockiji
+```
+
+Then to run it, just execute the `mockiji` binary:
+
+```sh
+mockiji
+```
+
+Note: By default Mockiji will expect a `mocks/` directory where the command is executed. You can use the one at the root of this repository as an example.
+
+## By cloning this repository
+
 <details>
 <summary>With Docker</summary>
+
 Mockiji is not yet available on Docker hub, however you can build an image easily.  
 You must have docker installed along with the `docker` command.
 
-## Docker build image
-From the app root folder:  
+### Docker build image
+From the app root folder:
+
 ```sh
 docker build -t mockiji .
 ```
 
-## Docker run
-From the app root folder:  
+### Docker run
+From the app root folder:
+
 ```sh
-docker run -p 8080:8080 mockiji
+docker run -d -p 8080:8080 mockiji ./bin/mockiji
 ```
 
 </details>
+
 <details>
 <summary>Without Docker</summary>
+
 You can use your favorite package manager and node process manager.
 
-## Requirements 
+### Requirements
 You MUST have `Node >= 6` and `NPM >= 3`.  
 You MAY have `yarn` and `pm2`.
 
-## Install Mockiji
+### Install Mockiji
 Please choose one of the following install option:
 
 <details open="1">
 <summary>Install with yarn</summary>
-From the `api/` folder:
+From the root folder:
+
 ```sh
 yarn
 ```
 </details>
 <details>
 <summary>Install with npm</summary>
-From the `api/` folder:  
+From the root folder:
+
 ```sh
 npm install
 ```
 </details>
 
-## Launch Mockiji
+### Launch Mockiji
 
 <details open="1">
 <summary>Launch with pm2</summary>
-From the `api/` folder:  
+From the root folder:
+
 ```sh
-pm2 start processes.json
+pm2 start src/index.js --name="mockiji-api"
 ```
 </details>
 <details>
 <summary>Launch with Node</summary>
-From the `api/` folder:  
+From the root folder:
+
 ```sh
-node app
+./bin/mockiji
 ```
 </details>
 </details>
@@ -179,37 +215,82 @@ node app
 You should now be able to load `http://localhost:8080` in your browser or REST client now.
 
 ## Configuration
-Mockiji always loads the following configuration file: `api/config/default.json`.  
-You can edit this default file or override it (totally or partially) with a custom configuration file.  
-In this case, you have to point this custom configuration file into the `api/config/env.json` file.  
-`api/config/env.json` will be copied automatically from `api/config/env.json.example` if it does not exist when pm2 starts.
+Mockiji embeds a default configuration that works out of the box and loads mocks from the `mocks/` folder.  
+You can override it using the following methods.
 
-Example of `env.json` file:  
-```json
-{
-  "name": "dev",
-  "path": "/srv/www/my-frontend-app/mocks/"
-}
-```
-This file tells Mockiji to load a `dev.json` file from the `/srv/www/my-frontend-app/mocks/` folder.  
-Mockiji will throw an explicit error on boot if this custom configuration has not been found.  
+Note: All path are relative to the directory Mockiji is started from.
+
+### Environment variables
+Usage: `PORT=8001 API_BASE_PATH=./my-mocks/ mockiji`
+
+| Name          | Type    | Default                 | Description                            |
+|---------------|---------|-------------------------|----------------------------------------|
+| PORT          | port    | 8080                    | Listening port                         |
+| NODE_ENV      | string  | dev                     | Environment name                       |
+| API_BASE_PATH | path    | ./mocks                 | Path to the folder containg mock files |
+
+### CLI parameters
+Usage: `mockiji --port 8001 --api-base-path ./my-mocks/`
+
+| Name          | Type    | Default                 | Description                                         |
+|---------------|-------- |-------------------------|-----------------------------------------------------|
+| config-file   | string  |                         | Path to a configuration file                        |
+| port          | port    | 8080                    | Listening port                                      |
+| env           | string  | dev                     | Environment name                                    |
+| api-base-path | path    | ./mocks                 | Path to the folder containg mock files              |
+| silent        |         |                         | If specified, disable the default stdout log stream |
+
+### Configuration file
+The whole [node-convict configuration schema](https://github.com/mozilla/node-convict#the-schema) can be found in the `src/utils/configuration.js` file.
+
+You can override the default values by specifying a JSON configuration file when running Mockiji, e.g. `mockiji --config-file mockiji.json`.
 
 You will have to restart Mockiji if you want the configuration to change.  
 If you use pm2, you can do it with `pm2 restart 0` (provided 0 is your mockiji pm2-process id)
 
-## Log
-Log files are located in the `logs/` folder and can be configured in a configuration file (eg. `api/config/default.json`).  
-If you use pm2, you can view them with `pm2 logs 0` (provided 0 is your mockiji pm2-process id)
+## API
+You can also start a mockiji server directly from your code by using its API:
 
-The configuration system is described in the [Bunyan repository](https://github.com/trentm/node-bunyan#stream-type-rotating-file).
+```js
+const Mockiji = require('mockiji');
+const server = new Mockiji({
+  configuration: {
+    port: 8001,
+    api_base_path: './my-mocks',
+  }
+});
+
+server.start().then(
+  () => { console.log('Mockiji started'); },
+  (error) => { console.error('Could not start Mockiji: ', error); }
+);
+```
+
+The `Mockiji` constructor takes an option object as a parameter that can have the following attributes:
+* `configuration`: a configuration object as described by the [node-convict configuration schema](https://github.com/mozilla/node-convict#the-schema) that can be found in the `src/utils/configuration.js` file;
+* `configFile`: a path to a JSON configuration file.
+
+An instance of `Mockiji` provides two methods `start` and `stop` both returning a `Promise` object.
+
+## Log
+Log files are generated by [Bunyan](https://github.com/trentm/node-bunyan) and are saved by default in the `logs/` folder.
+
+This behavior can by adding [Bunyan](https://github.com/trentm/node-bunyan) streams to the `logs` attribute of the configuration file described previously.
+
+A default `stdout` stream with the `debug` or `info` level (based on whether or not your are using the `dev` environment) is also automatically added and can be disabled using the `--silent` argument.
+
+As an example, using the configuration file:
 
 ```json
 {
-    "name": "api-mockiji",
-    "filepath": "../logs/api-mockiji.log",
-    "level": "info",
+  "logs": [{
+    "filepath": "./logs/api-mockiji.log",
+    "level": "warn",
     "type": "rotating-file",
     "period": "1d",
-    "count": 10
+    "count": 3
+  }]
 }
 ```
+
+Available parameters for each stream can be found in the [Bunyan documentation](https://github.com/trentm/node-bunyan#stream-type-rotating-file).

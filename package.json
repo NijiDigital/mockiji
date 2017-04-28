@@ -1,0 +1,40 @@
+{
+  "name": "mockiji",
+  "description": "Simple, Fast and Powerful file-based Node.js mock server",
+  "homepage": "https://github.com/NijiDigital/mockiji",
+  "version": "2.0.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NijiDigital/mockiji.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NijiDigital/mockiji/issues"
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "dependencies": {
+    "bunyan": "^1.8.0",
+    "convict": "^3.0.0",
+    "cors": "^2.7.1",
+    "express": "^3.0.0",
+    "glob-all": "^3.0.1",
+    "jsonfile": "^2.3.1",
+    "merge": "^1.2.0",
+    "mv": "^2.1.1",
+    "yargs": "^7.0.2"
+  },
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "mockiji",
+    "lint": "eslint ./src"
+  },
+  "bin": {
+    "mockiji": "./bin/mockiji"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0"
+  }
+}

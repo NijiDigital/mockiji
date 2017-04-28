@@ -1,27 +1,32 @@
 'use strict';
 
-let util = require('util');
-let URLRecomposerService = require('../services/URLRecomposerService.js');
-let FilePathBuilderService = require('../services/FilePathBuilderService.js');
-let FileLoaderService = require('../services/FileLoaderService.js');
-
-// Configuration and logger
-let config = require('../utils/configuration');
+const URLRecomposerService = require('../services/URLRecomposerService.js');
+const FilePathBuilderService = require('../services/FilePathBuilderService.js');
+const FileLoaderService = require('../services/FileLoaderService.js');
 
 /**
  * This controller is for processing the requests and building the response
  */
-let MockCtrl = function(log) {
+class MockCtrl {
+  /**
+   * Constructor.
+   */
+  constructor({Configuration, Logger}) {
+    this.Configuration = Configuration;
+    this.Logger = Logger;
+
+    this.urlRecomposer = new URLRecomposerService({Configuration, Logger});
+    this.pathBuilder = new FilePathBuilderService({Configuration, Logger});
+    this.fileLoader = new FileLoaderService({Configuration, Logger});
+  }
 
   /**
-   *
+   * Build a response based on the user request.
    * @param request
    * @param response
    */
-  function _buildResponse(request, response) {
-
+  buildResponse(request, response) {
     let method = request.method.toLowerCase();
-    let queryString = null;
     let httpCode = 201;
     let rawContent = null;
     let extension = 'json';
@@ -29,22 +34,19 @@ let MockCtrl = function(log) {
     let delay = 1;
 
     // Get the URL
-    let urlRecomposer = new URLRecomposerService();
-    let url = urlRecomposer.recompose(request);
-    log.debug({'method': method, 'url': url}, 'Incoming request');
+    let url = this.urlRecomposer.recompose(request);
+    this.Logger.debug({'method': method, 'url': url}, 'Incoming request');
 
     // List every possible paths
-    let pathBuilder = new FilePathBuilderService();
-    let paths = pathBuilder.generatePaths(method, url, queryString);
+    let paths = this.pathBuilder.generatePaths(method, url);
 
     // Find the file to load and extract the content
-    let fileLoader = new FileLoaderService();
-    let fileToLoad = fileLoader.find(paths.mocks);
+    let fileToLoad = this.fileLoader.find(paths.mocks);
 
     let responseHeaders = {};
 
     if (fileToLoad !== null) {
-      let fileData = fileLoader.load(fileToLoad, request, paths);
+      let fileData = this.fileLoader.load(fileToLoad, request, paths);
       rawContent = fileData.rawContent;
       httpCode = fileData.httpCode;
       extension = fileData.extension;
@@ -56,15 +58,15 @@ let MockCtrl = function(log) {
       if (location) {
         responseHeaders['Location'] = location;
       }
-      log.info({'method': method, 'url': url}, '[Response] ' + httpCode);
+      this.Logger.info({'method': method, 'url': url}, '[Response] ' + httpCode);
     } else {
-      httpCode = config.mock_file_not_found_http_code;
+      httpCode = this.Configuration.get('http_codes.mock_file_not_found');
       rawContent = {
         'errorCode': httpCode,
         'errorDescription': 'No mock file was found',
         'evaluatedMockFilePaths': paths.mocks
       };
-      log.info(rawContent, '[Response] Not Found');
+      this.Logger.info(rawContent, '[Response] Not Found');
     }
 
     // Set Response Headers
@@ -82,11 +84,6 @@ let MockCtrl = function(log) {
       }
     }, delay);
   }
-
-  return {
-    buildResponse: _buildResponse
-  }
-
-};
+}
 
 module.exports = MockCtrl;

@@ -20,20 +20,9 @@ echo     INSTALL mockiji
 #hook pre
 pre_bin
 
-pwd
-cd api
 npm install
 
-cd config
-cat > env.json << EOF
-{
-  "name": "dev",
-  "path": "../../mocks/data"
-}
-EOF
-cd ../
-
-pm2 start processes.json
+pm2 start ./bin/mockiji --name="mockiji-api" -- --config-file ../mocks/data/dev.json
 pm2 save
 
 #hook post

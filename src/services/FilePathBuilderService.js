@@ -1,17 +1,19 @@
 'use strict';
 
-let Toolbox = require('../utils/Toolbox.js');
-let util = require('util');
-let fs = require('fs');
-
-// Configuration and logger
-let config = require('../utils/configuration');
-let log = require('../utils/logger');
+const Toolbox = require('../utils/Toolbox.js');
+const path = require('path');
 
 /**
  * This Controller is for building the response
  */
-let FilePathBuilderService = function() {
+class FilePathBuilderService {
+  /**
+   * Constructor.
+   */
+  constructor({Configuration, Logger}) {
+    this.Configuration = Configuration;
+    this.Logger = Logger;
+  }
 
   /**
    * Build paths to load the mock file according to the method, url and queryString
@@ -20,15 +22,14 @@ let FilePathBuilderService = function() {
    * @param queryString the request query string
    * @returns object
    */
-  function generatePaths(method, url, queryString) {
-
+  generatePaths(method, url) {
     let mockURLs = [];
 
     // ../method.json
     // ../../method_lastElement.json
     // ../../../method_beforeLastElement_lastElement.json
     // etc.
-    mockURLs = mockURLs.concat(_buildSpecialPaths(method, url, false));
+    mockURLs = mockURLs.concat(this._buildSpecialPaths(method, url, false));
 
     // ../@default/method.json
     // @default/../method.json
@@ -40,7 +41,7 @@ let FilePathBuilderService = function() {
     // ../@default/../../method_beforeLastElement_lastElement.json
     // @default/../../../method_beforeLastElement_lastElement.json
     // etc.
-    mockURLs = mockURLs.concat(_buildSpecialPaths(method, url, '@default'));
+    mockURLs = mockURLs.concat(this._buildSpecialPaths(method, url, '@default'));
 
     // ../@scripts/method.js
     // @scripts/../method.js
@@ -52,13 +53,11 @@ let FilePathBuilderService = function() {
     // ../@scripts/../../method_beforeLastElement_lastElement.js
     // @scripts/../../../method_beforeLastElement_lastElement.js
     // etc.
-    let scriptURLs = _buildSpecialPaths(method, url, '@scripts');
+    let scriptURLs = this._buildSpecialPaths(method, url, '@scripts');
 
-    let toolbox = new Toolbox();
-    let appRootPath = require('path').dirname(require.main.filename) + '/';
-    let basePath = toolbox.buildAbsolutePaths(appRootPath, [config.listen_to_these_api_base_urls.api]);
-    let absoluteMocksURLs = toolbox.buildAbsolutePaths(basePath, mockURLs);
-    let absoluteScriptURLs = toolbox.buildAbsolutePaths(basePath, scriptURLs);
+    let basePath = path.join(process.cwd(), this.Configuration.get('api_base_path'));
+    let absoluteMocksURLs = Toolbox.buildAbsolutePaths(basePath, mockURLs);
+    let absoluteScriptURLs = Toolbox.buildAbsolutePaths(basePath, scriptURLs);
 
     return {
       mocks: absoluteMocksURLs,
@@ -71,10 +70,9 @@ let FilePathBuilderService = function() {
    * Build paths to load the mock file according to the method, url and queryString
    * @param method the request method
    * @param url the request url
-   * @param queryString the request query string
    * @returns object
    */
-  function _buildSpecialPaths(method, url, marker) {
+  _buildSpecialPaths(method, url, marker) {
     let mockURLs = [];
 
     let request = url.split('?');
@@ -117,11 +115,6 @@ let FilePathBuilderService = function() {
     }
     return mockURLs;
   }
-
-  return {
-    generatePaths
-  }
-
 }
 
 module.exports = FilePathBuilderService;

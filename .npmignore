@@ -1,0 +1,5 @@
+automation/
+docs/
+logs/
+mocks/
+Dockerfile
