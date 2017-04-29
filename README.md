@@ -6,6 +6,10 @@
   Simple, Fast and Powerful file-based Node.js mock server
 </p>
 
+<p align="center">
+  <a href="https://travis-ci.org/NijiDigital/mockiji"><img alt="Travis Status" src="https://travis-ci.org/NijiDigital/mockiji.svg?branch=master"></a>
+</p>
+
 ---
 
 # What is Mockiji?
