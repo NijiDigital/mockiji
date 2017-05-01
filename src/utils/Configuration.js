@@ -48,6 +48,11 @@ const SETTINGS_SCHEMA = {
       count:  3,
     }]
   },
+  middlewares: {
+    doc: 'Additional Express middlewares',
+    format: Array,
+    default: []
+  },
   authorization_header_replacements: {
     doc: 'An array of regexes and token replacement keys that can be used to change an URL part based on the content of the Authorization header',
     format: Array,
