@@ -2,4 +2,5 @@ automation/
 docs/
 logs/
 mocks/
+test/
 Dockerfile
