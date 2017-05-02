@@ -62,6 +62,7 @@ describe("Resolving", function() {
     this.checkPaths('GET', {
       'api/': {file: '/api/get.json', status: 200},
       'api/statuses/ok': {file: '/api/statuses/get_ok.200.json', status: 200},
+      'api/statuses/empty': {file: '/api/statuses/get_empty.201.json', status: 201},
       'api/statuses/not_found': {file: '/api/statuses/get_not_found.404.json', status: 404},
       'api/statuses/internal_error': {file: '/api/statuses/get_internal_error.500.json', status: 500},
     }).then(done, done.fail);
