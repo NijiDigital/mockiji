@@ -1,9 +1,16 @@
 {
   "env": {
     "es6": true,
-    "node": true
+    "node": true,
+    "jasmine": true
   },
-  "extends": "eslint:recommended",
+  "plugins": [
+    "jasmine"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:jasmine/recommended"
+  ],
   "rules": {
     "accessor-pairs": "error",
     "array-bracket-spacing": [
@@ -126,7 +133,7 @@
       "error",
       "functions"
     ],
-    "no-invalid-this": "error",
+    "no-invalid-this": "off",
     "no-iterator": "error",
     "no-label-var": "error",
     "no-labels": "error",
@@ -283,6 +290,8 @@
     "yoda": [
       "error",
       "never"
-    ]
+    ],
+    "jasmine/no-global-setup": 0,
+    "jasmine/no-expect-in-setup-teardown": 0
   }
 }
