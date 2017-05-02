@@ -61,6 +61,7 @@ beforeEach(function() {
       method: method,
       uri: `http://127.0.0.1:${SERVER_PORT}/${path}`,
       resolveWithFullResponse: true,
+      simple: false,
     });
   }
 
@@ -72,10 +73,18 @@ beforeEach(function() {
    */
   this.checkPaths = function(method, paths) {
     const promises = Object.keys(paths).map((path) => {
-      const expectedFile = paths[path];
+      const expectedStatus = paths[path].status;
+      const expectedFile = paths[path].file;
+
       return this.doRequest(method, path).then((response) => {
-        const mockFile = response.headers['x-mockiji-file'];
-        expect(mockFile.endsWith(expectedFile)).toBe(true, `Path "${path}" should use file "${expectedFile}" but used file "${mockFile}"`);
+        if (expectedStatus) {
+          expect(response.statusCode).toBe(expectedStatus, `Path "${path}" should return status code ${expectedStatus} but returned ${response.statusCode}`);
+        }
+
+        if (expectedFile) {
+          const mockFile = response.headers['x-mockiji-file'];
+          expect(mockFile.endsWith(expectedFile)).toBe(true, `Path "${path}" should use file "${expectedFile}" but used file "${mockFile}"`);
+        }
       });
     });
 
