@@ -25,7 +25,7 @@ beforeEach(function() {
     // Check if the server is already running and stop it if that's the case
     if (this.serverInstance) {
       return this.stopServer().then(
-        _ => { return this.startServer({ dataPath }); }
+        () => this.startServer({ dataPath })
       );
     }
 
@@ -67,13 +67,13 @@ beforeEach(function() {
   /**
    * Test if the given query paths are using the right mock files.
    * @param {string} method - HTTP Method
-   * @param {Object} paths - An object whose keys are query paths and values are expected file paths
+   * @param {Object} paths - An object whose keys are query paths and values are expectations
    * @return {Promise}
    */
   this.checkPaths = function(method, paths) {
-    const promises = Object.keys(paths).map(path => {
+    const promises = Object.keys(paths).map((path) => {
       const expectedFile = paths[path];
-      return this.doRequest(method, path).then(response => {
+      return this.doRequest(method, path).then((response) => {
         const mockFile = response.headers['x-mockiji-file'];
         expect(mockFile.endsWith(expectedFile)).toBe(true, `Path "${path}" should use file "${expectedFile}" but used file "${mockFile}"`);
       });

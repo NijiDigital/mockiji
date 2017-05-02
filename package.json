@@ -30,7 +30,7 @@
   "main": "./src/index.js",
   "scripts": {
     "start": "mockiji",
-    "lint": "eslint ./src",
+    "lint": "eslint ./src ./test",
     "test": "jasmine JASMINE_CONFIG_PATH=test/support/jasmine.json"
   },
   "bin": {
@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "eslint": "^3.19.0",
+    "eslint-plugin-jasmine": "^2.2.0",
     "jasmine": "^2.6.0",
     "jasmine-spec-reporter": "^4.1.0",
     "request": "^2.81.0",

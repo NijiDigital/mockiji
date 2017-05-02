@@ -1,8 +1,12 @@
 {
   "env": {
     "es6": true,
-    "node": true
+    "node": true,
+    "jasmine": true
   },
+  "plugins": [
+    "jasmine"
+  ],
   "extends": "eslint:recommended",
   "rules": {
     "accessor-pairs": "error",
@@ -126,7 +130,7 @@
       "error",
       "functions"
     ],
-    "no-invalid-this": "error",
+    "no-invalid-this": "off",
     "no-iterator": "error",
     "no-label-var": "error",
     "no-labels": "error",
