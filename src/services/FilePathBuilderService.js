@@ -53,11 +53,12 @@ class FilePathBuilderService {
     // ../@scripts/../../method_beforeLastElement_lastElement.js
     // @scripts/../../../method_beforeLastElement_lastElement.js
     // etc.
-    let scriptURLs = this._buildSpecialPaths(method, url, '@scripts');
+    const scriptURLs = this._buildSpecialPaths(method, url, '@scripts');
 
-    let basePath = path.join(process.cwd(), this.Configuration.get('api_base_path'));
-    let absoluteMocksURLs = Toolbox.buildAbsolutePaths(basePath, mockURLs);
-    let absoluteScriptURLs = Toolbox.buildAbsolutePaths(basePath, scriptURLs);
+    const apiBasePath = this.Configuration.get('api_base_path');
+    const basePath = path.isAbsolute(apiBasePath) ? apiBasePath : path.join(process.cwd(), apiBasePath);
+    const absoluteMocksURLs = Toolbox.buildAbsolutePaths(basePath, mockURLs);
+    const absoluteScriptURLs = Toolbox.buildAbsolutePaths(basePath, scriptURLs);
 
     return {
       mocks: absoluteMocksURLs,
