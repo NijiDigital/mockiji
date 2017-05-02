@@ -2,11 +2,11 @@
 
 describe("Resolving", function() {
   beforeEach(function(done) {
-    return this.startServer({ dataPath: 'test/data/resolving' }).then(done, done.fail);
+    this.startServer({ dataPath: 'test/data/resolving' }).then(done, done.fail);
   });
 
   afterEach(function(done) {
-    return this.stopServer().then(done, done.fail);
+    this.stopServer().then(done, done.fail);
   });
 
   it('should handle subdirectories', function(done) {

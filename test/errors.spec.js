@@ -2,7 +2,7 @@
 
 describe("Errors", function() {
   beforeEach(function(done) {
-    return this.startServer({ dataPath: 'test/data/errors' }).then(done, done.fail);
+    this.startServer({ dataPath: 'test/data/errors' }).then(done, done.fail);
   });
 
   afterEach(function(done) {
