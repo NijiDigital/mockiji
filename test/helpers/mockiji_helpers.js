@@ -75,6 +75,7 @@ beforeEach(function() {
     const promises = Object.keys(paths).map((path) => {
       const expectedStatus = paths[path].status;
       const expectedFile = paths[path].file;
+      const expectedResponse = paths[path].response;
 
       return this.doRequest(method, path).then((response) => {
         if (expectedStatus) {
@@ -84,6 +85,15 @@ beforeEach(function() {
         if (expectedFile) {
           const mockFile = response.headers['x-mockiji-file'];
           expect(mockFile.endsWith(expectedFile)).toBe(true, `Path "${path}" should use file "${expectedFile}" but used file "${mockFile}"`);
+        }
+
+        if (expectedResponse) {
+          try {
+            const serverResponse = (typeof expectedResponse === 'object') ? JSON.parse(response.body) : response.body;
+            expect(serverResponse).toEqual(expectedResponse);
+          } catch (e) {
+            fail(`Server was expected to return a JSON response but returned "${response.body}"`);
+          }
         }
       });
     });

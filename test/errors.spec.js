@@ -17,7 +17,7 @@ describe("Errors", function() {
 
   it('should return an error if a mock could not be found', function(done) {
     this.checkPaths('GET', {
-      'api/inexistant_file': {status: 404},
+      'api/missing_file': {status: 404},
     }).then(done, done.fail);
   });
 });
