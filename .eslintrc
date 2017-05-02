@@ -7,7 +7,10 @@
   "plugins": [
     "jasmine"
   ],
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:jasmine/recommended"
+  ],
   "rules": {
     "accessor-pairs": "error",
     "array-bracket-spacing": [
@@ -287,6 +290,8 @@
     "yoda": [
       "error",
       "never"
-    ]
+    ],
+    "jasmine/no-global-setup": 0,
+    "jasmine/no-expect-in-setup-teardown": 0
   }
 }
