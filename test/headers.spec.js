@@ -40,7 +40,7 @@ describe("Headers", function() {
   });
 
   describe("X-Mockiji-Not-Found", function() {
-    it('should bet set if a mock file was not found', function(done) {
+    it('should be set if a mock file was not found', function(done) {
       this.checkPaths('GET', {
         'api/missing_mock': {headers: {'X-Mockiji-Not-Found': 'true'}},
       }).then(done, done.fail);
