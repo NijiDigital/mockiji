@@ -28,6 +28,7 @@ class MockCtrl {
   buildResponse(request, response) {
     let method = request.method;
     let httpCode = 201;
+    let responseHeaders = {};
     let rawContent = null;
     let extension = 'json';
     let location = null;
@@ -35,6 +36,7 @@ class MockCtrl {
 
     // Get the URL
     let url = this.urlRecomposer.recompose(request);
+    responseHeaders['X-Mockiji-Url'] = url;
     this.Logger.info({
       'type': 'request',
       'method': method,
@@ -46,8 +48,6 @@ class MockCtrl {
 
     // Find the file to load and extract the content
     let fileToLoad = this.fileLoader.find(paths.mocks);
-
-    let responseHeaders = {};
 
     if (fileToLoad !== null) {
       let fileData = this.fileLoader.load(fileToLoad, request, paths);
@@ -65,6 +65,7 @@ class MockCtrl {
     } else {
       httpCode = this.Configuration.get('http_codes.mock_file_not_found');
 
+      responseHeaders['X-Mockiji-Not-Found'] = true;
       rawContent = {
         'errorCode': httpCode,
         'errorDescription': 'No mock file was found',
