@@ -76,6 +76,7 @@ beforeEach(function() {
       const expectedStatus = paths[path].status;
       const expectedFile = paths[path].file;
       const expectedResponse = paths[path].response;
+      const expectedHeaders = paths[path].headers;
 
       return this.doRequest(method, path).then((response) => {
         if (expectedStatus) {
@@ -93,6 +94,12 @@ beforeEach(function() {
             expect(serverResponse).toEqual(expectedResponse);
           } catch (e) {
             fail(`Server was expected to return a JSON response but returned "${response.body}"`);
+          }
+        }
+
+        if (expectedHeaders) {
+          for (let header in expectedHeaders) {
+            expect(response.headers[header.toLowerCase()]).toEqual(expectedHeaders[header]);
           }
         }
       });
