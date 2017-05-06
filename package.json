@@ -31,7 +31,7 @@
   "scripts": {
     "start": "mockiji",
     "lint": "eslint ./src ./test",
-    "test": "jasmine JASMINE_CONFIG_PATH=test/support/jasmine.json"
+    "test": "nyc --reporter=lcov --reporter=text jasmine JASMINE_CONFIG_PATH=test/support/jasmine.json"
   },
   "bin": {
     "mockiji": "./bin/mockiji"
@@ -41,6 +41,7 @@
     "eslint-plugin-jasmine": "^2.2.0",
     "jasmine": "^2.6.0",
     "jasmine-spec-reporter": "^4.1.0",
+    "nyc": "^10.3.2",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3"
   }
