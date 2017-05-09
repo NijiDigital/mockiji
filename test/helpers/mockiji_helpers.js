@@ -13,13 +13,14 @@ beforeEach(function() {
    * @param {string} dataPath - Path to the mock files
    * @return {Promise} A promise resolving on server startup
    */
-  this.startServer = function({ dataPath }) {
+  this.startServer = function({ dataPath, middlewares = [] }) {
     // Server configuration
     const configuration = {
       api_base_path: dataPath,
       port: SERVER_PORT,
       logs: [],
       silent: true,
+      middlewares: middlewares,
     };
 
     // Check if the server is already running and stop it if that's the case
