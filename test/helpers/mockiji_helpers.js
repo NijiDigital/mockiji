@@ -17,7 +17,7 @@ beforeEach(function() {
     // Server configuration
     const configuration = {
       api_base_path: dataPath,
-      port: SERVER_PORT,
+      port: this.getServerPort(),
       logs: [],
       silent: true,
       middlewares: middlewares,
@@ -60,10 +60,18 @@ beforeEach(function() {
   this.doRequest = function(method, path) {
     return rp({
       method: method,
-      uri: `http://127.0.0.1:${SERVER_PORT}/${path}`,
+      uri: `http://127.0.0.1:${this.getServerPort()}/${path}`,
       resolveWithFullResponse: true,
       simple: false,
     });
+  }
+
+  /**
+   * Return the port Mockiji should be started on during tests.
+   * @return {number}
+   */
+  this.getServerPort = function() {
+    return SERVER_PORT;
   }
 
   /**
