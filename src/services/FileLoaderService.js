@@ -76,8 +76,7 @@ class FileLoaderService {
     if (isScriptMock) {
       path = this.find(paths.scripts);
       if (path !== null) {
-        let scriptFilePath = pPath;
-        mockData = this._loadMockData(scriptFilePath, paths.mocks);
+        mockData = this._loadMockData(pPath, paths.mocks);
       }
     }
     else {
@@ -153,7 +152,7 @@ class FileLoaderService {
 
     let data = {
       rawContent: content,
-      extension: extension,
+      extension,
       location,
       httpCode,
       delay,
