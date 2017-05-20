@@ -37,7 +37,7 @@ class FileLoaderService {
       }
 
       let candidateFile = glob.sync(element);
-      if(candidateFile.length > 0) {
+      if (candidateFile.length > 0) {
         this.Logger.debug({'files': files}, `Mock file found: ${candidateFile[0]}`);
         files.push(candidateFile[0]);
         fileMatch = true;
@@ -73,7 +73,7 @@ class FileLoaderService {
     let mockData = {};
     let delay = 1;
 
-    if(isScriptMock) {
+    if (isScriptMock) {
       let scriptFilePath = pPath;
       mockData = this._loadMockData(scriptFilePath, paths.mocks);
       path = this.find(paths.scripts);
@@ -84,7 +84,7 @@ class FileLoaderService {
     }
 
     extension = this._extractExtensionFromFileName(path);
-    if(extension === 'js') {
+    if (extension === 'js') {
 
       // Load the possible memory file
       let memory = this._loadMemoryFile(path);
@@ -105,29 +105,29 @@ class FileLoaderService {
         delay = response.delay || delay;
 
         // Save memory if returned
-        if(response.memory) {
+        if (response.memory) {
           this._updateMemoryFile(path, response.memory);
         }
 
-      } catch(e) {
+      } catch (e) {
         const message = `The mock file is not valid (${path})`;
         content = { 'error': message, 'e': util.inspect(e, false, 2, true) };
         notices.push(message);
       }
     }
-    else if(extension === 'html') {
+    else if (extension === 'html') {
       content = fileContent;
       httpCode = 200;
     }
     else {
       try {
-        if(fileContent.length > 0) {
+        if (fileContent.length > 0) {
           content = JSON.parse(fileContent);
         } else {
           notices.push('The mock file is empty');
         }
       }
-      catch(e) {
+      catch (e) {
         httpCode = this.Configuration.get('http_codes.mock_file_invalid');
         const message = 'The mock file contains invalid JSON';
         content =  {
@@ -157,7 +157,7 @@ class FileLoaderService {
     let memoryPath = mockPath.replace('.js','.memory.json');
     try {
       return jsonfile.readFileSync(memoryPath);
-    } catch(e) {
+    } catch (e) {
       this.Logger.debug({'exception': e}, `Could not open memory file "${memoryPath}"`);
       return {};
     }
@@ -171,7 +171,7 @@ class FileLoaderService {
     try {
       jsonfile.writeFileSync(memoryPath, memory, {spaces:2});
       this.Logger.info(`Wrote into memory file "${memoryPath}"`);
-    } catch(e) {
+    } catch (e) {
       this.Logger.error({'exception': e}, `Could not write into memory file "${memoryPath}"`);
     }
   }
@@ -199,7 +199,7 @@ class FileLoaderService {
     let httpCode = 200;
 
     let matches = filename.match(/\.([0-9]{3})\.[a-z0-9]+$/i);
-    if(matches != null) {
+    if (matches != null) {
       httpCode = matches[1];
     }
 
@@ -213,7 +213,7 @@ class FileLoaderService {
     let extension = null;
 
     let matches = filename.match(/\.([a-z0-9]+)$/i);
-    if(matches != null) {
+    if (matches != null) {
       extension = matches[1];
     }
 
@@ -222,7 +222,7 @@ class FileLoaderService {
 
   _isScriptMockFilePath(filename) {
     let matches = filename.match(/\.script$/i);
-    if(matches != null) {
+    if (matches != null) {
       return true;
     }
     return false;
@@ -250,7 +250,7 @@ class FileLoaderService {
 
     paths.forEach((path) => {
       let lastSlashPosition = path.lastIndexOf('/');
-      if(lastSlashPosition !== -1) {
+      if (lastSlashPosition !== -1) {
         files.forEach((file) => {
           let dataDefaultPath = [path.substring(0, lastSlashPosition), '@default/@data', file].join('/');
           dataPaths[file].push(dataDefaultPath);
@@ -264,10 +264,10 @@ class FileLoaderService {
 
   _loadMockDataFromDataPaths(dataPaths) {
     let data = {};
-    for(let file in dataPaths) {
+    for (let file in dataPaths) {
       let paths = dataPaths[file];
       let mockDataPaths = this.find(paths, true);
-      if(mockDataPaths !== null) {
+      if (mockDataPaths !== null) {
         mockDataPaths.reverse().forEach((mockDataPath) => {
           let fileContent = fs.readFileSync(mockDataPath, 'utf8');
           try {

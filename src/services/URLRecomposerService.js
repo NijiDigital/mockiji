@@ -26,14 +26,14 @@ class URLRecomposerService {
     // Read the authorization token if provided and rebuild the request url
     let authorizationHeader = request.headers.authorization;
 
-    if(authorizationHeader) {
+    if (authorizationHeader) {
 
       // Authorization token is present
       this.Logger.debug(`Found an authorization header: "${authorizationHeader}"`);
       const token = this._decodeAuthorizationToken(request);
 
       // If the authorization token is invalid
-      if(token === null) {
+      if (token === null) {
         this.Logger.warn(
           {'authorizationHeader': authorizationHeader},
           `An authorization header was found but it did not contain a valid base64 encoded JSON object`
@@ -43,17 +43,17 @@ class URLRecomposerService {
 
       // If the token is an object
       const authorizationToken = this.Configuration.get('authorization_header_replacements');
-      if(typeof(authorizationToken) === 'object') {
+      if (typeof(authorizationToken) === 'object') {
         const tokenConfigs = authorizationToken;
 
         // We browse the token configs array
-        for(let i in tokenConfigs) {
+        for (let i in tokenConfigs) {
           const tokenConfig = tokenConfigs[i];
           const rawRegexp = tokenConfig.regexp;
           const regexp = new RegExp(rawRegexp, 'i');
 
           // We test the config regexp
-          if(regexp.test(rawUrl)) {
+          if (regexp.test(rawUrl)) {
             // If matched, we invert the replacing group to replace the good ones
             const invertedRegExp = this._invertRegexpGroups(rawRegexp);
             const iRegExp = new RegExp(invertedRegExp,'i');
@@ -96,7 +96,7 @@ class URLRecomposerService {
     const decoded = new Buffer(encoded, 'base64').toString('utf8');
     try {
       return JSON.parse(decoded);
-    } catch(e) {
+    } catch (e) {
       return null;
     }
   }

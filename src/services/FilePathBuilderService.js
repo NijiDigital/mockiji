@@ -88,18 +88,18 @@ class FilePathBuilderService {
     // Then joins pathParts with "/" and fileBodyName with "_" to form one full path
     // url : elmt1/elmt2/elmt3/elmt4/elmt5_elmt6
     // p : separator between pathParts and fileBodyName
-    for(let p=0; p <= (partsCount-2); ++p) {
+    for (let p=0; p <= (partsCount-2); ++p) {
       // j : allows to replace every element of the path with the specified marker if the marker is specified
       for (let j=(partsCount-p-1); j >= 1; --j) {
         let pathParts = [];
         let fileBodyName = [method];
         let fileExtensionName = '\\.*';
         // Go through allParts and split it according to p (and j if marker is defined)
-        for(let i=0; i<partsCount; ++i) {
-          if(marker != false && i == j) {
+        for (let i=0; i<partsCount; ++i) {
+          if (marker != false && i == j) {
             pathParts.push(marker);
           }
-          else if(i < partsCount - (p)) {
+          else if (i < partsCount - (p)) {
             pathParts.push(allParts[i]);
           }
           else {

@@ -85,9 +85,9 @@ class MockCtrl {
 
     // Send Response
     setTimeout(() => {
-      if(rawContent !== null && extension === 'html') {
+      if (rawContent !== null && extension === 'html') {
         response.status(httpCode).send(rawContent);
-      } else if(rawContent !== null) {
+      } else if (rawContent !== null) {
         response.status(httpCode).json(rawContent);
       } else {
         response.set('X-Mockiji-Empty-Response-Body', true);
