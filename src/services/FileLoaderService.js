@@ -74,16 +74,20 @@ class FileLoaderService {
     let delay = 1;
 
     if (isScriptMock) {
-      let scriptFilePath = pPath;
-      mockData = this._loadMockData(scriptFilePath, paths.mocks);
       path = this.find(paths.scripts);
-      this.Logger.debug(`Loading script file "${path}"`);
+      if (path !== null) {
+        let scriptFilePath = pPath;
+        mockData = this._loadMockData(scriptFilePath, paths.mocks);
+      }
     }
     else {
       path = pPath;
     }
 
-    extension = this._extractExtensionFromFileName(path);
+    if (path !== null) {
+      extension = this._extractExtensionFromFileName(path);
+    }
+
     if (extension === 'js') {
 
       // Load the possible memory file
@@ -119,7 +123,7 @@ class FileLoaderService {
       content = fileContent;
       httpCode = 200;
     }
-    else {
+    else if (extension !== null) {
       try {
         if (fileContent.length > 0) {
           content = JSON.parse(fileContent);
@@ -136,6 +140,15 @@ class FileLoaderService {
         };
         notices.push(message);
       }
+    } else {
+      httpCode = this.Configuration.get('http_codes.mock_file_invalid');
+      const message = `Mockiji loaded ${pPath} but could not find the actual script file.`;
+      content =  {
+        'errorCode': httpCode,
+        'errorDescription': message,
+        'evaluatedScriptFilePaths': paths.scripts
+      };
+      notices.push(message);
     }
 
     let data = {
