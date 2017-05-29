@@ -1,8 +1,8 @@
 'use strict';
 
-const URLRecomposerService = require('../services/URLRecomposerService.js');
 const FilePathBuilderService = require('../services/FilePathBuilderService.js');
 const FileLoaderService = require('../services/FileLoaderService.js');
+const Toolbox = require('../utils/Toolbox.js');
 
 /**
  * This controller is for processing the requests and building the response
@@ -15,7 +15,6 @@ class MockCtrl {
     this.Configuration = Configuration;
     this.Logger = Logger;
 
-    this.urlRecomposer = new URLRecomposerService({Configuration, Logger});
     this.pathBuilder = new FilePathBuilderService({Configuration, Logger});
     this.fileLoader = new FileLoaderService({Configuration, Logger});
   }
@@ -35,7 +34,7 @@ class MockCtrl {
     let delay = 1;
 
     // Get the URL
-    let url = this.urlRecomposer.recompose(request);
+    const url = Toolbox.removeTrailingSlash(request.url);
     responseHeaders['X-Mockiji-Url'] = url;
     this.Logger.info({
       'type': 'request',
