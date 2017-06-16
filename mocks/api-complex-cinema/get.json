@@ -1,0 +1,7 @@
+{
+  "library": {
+    "name": "Mockiji Movie Theatre",
+    "users": 3,
+    "borrowedBooks": 4
+  }
+}
