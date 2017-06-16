@@ -53,11 +53,6 @@ const SETTINGS_SCHEMA = {
     format: Array,
     default: []
   },
-  authorization_header_replacements: {
-    doc: 'An array of regexes and token replacement keys that can be used to change an URL part based on the content of the Authorization header',
-    format: Array,
-    default: [],
-  },
   silent: {
     doc: 'If set to true the default stdout log stream will not be created',
     format: Boolean,
