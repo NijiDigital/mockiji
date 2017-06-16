@@ -62,4 +62,13 @@ describe("Headers", function() {
       }).then(done, done.fail);
     });
   });
+
+  describe("Location", function() {
+    it('should contain a redirect header', function(done) {
+      this.checkPaths('GET', {
+        'api/redirect': {status: 303, headers: {'location': 'https://github.com'}},
+      }).then(done, done.fail);
+    });
+  });
+
 });

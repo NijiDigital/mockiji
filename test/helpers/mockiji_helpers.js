@@ -63,6 +63,7 @@ beforeEach(function() {
       uri: `http://127.0.0.1:${this.getServerPort()}/${path}`,
       resolveWithFullResponse: true,
       simple: false,
+      followRedirect: false,
     });
   }
 

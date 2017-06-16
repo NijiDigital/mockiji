@@ -30,4 +30,11 @@ describe("Scripts", function() {
       'api/status?code=500': {status: 500},
     }).then(done, done.fail);
   });
+
+  it('should be able to use the data from @data folder', function(done) {
+    this.checkPaths('GET', {
+      'api/users/user1': {status: 200, response: {var1: true}},
+    }).then(done, done.fail);
+  });
+
 });
