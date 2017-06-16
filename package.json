@@ -11,6 +11,13 @@
   "bugs": {
     "url": "https://github.com/NijiDigital/mockiji/issues"
   },
+  "nyc": {
+    "exclude": [
+      "test",
+      "**/node_modules/**",
+      "**/utils/PrettyLogStream.js"
+    ]
+  },
   "engines": {
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"

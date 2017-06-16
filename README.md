@@ -8,6 +8,7 @@
 
 <p align="center">
   <a href="https://travis-ci.org/NijiDigital/mockiji"><img alt="Travis Status" src="https://travis-ci.org/NijiDigital/mockiji.svg?branch=master"></a>
+  <a href="https://coveralls.io/github/NijiDigital/mockiji?branch=master"><img alt="Coverage Status" src="https://coveralls.io/repos/github/NijiDigital/mockiji/badge.svg?branch=master" /></a>
 </p>
 
 ---
