@@ -2720,7 +2720,7 @@
     },
     "rimraf": {
       "version": "2.4.5",
-      "from": "rimraf@2.4.5",
+      "from": "https://registry.npmjs.org/rimraf/-/rimraf-2.4.5.tgz",
       "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-2.4.5.tgz",
       "dependencies": {
         "glob": {

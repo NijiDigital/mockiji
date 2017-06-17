@@ -21,14 +21,8 @@ function initLogger({Configuration}) {
   }
 
   // Create log streams based on the configuration
-  if (loggerConfig) {
-    if (Array.isArray(loggerConfig)) {
-      for (let stream of loggerConfig) {
-        streams.push(stream);
-      }
-    } else {
-      streams.push(loggerConfig);
-    }
+  for (let stream of loggerConfig) {
+    streams.push(stream);
   }
 
   // Create logs directory for each stream if needed
