@@ -95,6 +95,7 @@ class FilePathBuilderService {
       markers.push(false);
     }
 
+    /* eslint-disable max-depth */
     for (let p=0; p <= (partsCount-2); ++p) {
       // j : allows to replace every element of the path with the specified marker if the marker is specified
       for (let j=(partsCount-p-1); j >= 1; --j) {
@@ -123,6 +124,7 @@ class FilePathBuilderService {
         }
       }
     }
+    /* eslint-enable max-depth */
     return mockURLs;
   }
 }
