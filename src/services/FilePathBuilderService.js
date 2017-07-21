@@ -29,7 +29,7 @@ class FilePathBuilderService {
     // ../../method_lastElement.json
     // ../../../method_beforeLastElement_lastElement.json
     // etc.
-    mockURLs = mockURLs.concat(this._buildSpecialPaths(method, url, false));
+    mockURLs = mockURLs.concat(this._buildSpecialPaths(method, url));
 
     // ../@default/method.json
     // @default/../method.json
@@ -53,7 +53,7 @@ class FilePathBuilderService {
     // ../@scripts/../../method_beforeLastElement_lastElement.js
     // @scripts/../../../method_beforeLastElement_lastElement.js
     // etc.
-    const scriptURLs = this._buildSpecialPaths(method, url, '@scripts');
+    const scriptURLs = this._buildSpecialPaths(method, url, '@scripts', '@default/@scripts');
 
     const apiBasePath = this.Configuration.get('api_base_path');
     const basePath = path.isAbsolute(apiBasePath) ? apiBasePath : path.join(process.cwd(), apiBasePath);
@@ -71,9 +71,10 @@ class FilePathBuilderService {
    * Build paths to load the mock file according to the method, url and queryString
    * @param method the request method
    * @param url the request url
+   * @param markers the optional markers to inject
    * @returns object
    */
-  _buildSpecialPaths(method, url, marker) {
+  _buildSpecialPaths(method, url, ...markers) {
     let mockURLs = [];
 
     let request = url.split('?');
@@ -88,29 +89,37 @@ class FilePathBuilderService {
     // Then joins pathParts with "/" and fileBodyName with "_" to form one full path
     // url : elmt1/elmt2/elmt3/elmt4/elmt5_elmt6
     // p : separator between pathParts and fileBodyName
+
+    // To iterate at least once over the marker loop
+    if (markers.length === 0) {
+      markers.push(false);
+    }
+
     for (let p=0; p <= (partsCount-2); ++p) {
       // j : allows to replace every element of the path with the specified marker if the marker is specified
       for (let j=(partsCount-p-1); j >= 1; --j) {
-        let pathParts = [];
-        let fileBodyName = [method];
-        let fileExtensionName = '\\.*';
-        // Go through allParts and split it according to p (and j if marker is defined)
-        for (let i=0; i<partsCount; ++i) {
-          if (marker != false && i == j) {
-            pathParts.push(marker);
+        for (let marker of markers) {
+          let pathParts = [];
+          let fileBodyName = [method];
+          let fileExtensionName = '\\.*';
+          // Go through allParts and split it according to p (and j if marker is defined)
+          for (let i=0; i<partsCount; ++i) {
+            if (marker !== false && i == j) {
+              pathParts.push(marker);
+            }
+            else if (i < partsCount - (p)) {
+              pathParts.push(allParts[i]);
+            }
+            else {
+              fileBodyName.push(allParts[i]);
+            }
           }
-          else if (i < partsCount - (p)) {
-            pathParts.push(allParts[i]);
+          let url = pathParts.join('/') + '/' + fileBodyName.join('_') + fileExtensionName;
+          mockURLs.push(url);
+          // if no marker is defined, then there is no use about incrementing j so we break the "j" for loop
+          if (marker === false) {
+            break;
           }
-          else {
-            fileBodyName.push(allParts[i]);
-          }
-        }
-        let url = pathParts.join('/') + '/' + fileBodyName.join('_') + fileExtensionName;
-        mockURLs.push(url);
-        // if no marker is defined, then there is no use about incrementing j so we break the "j" for loop
-        if (!marker) {
-          break;
         }
       }
     }
