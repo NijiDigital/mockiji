@@ -42,8 +42,14 @@ class MockCtrl {
       'url': url
     }, `Received a request: "${method} ${url}"`);
 
+    // Retreive authorization token if needed
+    let token = this._handleToken(request);
+
+    // replace dynamic markers
+    let customUrl = this._handleDynamicMarkers(url);
+
     // List every possible paths
-    let paths = this.pathBuilder.generatePaths(method.toLowerCase(), url);
+    let paths = this.pathBuilder.generatePaths(method.toLowerCase(), (customUrl)?customUrl:url, token);
 
     // Find the file to load and extract the content
     let fileToLoad = this.fileLoader.find(paths.mocks);
@@ -101,6 +107,75 @@ class MockCtrl {
         'mockPath': fileToLoad,
       }, `Response sent for "${method} ${url}" (${httpCode})`);
     }, delay);
+  }
+
+  /**
+   * Decode token if needed.
+   * @param request
+   */
+  _handleToken(request) {
+    let token_type = this.Configuration.get('authorization_token');
+    if (token_type && request.headers.authorization) {
+      if (token_type === 'base64') {
+        var encoded = request.headers.authorization.split(' ')[1];
+        var decoded = new Buffer(encoded, 'base64').toString('utf8');
+        this.token = JSON.parse(decoded);
+      } else {
+        throw Error('Authorization token type not supported: ' + token_type);
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Replace dynamic markers from raw url
+   * @param url
+   */
+  _handleDynamicMarkers(url) {
+    if(typeof(this.Configuration.get('dynamic_markers')) === 'object') {
+      let markerConfigs = this.Configuration.get('dynamic_markers');
+      if (markerConfigs) {
+        // We browse the token configs array
+        for(let i in markerConfigs) {
+          let config = markerConfigs[i];
+          let rawRegexp = config.regexp;
+          var regexp = new RegExp(rawRegexp, 'i');
+
+          // We test the config regexp
+          if(regexp.test(url)) {
+
+            // If matched, we invert the replacing group to replace the good ones
+            var invertedRegExp = this._invertRegexpGroups(rawRegexp);
+            let iRegExp = new RegExp(invertedRegExp,'i');
+
+            // We fetch the replacement data to replace the group
+            let replacementKey = config.replacement_key;
+            let replacement = null;
+            if (config.type === 'token') {
+              replacement = this.token[replacementKey];
+            }
+
+            // We recompose the url with the replacement
+            return url.replace(iRegExp, ['$1',replacement,'$2'].join(''));
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  _invertRegexpGroups(regexp) {
+    let startGroup = regexp.indexOf('(');
+    let stopGroup = regexp.indexOf(')');
+    let invertedRegExp = [
+      '(',
+      regexp.substring(0, startGroup),
+      ')',
+      regexp.substring(startGroup+1, stopGroup),
+      '(',
+      regexp.substring(stopGroup+1),
+      ')'].join('');
+    return invertedRegExp;
   }
 }
 
