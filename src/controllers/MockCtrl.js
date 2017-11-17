@@ -43,13 +43,13 @@ class MockCtrl {
     }, `Received a request: "${method} ${url}"`);
 
     // Retreive authorization token if needed
-    let token = this._handleToken(request);
+    this._handleToken(request);
 
     // replace dynamic markers
     let customUrl = this._handleDynamicMarkers(url);
 
     // List every possible paths
-    let paths = this.pathBuilder.generatePaths(method.toLowerCase(), (customUrl)?customUrl:url, token);
+    let paths = this.pathBuilder.generatePaths(method.toLowerCase(), customUrl);
 
     // Find the file to load and extract the content
     let fileToLoad = this.fileLoader.find(paths.mocks);
@@ -120,11 +120,8 @@ class MockCtrl {
         let encoded = request.headers.authorization.split(' ')[1];
         let decoded = new Buffer(encoded, 'base64').toString('utf8');
         this.token = JSON.parse(decoded);
-      } else {
-        throw Error('Authorization token type not supported: ' + tokenType);
       }
     }
-    return null;
   }
 
   /**
@@ -145,7 +142,7 @@ class MockCtrl {
         }
       }
     }
-    return null;
+    return url;
   }
 
   /**
