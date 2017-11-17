@@ -40,14 +40,14 @@ const SETTINGS_SCHEMA = {
   authorization_token: {
     doc: 'Authorization token type (base64)',
     format: String,
-    default: null,
+    default: '',
     arg: 'authorization-token',
     env: 'AUTHORIZATIOBN_TOKEN',
   },
   dynamic_markers: {
     doc: 'Additionnals API path markers',
     format: Array,
-    default: {},
+    default: [],
     arg: 'api-dynamic-markers',
     env: 'API_DYNAMIC_MARKERS',
   },

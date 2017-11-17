@@ -114,14 +114,14 @@ class MockCtrl {
    * @param request
    */
   _handleToken(request) {
-    let token_type = this.Configuration.get('authorization_token');
-    if (token_type && request.headers.authorization) {
-      if (token_type === 'base64') {
-        var encoded = request.headers.authorization.split(' ')[1];
-        var decoded = new Buffer(encoded, 'base64').toString('utf8');
+    let tokenType = this.Configuration.get('authorization_token');
+    if (tokenType && tokenType !== '' && request.headers.authorization) {
+      if (tokenType === 'base64') {
+        let encoded = request.headers.authorization.split(' ')[1];
+        let decoded = new Buffer(encoded, 'base64').toString('utf8');
         this.token = JSON.parse(decoded);
       } else {
-        throw Error('Authorization token type not supported: ' + token_type);
+        throw Error('Authorization token type not supported: ' + tokenType);
       }
     }
     return null;
@@ -139,24 +139,25 @@ class MockCtrl {
         for(let i in markerConfigs) {
           let config = markerConfigs[i];
           let rawRegexp = config.regexp;
-          var regexp = new RegExp(rawRegexp, 'i');
+          let regexp = new RegExp(rawRegexp, 'i');
 
           // We test the config regexp
           if(regexp.test(url)) {
-
             // If matched, we invert the replacing group to replace the good ones
-            var invertedRegExp = this._invertRegexpGroups(rawRegexp);
+            let invertedRegExp = this._invertRegexpGroups(rawRegexp);
             let iRegExp = new RegExp(invertedRegExp,'i');
 
             // We fetch the replacement data to replace the group
             let replacementKey = config.replacement_key;
             let replacement = null;
-            if (config.type === 'token') {
+            if (config.type === 'token' && this.token && this.token.hasOwnProperty(replacementKey)) {
               replacement = this.token[replacementKey];
             }
 
-            // We recompose the url with the replacement
-            return url.replace(iRegExp, ['$1',replacement,'$2'].join(''));
+            if (replacement !== null) {
+              // We recompose the url with the replacement
+              return url.replace(iRegExp, ['$1',replacement,'$2'].join(''));
+            }
           }
         }
       }
