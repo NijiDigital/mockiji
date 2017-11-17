@@ -137,27 +137,10 @@ class MockCtrl {
       if (markerConfigs) {
         // We browse the token configs array
         for(let i in markerConfigs) {
-          let config = markerConfigs[i];
-          let rawRegexp = config.regexp;
-          let regexp = new RegExp(rawRegexp, 'i');
-
           // We test the config regexp
-          if(regexp.test(url)) {
-            // If matched, we invert the replacing group to replace the good ones
-            let invertedRegExp = this._invertRegexpGroups(rawRegexp);
-            let iRegExp = new RegExp(invertedRegExp,'i');
-
-            // We fetch the replacement data to replace the group
-            let replacementKey = config.replacement_key;
-            let replacement = null;
-            if (config.type === 'token' && this.token && this.token.hasOwnProperty(replacementKey)) {
-              replacement = this.token[replacementKey];
-            }
-
-            if (replacement !== null) {
-              // We recompose the url with the replacement
-              return url.replace(iRegExp, ['$1',replacement,'$2'].join(''));
-            }
+          let newUrl = this._testAndReplaceUrl(markerConfigs[i], url);
+          if (newUrl !== null) {
+            return newUrl;
           }
         }
       }
@@ -165,6 +148,39 @@ class MockCtrl {
     return null;
   }
 
+  /**
+   * Test regex on url and apply it
+   * @param config
+   * @param url
+   */
+  _testAndReplaceUrl(config, url) {
+    let rawRegexp = config.regexp;
+    let regexp = new RegExp(rawRegexp, 'i');
+
+    if(regexp.test(url)) {
+      // If matched, we invert the replacing group to replace the good ones
+      let invertedRegExp = this._invertRegexpGroups(rawRegexp);
+      let iRegExp = new RegExp(invertedRegExp,'i');
+
+      // We fetch the replacement data to replace the group
+      let replacementKey = config.replacement_key;
+      let replacement = null;
+      if (config.type === 'token' && this.token && this.token.hasOwnProperty(replacementKey)) {
+        replacement = this.token[replacementKey];
+      }
+
+      if (replacement !== null) {
+        // We recompose the url with the replacement
+        return url.replace(iRegExp, ['$1',replacement,'$2'].join(''));
+      }
+    }
+    return null;
+  }
+
+  /**
+   * invert the replacing group to replace the good ones
+   * @param regexp
+   */
   _invertRegexpGroups(regexp) {
     let startGroup = regexp.indexOf('(');
     let stopGroup = regexp.indexOf(')');
