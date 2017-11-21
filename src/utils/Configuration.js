@@ -42,7 +42,7 @@ const SETTINGS_SCHEMA = {
     format: String,
     default: '',
     arg: 'authorization-token',
-    env: 'AUTHORIZATIOBN_TOKEN',
+    env: 'AUTHORIZATION_TOKEN',
   },
   dynamic_markers: {
     doc: 'Additionnals API path markers',
