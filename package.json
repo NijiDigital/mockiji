@@ -2,7 +2,7 @@
   "name": "mockiji",
   "description": "Simple, Fast and Powerful file-based Node.js mock server",
   "homepage": "https://github.com/NijiDigital/mockiji",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
