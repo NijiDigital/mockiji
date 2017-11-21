@@ -37,6 +37,20 @@ const SETTINGS_SCHEMA = {
       default: 500,
     }
   },
+  authorization_token: {
+    doc: 'Authorization token type (base64)',
+    format: String,
+    default: '',
+    arg: 'authorization-token',
+    env: 'AUTHORIZATIOBN_TOKEN',
+  },
+  dynamic_markers: {
+    doc: 'Additionnals API path markers',
+    format: Array,
+    default: [],
+    arg: 'api-dynamic-markers',
+    env: 'API_DYNAMIC_MARKERS',
+  },
   logs: {
     doc: 'Logs configuration as an object or an array of node-bunyan streams',
     format: Array,

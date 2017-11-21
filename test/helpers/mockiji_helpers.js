@@ -57,14 +57,18 @@ beforeEach(function() {
    * @param {string} path - Path to use in the query
    * @return {Promise}
    */
-  this.doRequest = function(method, path) {
-    return rp({
+  this.doRequest = function(method, path, headers) {
+    let options = {
       method: method,
       uri: `http://127.0.0.1:${this.getServerPort()}/${path}`,
       resolveWithFullResponse: true,
       simple: false,
       followRedirect: false,
-    });
+    }
+    if (headers) {
+      options.headers = headers;
+    }
+    return rp(options);
   }
 
   /**
@@ -79,16 +83,17 @@ beforeEach(function() {
    * Test if the given query paths are using the right mock files.
    * @param {string} method - HTTP Method
    * @param {Object} paths - An object whose keys are query paths and values are expectations
+   * @param {Object} headers - Additionnals headers to inject
    * @return {Promise}
    */
-  this.checkPaths = function(method, paths) {
+  this.checkPaths = function(method, paths, headers) {
     const promises = Object.keys(paths).map((path) => {
       const expectedStatus = paths[path].status;
       const expectedFile = paths[path].file;
       const expectedResponse = paths[path].response;
       const expectedHeaders = paths[path].headers;
 
-      return this.doRequest(method, path).then((response) => {
+      return this.doRequest(method, path, headers).then((response) => {
         if (expectedStatus) {
           expect(response.statusCode).toBe(expectedStatus, `Path "${path}" should return status code ${expectedStatus} but returned ${response.statusCode}`);
         }
