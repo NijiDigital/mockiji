@@ -1,5 +1,7 @@
 'use strict';
 
+const {json, urlencoded} = require('body-parser');
+
 const express = require('express');
 
 class Mockiji {
@@ -21,8 +23,8 @@ class Mockiji {
     this.app = express();
 
     // Server configuration
-    this.app.use(express.json());
-    this.app.use(express.urlencoded());
+    this.app.use(json());
+    this.app.use(urlencoded());
     this.http = require('http').Server(this.app);
 
     // Routes
